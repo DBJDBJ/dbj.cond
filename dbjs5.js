@@ -103,61 +103,52 @@ and GPL (GPL-LICENSE.txt) licenses.
 
 	/* the below code borrowed from S5 */
 
-	function fontScale() {  // causes layout problems in FireFox that get fixed if browser's Reload is used; same may be true of other Gecko-based browsers
-		var vScale = 22,  // both yield 32 (after rounding) at 1024x768
-		    hScale = 32,  // perhaps should auto-calculate based on theme's declared value?
-			vSize, hSize;
-		if (window.innerHeight) {
-			vSize = window.innerHeight;
-			hSize = window.innerWidth;
-		} else if (document.documentElement.clientHeight) {
-			vSize = document.documentElement.clientHeight;
-			hSize = document.documentElement.clientWidth;
-		} else if (document.body.clientHeight) {
-			vSize = document.body.clientHeight;
-			hSize = document.body.clientWidth;
-		} else {
-			vSize = 700;  // assuming 1024x768, minus chrome and such
-			hSize = 1024; // these do not account for kiosk mode or Opera Show
-		}
-		var newSize = Math.min(Math.round(vSize / vScale), Math.round(hSize / hScale));
-		fontSize(newSize + 'px');
+	// causes layout problems in FireFox < 4, that get fixed if browser's Reload is used; 
+	// same may be true of other Gecko-based browsers
+	function fontScale() {
+		var vScale = 1.5 * 22,  // both yield 32 (after rounding) at 1024x768
+		    hScale = 1.5 * 32,  // perhaps should auto-calculate based on theme's declared value?
+			vSize = $(document).height(), hSize = $(document).width(),
+		    newSize = Math.min(Math.round(vSize / vScale), Math.round(hSize / hScale));
+
+		$body.css("font-size", parseInt(newSize) + 'px');
+
 		if (jQuery.browser['mozilla']) {  // hack to counter incremental reflow bugs
 			$body.css("display", 'none').css("display", 'block');
 		}
 	}
-
+	/*
 	function fontSize(value) {
-		var ssstr = "<style type='text/css' media='screen, projection' id='s5ss'>body {font-size:{0} !important;}</style>";
-		$("#s5ss", $head).remove();
+		var ssstr = "<style type='text/css' media='screen, projection' id='dbjs5_font_size'>body {font-size:{0} !important;}</style>";
+		$("#dbjs5_font_size", $head).remove();
 		$head.append($(ssstr.format(value)));
 	}
-
+	*/
 	// 'keys' code adapted from MozPoint (http://mozpoint.mozdev.org/)
 	function keys(key) {
 		if (!key) {
 			key = event;
 			key.which = key.keyCode;
 		}
-		cond (key.which,
+		cond(key.which,
 			[10 // return
-			,13 // enter
-			,32 // spacebar
-			,34 // page down
-			,39 // rightkey
-			,40], // downkey
-			function () {go('next');},
+			, 13 // enter
+			, 32 // spacebar
+			, 34 // page down
+			, 39 // rightkey
+			, 40], // downkey
+			function () { go('next'); },
 			[33 // page up
-			,37 // leftkey
-			,38 // upkey
+			, 37 // leftkey
+			, 38 // upkey
 			, 8], // backspace
-			function () {go('prev');},
+			function () { go('prev'); },
 			36, // home
 				function () { go(0); },
 			35, // end
-				function () { go(slideCount - 1);},
+				function () { go(slideCount - 1); },
 			67, // c
-				function () {},
+				function () { },
 			79, // o
 				function () { $('.outline').toggle(); },
 				function () { }
@@ -192,5 +183,9 @@ and GPL (GPL-LICENSE.txt) licenses.
 		}
 	}
 
+	/* self ignition */
+	$(function () {
+		jqs5.init();
+	});
 
 } ());

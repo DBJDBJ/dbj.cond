@@ -4,50 +4,11 @@
 
 DBJQS5 DBJ QS5 
 
- Inspired with S5 and JQS5 Copyright 2008 Steve Pomeroy <steve@staticfree.info>
- Dual licensed under the MIT (MIT-LICENSE.txt)
- and GPL (GPL-LICENSE.txt) licenses.
-
+Inspired with S5 and JQS5 Copyright 2008 Steve Pomeroy <steve@staticfree.info>
+Dual licensed under the MIT (MIT-LICENSE.txt)
+and GPL (GPL-LICENSE.txt) licenses.
 */
-
 (function (undefined) {
-
-	/*--------------------------------------------------------------------------------------------*/
-	// quirky implementation, enough here
-	if ("function" !== role(Array.prototype.indexOf))
-		Array.prototype.indexOf = function (value) {
-			var i = this.length;
-			while (i-- && this[i] !== value) { };
-			return i;
-		};
-	var cond = function (v) {
-		var comparator = function (a, b) {
-			if ("array" !== role(b))
-				return a === b;
-			return comparator(a, b[b.indexOf(a)]);
-		};
-		var j = 1, L = arguments.length;
-		for (; j < L; j += 2) {
-			if (comparator(v, arguments[j])) return arguments[j + 1];
-		}
-		return (!arguments[j - 2]) ? undefined : arguments[j - 2];
-	},
-
-    role = function (o) {
-    	/// NOTE: for DOM objects function bellow will return "object"
-    	///       in IE < 9. example: window.alert returns "object"
-    	return o === undefined
-                ? "undefined" : o === null
-                ? "null" : (Object.prototype.toString.call(o).match(/\w+/g)[1]).toLowerCase();
-    };
-	if ("function" != typeof "".format)
-		String.prototype.format = function () {
-			var args = arguments;
-			return this.replace(/\{(\d|\d\d)\}/g, function ($0) {
-				var idx = 1 * $0.match(/\d+/)[0]; return args[idx] !== undefined ? args[idx] : (args[idx] === "" ? "" : $0);
-			}
-            );
-		}
 	/*--------------------------------------------------------------------------------------------*/
 	/* extend jQuery with a new function */
 	jQuery.fn.extend({
@@ -118,7 +79,7 @@ DBJQS5 DBJ QS5
 
 	/* go to either a numbered slide, 'next', 'prev', 'last, or 'first' */
 	function go(n) {
-		if (typeof n == 'string') {
+		if (role.isString(n)) {
 			n = cond(n,
 					'next', cur < (slideCount - 1) ? cur + 1 : cur,
 					'prev', cur > 0 ? cur - 1 : cur,
@@ -178,32 +139,29 @@ DBJQS5 DBJ QS5
 			key = event;
 			key.which = key.keyCode;
 		}
-		switch (key.which) {
-			case 10: // return
-			case 13: // enter
-			case 32: // spacebar
-			case 34: // page down
-			case 39: // rightkey
-			case 40: // downkey
-				go('next');
-				break;
-			case 33: // page up
-			case 37: // leftkey
-			case 38: // upkey
-			case 8: // backspace
-				go('prev');
-				break;
-			case 36: // home
-				go(0);
-				break;
-			case 35: // end
-				go(slideCount - 1);
-				break;
-			case 67: // c
-				break;
-			case 79: // o
-				$('.outline').toggle();
-		}
+		cond (key.which,
+			[10 // return
+			,13 // enter
+			,32 // spacebar
+			,34 // page down
+			,39 // rightkey
+			,40], // downkey
+			function () {go('next');},
+			[33 // page up
+			,37 // leftkey
+			,38 // upkey
+			, 8], // backspace
+			function () {go('prev');},
+			36, // home
+				function () { go(0); },
+			35, // end
+				function () { go(slideCount - 1);},
+			67, // c
+				function () {},
+			79, // o
+				function () { $('.outline').toggle(); },
+				function () { }
+		)();
 		return false;
 	}
 	// Key trap fix, new function body for trap()

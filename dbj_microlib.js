@@ -6,10 +6,8 @@
 */
 
 (function (undefined) {
-
-	if (undefined === window.dbj) dbj = {};
-
-
+	if (undefined === window.dbj)
+		dbj = {};
 	/*
 	Defult cond allows users to compare initial values with other values of the same type
 	or arrays of values of the same type. Order is "first found, first served". Example:
@@ -31,12 +29,15 @@
 		with the input value of the same type
 		this works for all types, because it uses function dbj.EQ.rathe(b, a) 
 		Example:
-				default_comparator( 1, [3,2,1] ) --> true
+		default_comparator( 1, [3,2,1] ) --> true
 		*/
 		var default_comparator = function (a, b) {
-			if (!dbj.type.isArray(b))
-				return dbj.EQ.rathe(a, b);
-			return default_comparator(a, b[b.indexOf(a)]);
+			if (!dbj.type.isArray(a) && dbj.type.isArray(b))
+			// try to find a in array b and then compare the values
+			//TODO: this uses [].indexOf() which works only for scalar types
+			// 
+					return default_comparator(a, b[b.indexOf(a)]);
+			return dbj.EQ.rathe(a, b);
 		};
 
 		return function (v) {

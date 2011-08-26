@@ -6,12 +6,14 @@ A little front-end to qunit, depends on:
 http://github.com/jquery/qunit/raw/master/qunit/qunit.css
 http://github.com/jquery/qunit/raw/master/qunit/qunit.js
 
+which have to be downloaded and used localy!
+
 */
-/* ensure no dependancy on dbj.lib.js */
+/* ensure no interaction woth dbj.lib.js */
     (function () {
         var HOP = Object.prototype.hasOwnProperty;
-        dbj = {
-        toString : function () { return "tiny dbj  lib for qunit testing. $Revision: 6 $" },
+        dbj_qunit = {
+        toString : function () { return "tiny dbj_qunit  lib for qunit testing. $Revision: 6 $" },
         try_n_times: function (callback, times_, delay_) {
             /*
             try N times with delay between, 
@@ -64,7 +66,7 @@ http://github.com/jquery/qunit/raw/master/qunit/qunit.js
     }
 }());
 //-------------------------------------------------------------------------------------
-// DBJ qunit front-end
+// dbj_qunit qunit front-end
     (function (window, undefined) {
 
         var call_in_loop = function (fp, howlong) {
@@ -141,22 +143,22 @@ http://github.com/jquery/qunit/raw/master/qunit/qunit.js
     })(window);
     //-------------------------------------------------------------------------------------
     // tests have to be assigned to "tests" global var
-    dbj.addListener("load", function () {
+    dbj_qunit.addListener("load", function () {
 
-        dbj.try_n_times(function () { return ! dbj.isEmpty(window.QUnit); });
+        dbj_qunit.try_n_times(function () { return ! dbj_qunit.isEmpty(window.QUnit); });
 
-        if (dbj.isEmpty(window.QUnit)) {
-            return alert("dbj.qunit TEST object needs QUnit to work");
+        if (dbj_qunit.isEmpty(window.QUnit)) {
+            return alert("dbj_qunit.qunit TEST object needs QUnit to work");
         }
-        if (dbj.isEmpty(window.TEST)) {
-            return alert("dbj.qunit TEST object needs global 'TEST' object to work");
+        if (dbj_qunit.isEmpty(window.TEST)) {
+            return alert("dbj_qunit.qunit TEST object needs global 'TEST' object to work");
         }
-        if (dbj.isEmpty(top.tests)) {
-            return alert("dbj.qunit TEST object needs global 'tests' object to work");
+        if (dbj_qunit.isEmpty(top.tests)) {
+            return alert("dbj_qunit.qunit TEST object needs global 'tests' object to work");
         }
         try {
             TEST.load(top.tests);
         } catch (x) {
-            top.alert("ERROR! from dbj.qunit.js TEST.onload(): " + x + "\n\n" + x.message);
+            top.alert("ERROR! from dbj_qunit.qunit.js TEST.onload(): " + x + "\n\n" + x.message);
         }
     });

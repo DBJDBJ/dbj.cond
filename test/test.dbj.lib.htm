@@ -1,0 +1,26 @@
+﻿<!DOCTYPE HTML >
+<html>
+<head>
+<title>DBJ(tm) QUNIT Tests</title>
+<link href="qunit.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<h1 id="qunit-header">DBJ&trade;&nbsp;JavaScript Foundation Mechanisms (FM)</h1>
+<h2 id="qunit-banner"></h2>
+<h2 id="qunit-userAgent"></h2>
+<ol id="qunit-tests"></ol>
+</body>
+<script type="text/javascript" >
+	var crazyLoader = function () {
+		/* just slap the script tag in the page wherever that might be */
+		for (var i = 0, L = arguments.length; i < L; i++) {
+			document.write("<script type='text/javascript' src='" + arguments[i] + "' ></" + "script>");
+		};
+	}
+</script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript" src="qunit.js" ></script>
+<script type="text/javascript" src="../dbj_microlib.js" ></script>
+<script type="text/javascript" src="test.dbj.lib.js" ></script>
+<script type="text/javascript" src="dbj.qunit.js" ></script>
+</html>

@@ -3,7 +3,7 @@ tests for defauly.htm + dbj.qunit.js
 */
 top.tests = {
 	"Language Services": {  // begin module "DBJS"
-	    "dbj.condex for the simplest comparisons":
+		"dbj.condex for the simplest comparisons":
 		[
 		    [function () { return dbj.condex(1, 1, "A", 2, "B", "C"); }, "A"],
             [function () { return dbj.condex(7, 1, "A", 2, "B", "C"); }, "C"],
@@ -17,7 +17,16 @@ top.tests = {
             ],
 		"complex dbj conditioners": [
            [function () {
-           	var d1 = new Date(), d2 = new Date(1959,7,3);
+           	var f1 = function () { return 4; }, f2 = function () { return 5; }, 
+			f3 = function () { return 3; }, f5 = function () { return 5; }, f6 = function () { return 6; };
+           	return dbj.cond(f1, f1, f3, f2, f5, f6)();
+           }, 3],
+           [function () {
+           	var f1 = function () { return 4; }, f2 = function () { return 5; };
+           	return dbj.cond(f1, f1, "A", f2, "B", "C");
+           }, "A"],
+           [function () {
+           	var d1 = new Date(), d2 = new Date(1959, 7, 3);
            	return dbj.cond(d1, d1, "A", d2, "B", "C");
            }, "A"],
            [function () { return dbj.cond(/./, /./, "A", /.[a,A]?/, "B", "C"); }, "A"],

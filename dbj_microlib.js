@@ -13,14 +13,11 @@
 	or arrays of values of the same type. Order is "first found, first served". Example:
 
 	dbj.cond( 1, 1, "A", 2, "B", "C") returns "A"
-
 	dbj.cond( 1, [3,2,1],"A", 2, "B", "C") returns "A" , 1 is found first in [3,2,1]
 
-	only intrinisc types can be compared meaningfully: that is arrays and objects can not be compared. 
-	as in javascript this is the default behavior:
+	any types can be compared meaningfully. For example
 
-	[1,2] === [1,2] yields false
-	{a:1} === {a:1 } yoelds false
+	dbj.cond( /./, /./, "A", /$/, "B", "C") returns "A"
 
 	*/
 	dbj.cond = (function () {
@@ -32,11 +29,10 @@
 		default_comparator( 1, [3,2,1] ) --> true
 		*/
 		var default_comparator = function (a, b) {
+			// try to find a in array b 
 			if (!dbj.type.isArray(a) && dbj.type.isArray(b))
-			// try to find a in array b and then compare the values
-			//TODO: this uses [].indexOf() which works only for scalar types
-			// 
-					return default_comparator(a, b[b.indexOf(a)]);
+				return default_comparator(a, b[indexOfanything(b, a)]);
+			// and then compare the values
 			return dbj.EQ.rathe(a, b);
 		};
 
@@ -50,17 +46,13 @@
 	/* see the usage in dbj.conex */
 	var cond_comparator = null;
 	/*
-	condex allows for comparison of "anything to anything"
-
-	condex( {a:1}, {a:1}, "A", {b:2}, "B", "C") returns "A"
-
-	NOTE: "anything" but functions results that is
+	condex is quick and simple since it can test for equality of only simple types
 	*/
 	dbj.condex = (function () {
 		return function () {
 			try {
-				cond_comparator = dbj.EQ.rathe;
-				return dbj.cond.call(Array.prototype.slice.apply(arguments));
+				cond_comparator = function (a, b) { return a === b; };
+				return dbj.cond.apply(null, Array.prototype.slice.apply(arguments));
 			} finally {
 				cond_comparator = null;
 			}
@@ -74,18 +66,10 @@
                 ? "undefined" : o === null
                 ? "null" : (Object.prototype.toString.call(o).match(/\w+/g)[1]).toLowerCase();
 	};
-	dbj.type.isObject = function (o) {
-		return "object" === dbj.type(o);
-	}
-	dbj.type.isFunction = function (o) {
-		return "function" === dbj.type(o);
-	}
-	dbj.type.isArray = function (o) {
-		return "array" === dbj.type(o);
-	}
-	dbj.type.isString = function (o) {
-		return "string" === dbj.type(o);
-	}
+	dbj.type.isObject = function (o) { return "object" === dbj.type(o); }
+	dbj.type.isFunction = function (o) { return "function" === dbj.type(o); }
+	dbj.type.isArray = function (o) { return "array" === dbj.type(o); }
+	dbj.type.isString = function (o) { return "string" === dbj.type(o); }
 
 	/*--------------------------------------------------------------------------------------------*/
 	if ("function" != typeof "".format)
@@ -98,38 +82,37 @@
 		}
 	/*
 	https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
+	changed so that it works for "everything"
 	*/
-	if ("function" !== typeof Array.prototype.indexOf) {
-		Array.prototype.indexOf = function (searchElement /*, fromIndex */) {
-			"use strict";
-			if (this === void 0 || this === null) {
-				throw new TypeError();
-			}
-			var t = Object(this);
-			var len = t.length >>> 0;
-			if (len === 0) {
-				return -1;
-			}
-			var n = 0;
-			if (arguments.length > 0) {
-				n = Number(arguments[1]);
-				if (n !== n) { // shortcut for verifying if it's NaN
-					n = 0;
-				} else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0)) {
-					n = (n > 0 || -1) * Math.floor(Math.abs(n));
-				}
-			}
-			if (n >= len) {
-				return -1;
-			}
-			var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
-			for (; k < len; k++) {
-				if (k in t && t[k] === searchElement) {
-					return k;
-				}
-			}
+	var indexOfanything = function (array, searchElement /*, fromIndex */) {
+		"use strict";
+		if (!dbj.type.isArray(array)) {
+			throw new Error(0xFF, "indexOfanything() : bad array argument");
+		}
+		var t = Object(array), len = t.length >>> 0;
+		if (len === 0) {
 			return -1;
 		}
+		// if fromIndex is used as 3-rd argument
+		var n = 0;
+		if (arguments.length > 0) {
+			n = Number(arguments[2]);
+			if (n !== n) { // shortcut for verifying if it's NaN
+				n = 0;
+			} else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0)) {
+				n = (n > 0 || -1) * Math.floor(Math.abs(n));
+			}
+		}
+		if (n >= len) {
+			return -1;
+		}
+		var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
+		for (; k < len; k++) {
+			if (k in t && t[k] === searchElement) {
+				return k;
+			}
+		}
+		return -1;
 	}
 	/*--------------------------------------------------------------------------------------------*/
 

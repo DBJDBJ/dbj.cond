@@ -16,11 +16,8 @@ which have to be downloaded and used localy!
         toString : function () { return "tiny dbj_qunit  lib for qunit testing. $Revision: 6 $" },
         try_n_times: function (callback, times_, delay_) {
             /*
-            try N times with delay between, 
-            break if callback returns true
-            defaults:    
-            no of times : 10     
-            uSec between times : 1 
+            try N times with delay between, break if callback returns true
+            defaults: no of times : 10     uSec between times : 1 
             */
             var tid, times = times_ || 10, delay = delay_ || 1;
             function _internal() {

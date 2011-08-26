@@ -3,18 +3,26 @@ tests for defauly.htm + dbj.qunit.js
 */
 top.tests = {
 	"Language Services": {  // begin module "DBJS"
+	    "dbj.condex for the simplest comparisons":
+		[
+		    [function () { return dbj.condex(1, 1, "A", 2, "B", "C"); }, "A"],
+            [function () { return dbj.condex(7, 1, "A", 2, "B", "C"); }, "C"],
+        ],
 		"dbj.conditioners":
-                    [
-                        [function () { return dbj.cond(1, 1, "A", 2, "B", "C"); }, "A"],
-                        [function () { return dbj.cond(7, 1, "A", 2, "B", "C"); }, "C"],
-                        [function () { return dbj.cond(1, [3, 2, 1], "A", 7, "B", "C"); }, "A"],
-                        [function () { return dbj.cond(7, [3, 2, 1], "A", 7, "B", "C"); }, "B"],
-                        [function () { return dbj.cond(9, [3, 2, 1], "A", 7, "B", "C"); }, "C"],
-                        [function () { return dbj.cond([4,3,2,1], [3, 2, 1], "A", 7, "B", "C"); }, "C"]
-                    ],
+            [
+                [function () { return dbj.cond(1, [3, 2, 1], "A", 7, "B", "C"); }, "A"],
+                [function () { return dbj.cond(7, [3, 2, 1], "A", 7, "B", "C"); }, "B"],
+                [function () { return dbj.cond(9, [3, 2, 1], "A", 7, "B", "C"); }, "C"],
+                [function () { return dbj.cond([4, 3, 2, 1], [3, 2, 1], "A", 7, "B", "C"); }, "C"]
+            ],
 		"complex dbj conditioners": [
+           [function () {
+           	var d1 = new Date(), d2 = new Date(1959,7,3);
+           	return dbj.cond(d1, d1, "A", d2, "B", "C");
+           }, "A"],
+           [function () { return dbj.cond(/./, /./, "A", /.[a,A]?/, "B", "C"); }, "A"],
            [function () { return dbj.cond([1, 2, 3], [1, 2, 3], "A", 7, "B", "C"); }, "A"],
-           [function () { return dbj.cond({a:7}, [1, 2, 3], "A", { a: 7 }, "B", "C"); }, "B"]
+           [function () { return dbj.cond({ a: 7 }, [1, 2, 3], "A", { a: 7 }, "B", "C"); }, "B"]
 		]
 	}, // eof module "DBJS"
 	"Utilities": {

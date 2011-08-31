@@ -59,13 +59,16 @@
 		}
 	} ());
 
-	dbj.type = function (o) {
-		/// NOTE: for DOM objects methods, js function bellow will return "object"
-		///       in IE < 9. example: window.alert returns "object"
-		return o === undefined
-                ? "undefined" : o === null
-                ? "null" : (Object.prototype.toString.call(o).match(/\w+/g)[1]).toLowerCase();
-	};
+	dbj.type = (function () {
+		var rx = /\w+/g, tos = Object.prototype.toString;
+		return function (o) {
+			if (o === undefined) return "undefined";
+			if (o === null) return "null";
+			if ("number" === typeof (o) && isNaN(o)) return "nan";
+			return (tos.call(o).match(rx)[1]).toLowerCase();
+		}
+	} ());
+
 	dbj.type.isObject = function (o) { return "object" === dbj.type(o); }
 	dbj.type.isFunction = function (o) { return "function" === dbj.type(o); }
 	dbj.type.isArray = function (o) { return "array" === dbj.type(o); }
@@ -169,6 +172,7 @@ EQ.rathe = function () {
 			}
 		}
 
+		// TODO! Check that dbj.type() returns these strings
 		return {
 			"string" : EQ.useStrictEquality,
 			"boolean" : EQ.useStrictEquality,

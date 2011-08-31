@@ -41,6 +41,7 @@ top.tests = {
                 [function () { return "{99}".format("!"); }, "{99}"]
               ],
 		"DBJ dbj.type system": [
+                [function () { return dbj.type(NaN); }, "nan"],
                 [function () { return dbj.type([]); }, "array"],
                 [function () { return dbj.type(true); }, "boolean"],
                 [function () { return dbj.type(new Date()); }, "date"],

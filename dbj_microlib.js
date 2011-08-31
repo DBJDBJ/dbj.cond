@@ -11,22 +11,33 @@
 	/*
 	Defult cond allows users to compare initial values with other values of the same type
 	or arrays of values of the same type. Order is "first found, first served". Example:
-
-	dbj.cond( 1, 1, "A", 2, "B", "C") returns "A"
-	dbj.cond( 1, [3,2,1],"A", 2, "B", "C") returns "A" , 1 is found first in [3,2,1]
+		dbj.cond( 1, 1, "A", 2, "B", "C") returns "A"
+		dbj.cond( 1, [3,2,1],"A", 2, "B", "C") returns "A" , 1 is found first in [3,2,1]
 
 	any types can be compared meaningfully. For example
+		dbj.cond( /./, /./, "A", /$/, "B", "C") returns "A"
 
-	dbj.cond( /./, /./, "A", /$/, "B", "C") returns "A"
+	function types are also compared and not called as functions
+		dbj.cond( function() {return 1;}, function(){return 1}, "A", function(){return 1}, "B", "C") returns "A"
 
+      this behavior allows for functions dispatching. Example: 
+
+	  function disptacher ( fx ) {
+           return dbj.cond( fx, f1, f2, f3, f4, f5 ) ;
+		   // returns f2,f4 or f5 if neither f1 or f3 are equal to fx
+	  }
 	*/
 	dbj.cond = (function () {
 		/*
-		defualt comparator allows for arrays of values to be compared 
-		with the input value of the same type
+		comparator in essence defines the behaviour of the cond() 
 		this works for all types, because it uses function dbj.EQ.rathe(b, a) 
-		Example:
+		input value is the left side in the comparison
+		defualt comparator allows for arrays of values to be compared 
+		with the single input value of the same type
+		Examples:
 		default_comparator( 1, [3,2,1] ) --> true
+		default_comparator( function (){ return 1;}, [3,2,1] ) --> true
+		default_comparator( [3,2,1], [3,2,1] ) --> true
 		*/
 		var default_comparator = function (a, b) {
 			// try to find a in array b 

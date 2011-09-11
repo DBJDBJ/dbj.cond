@@ -11,26 +11,26 @@
 	/*
 	Defult cond allows users to compare initial values with other values of the same type
 	or arrays of values of the same type. Order is "first found, first served". Example:
-		dbj.cond( 1, 1, "A", 2, "B", "C") returns "A"
-		dbj.cond( 1, [3,2,1],"A", 2, "B", "C") returns "A" , 1 is found first in [3,2,1]
+	dbj.cond( 1, 1, "A", 2, "B", "C") returns "A"
+	dbj.cond( 1, [3,2,1],"A", 2, "B", "C") returns "A" , 1 is found first in [3,2,1]
 
 	any types can be compared meaningfully. For example
-		dbj.cond( /./, /./, "A", /$/, "B", "C") returns "A"
+	dbj.cond( /./, /./, "A", /$/, "B", "C") returns "A"
 
 	function types are also compared and not called as functions
-		dbj.cond( function() {return 1;}, function(){return 1}, "A", function(){return 1}, "B", "C") returns "A"
+	dbj.cond( function() {return 1;}, function(){return 1}, "A", function(){return 1}, "B", "C") returns "A"
 
-      this behavior allows for functions dispatching. Example: 
+	this behavior allows for functions dispatching. Example: 
 
-	  function disptacher ( fx ) {
-           return dbj.cond( fx, f1, f2, f3, f4, f5 ) ;
-		   // returns f2,f4 or f5 if neither f1 or f3 are equal to fx
-	  }
+	function disptacher ( fx ) {
+	return dbj.cond( fx, f1, f2, f3, f4, f5 ) ;
+	// returns f2,f4 or f5 if neither f1 or f3 are equal to fx
+	}
 	*/
 	dbj.cond = (function () {
 		/*
 		comparator in essence defines the behaviour of the cond() 
-		this works for all types, because it uses function dbj.EQ.rathe(b, a) 
+		default_comparator works for all types, because it uses function dbj.EQ.rathe(b, a) 
 		input value is the left side in the comparison
 		defualt comparator allows for arrays of values to be compared 
 		with the single input value of the same type
@@ -40,35 +40,38 @@
 		default_comparator( [3,2,1], [3,2,1] ) --> true
 		*/
 		var default_comparator = function (a, b) {
-			// try to find a in array b 
-			if (!dbj.type.isArray(a) && dbj.type.isArray(b))
-				return default_comparator(a, b[indexOfanything(b, a)]);
-			// and then compare the values
+			/* 
+			dbj 2011sep11 --- also try to find a in b if b is array regardless of what is a
+			*/
+			if (/* !dbj.type.isArray(a) && */dbj.type.isArray(b))
+				return indexOfanything(b, a) < 0 ? false : true;
+			// or just compare the values
 			return dbj.EQ.rathe(a, b);
 		};
 
 		return function (v) {
+			var comparator = dbj.condex.comparator || default_comparator;
 			for (var j = 1, L = arguments.length; j < L; j += 2) {
-				if (default_comparator(v, arguments[j])) return arguments[j + 1];
+				if (comparator(v, arguments[j])) return arguments[j + 1];
 			}
 			return (!arguments[j - 2]) ? undefined : arguments[j - 2];
 		};
 	} ());
-	/* see the usage in dbj.conex */
-	var cond_comparator = null;
 	/*
 	condex is quick and simple since it can test for equality of only simple types
 	*/
-	dbj.condex = (function () {
+	dbj.condex = (function (native_equal) {
 		return function () {
 			try {
-				cond_comparator = function (a, b) { return a === b; };
+				dbj.condex.comparator = native_equal;
 				return dbj.cond.apply(null, Array.prototype.slice.apply(arguments));
 			} finally {
-				cond_comparator = null;
+				dbj.condex.comparator = null;
 			}
 		}
-	} ());
+	} (function (a, b) { return a === b; }));
+	/* see the usage in dbj.condex */
+	dbj.condex.comparator = null;
 
 	dbj.type = (function () {
 		var rx = /\w+/g, tos = Object.prototype.toString;
@@ -96,7 +99,8 @@
 		}
 	/*
 	https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
-	changed so that it works for "everything"
+	changed so that it works for "everything" by using dbj.E.rathe() instead of "==="
+	also not implemented as array extension but private function instead
 	*/
 	var indexOfanything = function (array, searchElement /*, fromIndex */) {
 		"use strict";
@@ -122,7 +126,8 @@
 		}
 		var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
 		for (; k < len; k++) {
-			if (k in t && t[k] === searchElement) {
+			/* dbj 2011SEP11 replaced simple native '===' with dbj.EQ.rathe() */
+			if (k in t && dbj.EQ.rathe(t[k], searchElement) /* t[k] === searchElement */) {
 				return k;
 			}
 		}

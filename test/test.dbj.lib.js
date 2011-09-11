@@ -31,6 +31,7 @@ top.tests = {
            }, "A"],
            [function () { return dbj.cond(/./, /./, "A", /.[a,A]?/, "B", "C"); }, "A"],
            [function () { return dbj.cond([1, 2, 3], [1, 2, 3], "A", 7, "B", "C"); }, "A"],
+           [function () { return dbj.cond([1, 2, 3], [1, [2,3], [1,2,3]], "A", 7, "B", "C"); }, "A"],
            [function () { return dbj.cond({ a: 7 }, [1, 2, 3], "A", { a: 7 }, "B", "C"); }, "B"]
 		]
 	}, // eof module "DBJS"

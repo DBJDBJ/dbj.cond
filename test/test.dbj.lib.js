@@ -2,20 +2,36 @@
 tests for defauly.htm + dbj.qunit.js
 */
 top.tests = {
-	"Language Services": {  // begin module "DBJS"
-		"dbj.condex for the simplest comparisons":
+    "Basic dbj.condxx()" : {
+		"dbj.condeq() for the simplest native equality comparisons":
 		[
-		    [function () { return dbj.condex(1, 1, "A", 2, "B", "C"); }, "A"],
-            [function () { return dbj.condex(7, 1, "A", 2, "B", "C"); }, "C"],
+		    [function () { return dbj.condeq(1, 1, "A", 2, "B", "C"); }, "A"],
+            [function () { return dbj.condeq(7, 1, "A", 2, "B", "C"); }, "C"],
         ],
-		"dbj.conditioners":
-            [
+		"dbj.condnq() for the simplest native non-equality comparisons":
+		[
+		    [function () { return dbj.condnq(1, 1, "A", 2, "B", "C"); }, "B"],
+            [function () { return dbj.condnq(7, 7, "A", 7, "B", "C"); }, "C"],
+        ],
+		"dbj.condgt() for the simplest native greater than comparisons":
+		[
+		    [function () { return dbj.condgt(1, 1, "A", 2, "B", "C"); }, "C"],
+            [function () { return dbj.condgt(7, 7, "A", 2, "B", "C"); }, "B"],
+        ],
+		"dbj.condlt() for the simplest native less than comparisons":
+		[
+		    [function () { return dbj.condlt(1, 1, "A", 2, "B", "C"); }, "B"],
+            [function () { return dbj.condlt(7, 7, "A", 4, "B", "C"); }, "C"],
+        ]
+	},
+	"dbj.cond() by defauylt uses complex comparator for equality comparisons of any types": {  
+		"dbj.cond() simpler uses": [
                 [function () { return dbj.cond(1, [3, 2, 1], "A", 7, "B", "C"); }, "A"],
                 [function () { return dbj.cond(7, [3, 2, 1], "A", 7, "B", "C"); }, "B"],
                 [function () { return dbj.cond(9, [3, 2, 1], "A", 7, "B", "C"); }, "C"],
                 [function () { return dbj.cond([4, 3, 2, 1], [3, 2, 1], "A", 7, "B", "C"); }, "C"]
             ],
-		"complex dbj conditioners": [
+		"dbj.cond() more complex usage": [
            [function () {
            	var f1 = function () { return 4; }, f2 = function () { return 5; }, 
 			f3 = function () { return 3; }, f5 = function () { return 5; }, f6 = function () { return 6; };
@@ -34,7 +50,7 @@ top.tests = {
            [function () { return dbj.cond([1, 2, 3], [1, [2,3], [1,2,3]], "A", 7, "B", "C"); }, "A"],
            [function () { return dbj.cond({ a: 7 }, [1, 2, 3], "A", { a: 7 }, "B", "C"); }, "B"]
 		]
-	}, // eof module "DBJS"
+	}, // eof module
 	"Utilities": {
 		"DBJ String ulitities ": [
                 [function () { return "{0}{1}{2}".format(1, 2, 3); }, "123"],

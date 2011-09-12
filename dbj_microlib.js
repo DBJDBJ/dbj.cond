@@ -43,36 +43,79 @@
 			/* 
 			dbj 2011sep11 --- also try to find a in b if b is array regardless of what is a
 			*/
-			if (/* !dbj.type.isArray(a) && */dbj.type.isArray(b))
+			if ( !dbj.type.isArray(a) && dbj.type.isArray(b))
 				return indexOfanything(b, a) < 0 ? false : true;
 			// or just compare the values
 			return dbj.EQ.rathe(a, b);
 		};
 
 		return function (v) {
-			var comparator = dbj.condex.comparator || default_comparator;
+			var comparator = dbj.cond.comparator || default_comparator;
 			for (var j = 1, L = arguments.length; j < L; j += 2) {
 				if (comparator(v, arguments[j])) return arguments[j + 1];
 			}
 			return (!arguments[j - 2]) ? undefined : arguments[j - 2];
 		};
 	} ());
-	/*
-	condex is quick and simple since it can test for equality of only simple types
+	/* 
+	see the usage in dbj.cond 
 	*/
-	dbj.condex = (function (native_equal) {
+	dbj.cond.comparator = null;
+	/*
+	dbj.cond() using native equals behavior
+	*/
+	dbj.condeq = (function (native_equal) {
 		return function () {
 			try {
-				dbj.condex.comparator = native_equal;
+				dbj.cond.comparator = native_equal;
 				return dbj.cond.apply(null, Array.prototype.slice.apply(arguments));
 			} finally {
-				dbj.condex.comparator = null;
+				dbj.cond.comparator = null;
 			}
 		}
 	} (function (a, b) { return a === b; }));
-	/* see the usage in dbj.condex */
-	dbj.condex.comparator = null;
-
+	/*
+	dbj.cond() using native not equals behavior
+	*/
+	dbj.condnq = (function (native_not_equal) {
+		return function () {
+			try {
+				dbj.cond.comparator = native_not_equal;
+				return dbj.cond.apply(null, Array.prototype.slice.apply(arguments));
+			} finally {
+				dbj.cond.comparator = null;
+			}
+		}
+	} (function (a, b) { return a !== b; }));
+	/*
+	dbj.cond() using native less than behavior
+	*/
+	dbj.condlt = (function (native_lt) {
+		return function () {
+			try {
+				dbj.cond.comparator = native_lt;
+				return dbj.cond.apply(null, Array.prototype.slice.apply(arguments));
+			} finally {
+				dbj.cond.comparator = null;
+			}
+		}
+	} (function (a, b) { return a < b; }));
+	/*
+	dbj.cond() using native greater than behavior
+	*/
+	dbj.condgt = (function (native_gt) {
+		return function () {
+			try {
+				dbj.cond.comparator = native_gt;
+				return dbj.cond.apply(null, Array.prototype.slice.apply(arguments));
+			} finally {
+				dbj.cond.comparator = null;
+			}
+		}
+	} (function (a, b) { return a > b; }));
+	/*
+	type sub-system
+	*/
 	dbj.type = (function () {
 		var rx = /\w+/g, tos = Object.prototype.toString;
 		return function (o) {

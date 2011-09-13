@@ -11,11 +11,20 @@
 <ol id="qunit-tests"></ol>
 </body>
 <script type="text/javascript" >
+/* just slap the script tag in the page wherever that might be */
 	var crazyLoader = function () {
-		/* just slap the script tag in the page wherever that might be */
-		for (var i = 0, L = arguments.length; i < L; i++) {
-			document.write("<script type='text/javascript' src='" + arguments[i] + "' ></" + "script>");
+		var args = arguments;
+		function loader(args_idx) {
+			if (args_idx > args.length) return;
+
+			var next_script = args[args_idx + 1] ? " onload='loader(" + args[args_idx + 1] + ")' " : " ";
+
+			document.write("<script type='text/javascript' src='" + args[args_idx] +
+			                 next_script + "' ></" + "script>");
+
+			loader(args_idx + 1);
 		};
+		loader(0);
 	}
 </script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>

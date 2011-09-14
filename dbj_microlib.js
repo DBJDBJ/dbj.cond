@@ -78,35 +78,29 @@
 	/*
 	dbj.cond() using native equals behavior
 	*/
-	dbj.condeq = (function (native_equal) {
-		return function () {
-			return dbj.cond.applicator.apply(native_equal, Array.prototype.slice.apply(arguments));
-		}
-	} (function (a, b) { return a === b; }));
+	dbj.condeq = function () {
+	  return dbj.cond.applicator.apply(
+		function (a, b) { return a === b; }, Array.prototype.slice.apply(arguments));
+	} 
 	/*
 	dbj.cond() using native not equals behavior
 	*/
-	dbj.condnq = (function (native_not_equal) {
-		return function () {
-			return dbj.cond.applicator.apply(native_not_equal, Array.prototype.slice.apply(arguments));
-		}
-	} (function (a, b) { return a !== b; }));
+	dbj.condnq = function () {
+		return dbj.cond.applicator.apply(
+			function (a, b) { return a !== b; }, Array.prototype.slice.apply(arguments));
+	}
 	/*
 	dbj.cond() using native less than behavior
 	*/
-	dbj.condlt = (function (native_lt) {
-		return function () {
-			return dbj.cond.applicator.apply(native_lt, Array.prototype.slice.apply(arguments));
-		}
-	} (function (a, b) { return a < b; }));
+	dbj.condlt = function () {
+			return dbj.cond.applicator.apply(function (a, b) { return a < b; }, Array.prototype.slice.apply(arguments));
+	}
 	/*
 	dbj.cond() using native greater than behavior
 	*/
-	dbj.condgt = (function (native_gt) {
-		return function () {
-			return dbj.cond.applicator.apply(native_gt, Array.prototype.slice.apply(arguments));
-		}
-	} (function (a, b) { return a > b; }));
+	dbj.condgt = function () {
+			return dbj.cond.applicator.apply(function (a, b) { return a > b; }, Array.prototype.slice.apply(arguments));
+	}
 	/*
 	type sub-system
 	*/

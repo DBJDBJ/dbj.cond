@@ -43,9 +43,6 @@
 		default_comparator( [3,2,1], [3,2,1] ) --> true
 		*/
 		var default_comparator = function (a, b) {
-			/* 
-			dbj 2011sep11 --- also try to find a in b if b is array
-			*/
 			if (dbj.EQ.rathe(a, b)) return true;
 			if (dbj.type.isArray(b)) return indexOfanything(b, a) > -1;
 			return false;

@@ -46,17 +46,19 @@
 			/* 
 			dbj 2011sep11 --- also try to find a in b if b is array
 			*/
-			if (dbj.EQ.rathe(a, b))  return true;
+			if (dbj.EQ.rathe(a, b)) return true;
 			if (dbj.type.isArray(b)) return indexOfanything(b, a) > -1;
-				return false;
+			return false;
 		};
 
 		return function (v) {
-			var comparator = dbj.cond.comparator || default_comparator;
-			for (var j = 1, L = arguments.length; j < L; j += 2) {
+		    if ( ! dbj.isEven( arguments.length )) throw "dbj.cond() not given even number of arguments" ;
+			var comparator = dbj.cond.comparator || default_comparator,
+			    j = 1, L = arguments.length; 
+			for (; j < L; j += 2) {
 				if (comparator(v, arguments[j])) return arguments[j + 1];
 			}
-			return (!arguments[j - 2]) ? undefined : arguments[j - 2];
+			return arguments[L - 1];
 		};
 	} ());
 	/* 

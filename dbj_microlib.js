@@ -52,30 +52,35 @@
 		};
 
 		return function (v) {
-		    if ( ! dbj.isEven( arguments.length )) throw "dbj.cond() not given even number of arguments" ;
+			if (!dbj.isEven(arguments.length)) throw "dbj.cond() not given even number of arguments";
 			var comparator = dbj.cond.comparator || default_comparator,
-			    j = 1, L = arguments.length; 
+			    j = 1, L = arguments.length;
 			for (; j < L; j += 2) {
 				if (comparator(v, arguments[j])) return arguments[j + 1];
 			}
 			return arguments[L - 1];
 		};
 	} ());
-	/* 
-	see the usage in dbj.cond 
-	*/
+	/* see the usage in dbj.cond */
 	dbj.cond.comparator = null;
+	/*
+	Apply the comparator of your choice. Must call with apply()
+	*/
+	dbj.cond.applicator = function () {
+	      if ( ! dbj.type.isFunction( this )) throw "this in the applicator must be the comparator" ;
+			try {
+				dbj.cond.comparator = this ;
+				return dbj.cond.apply(null, Array.prototype.slice.apply(arguments));
+	     } finally {
+	     	dbj.cond.comparator = null;
+	     }
+	    }
 	/*
 	dbj.cond() using native equals behavior
 	*/
 	dbj.condeq = (function (native_equal) {
 		return function () {
-			try {
-				dbj.cond.comparator = native_equal;
-				return dbj.cond.apply(null, Array.prototype.slice.apply(arguments));
-			} finally {
-				dbj.cond.comparator = null;
-			}
+			return dbj.cond.applicator.apply(native_equal, Array.prototype.slice.apply(arguments));
 		}
 	} (function (a, b) { return a === b; }));
 	/*
@@ -83,12 +88,7 @@
 	*/
 	dbj.condnq = (function (native_not_equal) {
 		return function () {
-			try {
-				dbj.cond.comparator = native_not_equal;
-				return dbj.cond.apply(null, Array.prototype.slice.apply(arguments));
-			} finally {
-				dbj.cond.comparator = null;
-			}
+			return dbj.cond.applicator.apply(native_not_equal, Array.prototype.slice.apply(arguments));
 		}
 	} (function (a, b) { return a !== b; }));
 	/*
@@ -96,12 +96,7 @@
 	*/
 	dbj.condlt = (function (native_lt) {
 		return function () {
-			try {
-				dbj.cond.comparator = native_lt;
-				return dbj.cond.apply(null, Array.prototype.slice.apply(arguments));
-			} finally {
-				dbj.cond.comparator = null;
-			}
+			return dbj.cond.applicator.apply(native_lt, Array.prototype.slice.apply(arguments));
 		}
 	} (function (a, b) { return a < b; }));
 	/*
@@ -109,12 +104,7 @@
 	*/
 	dbj.condgt = (function (native_gt) {
 		return function () {
-			try {
-				dbj.cond.comparator = native_gt;
-				return dbj.cond.apply(null, Array.prototype.slice.apply(arguments));
-			} finally {
-				dbj.cond.comparator = null;
-			}
+			return dbj.cond.applicator.apply(native_gt, Array.prototype.slice.apply(arguments));
 		}
 	} (function (a, b) { return a > b; }));
 	/*

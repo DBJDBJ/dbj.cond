@@ -7,7 +7,10 @@
 
 (function (undefined) {
 	if (undefined === window.dbj)
-		dbj = {};
+		dbj = { isEven: function (value) {
+			return (value % 2 == 0);
+		}
+		};
 	/*
 	Defult cond allows users to compare initial values with other values of the same type
 	or arrays of values of the same type. Order is "first found, first served". Example:
@@ -41,12 +44,11 @@
 		*/
 		var default_comparator = function (a, b) {
 			/* 
-			dbj 2011sep11 --- also try to find a in b if b is array regardless of what is a
+			dbj 2011sep11 --- also try to find a in b if b is array
 			*/
-			if ( !dbj.type.isArray(a) && dbj.type.isArray(b))
-				return indexOfanything(b, a) < 0 ? false : true;
-			// or just compare the values
-			return dbj.EQ.rathe(a, b);
+			if (dbj.EQ.rathe(a, b))  return true;
+			if (dbj.type.isArray(b)) return indexOfanything(b, a) > -1;
+				return false;
 		};
 
 		return function (v) {
@@ -119,7 +121,7 @@
 	dbj.type = (function () {
 		var rx = /\w+/g, tos = Object.prototype.toString;
 		return function (o) {
-			if (o === undefined) return "undefined";
+			if (typeof o === "undefined") return "undefined";
 			if (o === null) return "null";
 			if ("number" === typeof (o) && isNaN(o)) return "nan";
 			return (tos.call(o).match(rx)[1]).toLowerCase();
@@ -145,10 +147,13 @@
 	changed so that it works for "everything" by using dbj.E.rathe() instead of "==="
 	also not implemented as array extension but private function instead
 	*/
-	var indexOfanything = function (array, searchElement /*, fromIndex */) {
+	var find_index = function (arg) {
 		"use strict";
+		var array = arg["array"], searchElement = arg["searchElement"],
+			fromIndex = arg["fromIndex"], comparator = arg["comparator"];
+
 		if (!dbj.type.isArray(array)) {
-			throw new Error(0xFF, "indexOfanything() : bad array argument");
+			throw new Error(0xFF, "find_index() : bad array argument");
 		}
 		var t = Object(array), len = t.length >>> 0;
 		if (len === 0) {
@@ -156,8 +161,8 @@
 		}
 		// if fromIndex is used as 3-rd argument
 		var n = 0;
-		if (arguments.length > 0) {
-			n = Number(arguments[2]);
+		if (fromIndex) {
+			n = Number(fromIndex);
 			if (n !== n) { // shortcut for verifying if it's NaN
 				n = 0;
 			} else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0)) {
@@ -170,12 +175,28 @@
 		var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
 		for (; k < len; k++) {
 			/* dbj 2011SEP11 replaced simple native '===' with dbj.EQ.rathe() */
-			if (k in t && dbj.EQ.rathe(t[k], searchElement) /* t[k] === searchElement */) {
+			if (k in t && comparator(t[k], searchElement)) {
 				return k;
 			}
 		}
 		return -1;
 	}
+
+	/*--------------------------------------------------------------------------------------------*/
+	var indexOfanything = function (array, searchElement /*, fromIndex */) {
+		return find_index({ "array": array, "searchElement": searchElement,
+			"fromIndex": typeof (fromIndex) !== "undefined" ? fromIndex : null,
+			"comparator": dbj.EQ.rathe
+		});
+	}
+	/*--------------------------------------------------------------------------------------------*/
+	if (!dbj.type.isFunction([].indexOf))
+		Array.prototype.indexOf = function (searchElement /*, fromIndex */) {
+			return find_index({ "array": this, "searchElement": searchElement,
+				"fromIndex": typeof (fromIndex) !== "undefined" ? fromIndex : null,
+				"comparator": function (a, b) { return a === b; }
+			});
+		}
 	/*--------------------------------------------------------------------------------------------*/
 
 } ());

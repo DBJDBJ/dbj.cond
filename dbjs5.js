@@ -28,7 +28,7 @@ and GPL (GPL-LICENSE.txt) licenses.
 	});
 	/*--------------------------------------------------------------------------------------------*/
 
-	var cur, slideCount, $body = $(document.body), $head = $("head");
+	var cur, slideCount, $body = $(document.body), $head = $("head"), $document = $(document);
 
 	/* initialize the jqs5 rendering */
 	window.jqs5 = {
@@ -108,7 +108,7 @@ and GPL (GPL-LICENSE.txt) licenses.
 	function fontScale() {
 		var vScale = 1.5 * 22,  // both yield 32 (after rounding) at 1024x768
 		    hScale = 1.5 * 32,  // perhaps should auto-calculate based on theme's declared value?
-			vSize = $(document).height(), hSize = $(document).width(),
+			vSize = $document.height(), hSize = $document.width(),
 		    newSize = Math.min(Math.round(vSize / vScale), Math.round(hSize / hScale));
 
 		$body.css("font-size", parseInt(newSize) + 'px');
@@ -119,9 +119,9 @@ and GPL (GPL-LICENSE.txt) licenses.
 	}
 	/*
 	function fontSize(value) {
-		var ssstr = "<style type='text/css' media='screen, projection' id='dbjs5_font_size'>body {font-size:{0} !important;}</style>";
-		$("#dbjs5_font_size", $head).remove();
-		$head.append($(ssstr.format(value)));
+	var ssstr = "<style type='text/css' media='screen, projection' id='dbjs5_font_size'>body {font-size:{0} !important;}</style>";
+	$("#dbjs5_font_size", $head).remove();
+	$head.append($(ssstr.format(value)));
 	}
 	*/
 	// 'keys' code adapted from MozPoint (http://mozpoint.mozdev.org/)
@@ -185,7 +185,12 @@ and GPL (GPL-LICENSE.txt) licenses.
 
 	/* self ignition */
 	$(function () {
-		jqs5.init();
+		try {
+			$body.hide();
+			jqs5.init();
+		} finally {
+			$body.show();
+		}
 	});
 
 } ());

@@ -11,7 +11,7 @@ top.tests = {
 		"dbj.condnq() for the simplest native non-equality comparisons":
 		[
 		    [function () { return dbj.condnq(1, 1, "A", 2, "B", "C"); }, "B"],
-            [function () { return dbj.condnq(7, 7, "A", 7, "B", "C"); }, "C"],
+            [function () { return dbj.condnq(1, 1, "A", 1, "B", "C"); }, "C"],
         ],
 		"dbj.condgt() for the simplest native greater than comparisons":
 		[

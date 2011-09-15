@@ -75,10 +75,10 @@ top.tests = {
                 [function () { return dbj.type(null); }, "null"]
             ],
 		"DBJ dbj.type system isXXX functions ": [
-                [function () { return dbj.type.isArray([]); }, true],
-                [function () { return dbj.type.isFunction(Function); }, true],
-                [function () { return dbj.type.isObject({}); }, true],
-                [function () { return dbj.type.isString("."); }, true]
+                [function () { return dbj.isArray([]); }, true],
+                [function () { return dbj.isFunction(Function); }, true],
+                [function () { return dbj.isObject({}); }, true],
+                [function () { return dbj.isString("."); }, true]
             ]
 	}
 }         // eof tests

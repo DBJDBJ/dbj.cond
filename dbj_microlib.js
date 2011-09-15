@@ -6,10 +6,42 @@
 */
 
 (function (undefined) {
-	if (undefined === window.dbj)
-		dbj = { isEven: function (value) {
-			return (value % 2 == 0);
+
+	var oprot = Object.prototype,
+		aprot = Array.prototype,
+		sprot = String.prototype;
+
+	/*--------------------------------------------------------------------------------------------*/
+	if ("function" != typeof "".format)
+		String.prototype.format = function () {
+			var args = arguments;
+			return this.replace(/\{(\d|\d\d)\}/g, function ($0) {
+				var idx = 1 * $0.match(/\d+/)[0]; return args[idx] !== undefined ? args[idx] : (args[idx] === "" ? "" : $0);
+			}
+            );
 		}
+
+	/*--------------------------------------------------------------------------------------------*/
+		if (undefined === window.dbj)
+		dbj = {
+			toString: function () { return "DBJ.ORG JavaScript MicroLib 1.0.0"; },
+			isEven: function (value) { return (value % 2 == 0); },
+
+			/* type sub-system */
+			type: (function () {
+				var rx = /\w+/g, tos = oprot.toString;
+				return function (o) {
+					if (typeof o === "undefined") return "undefined";
+					if (o === null) return "null";
+					if ("number" === typeof (o) && isNaN(o)) return "nan";
+					return (tos.call(o).match(rx)[1]).toLowerCase();
+				}
+			} ()),
+			isObject: function (o) { return "object" === dbj.type(o); },
+			isFunction: function (o) { return "function" === dbj.type(o); },
+			isArray: function (o) { return "array" === dbj.type(o); },
+			isString: function (o) { return "string" === dbj.type(o); }
+
 		};
 	/*
 	Defult cond allows users to compare initial values with other values of the same type
@@ -44,7 +76,7 @@
 		*/
 		var default_comparator = function (a, b) {
 			if (dbj.EQ.rathe(a, b)) return true;
-			if (dbj.type.isArray(b)) return indexOfanything(b, a) > -1;
+			if (dbj.isArray(b)) return indexOfanything(b, a) > -1;
 			return false;
 		};
 
@@ -64,67 +96,41 @@
 	Apply the comparator of your choice. Must call with apply()
 	*/
 	dbj.cond.applicator = function () {
-	      if ( ! dbj.type.isFunction( this )) throw "this in the applicator must be the comparator" ;
-			try {
-				dbj.cond.comparator = this ;
-				return dbj.cond.apply(null, Array.prototype.slice.apply(arguments));
-	     } finally {
-	     	dbj.cond.comparator = null;
-	     }
-	    }
+		if (!dbj.isFunction(this)) throw "this in the applicator must be the comparator";
+		try {
+			dbj.cond.comparator = this;
+			return dbj.cond.apply(null, aprot.slice.apply(arguments));
+		} finally {
+			dbj.cond.comparator = null;
+		}
+	}
 	/*
 	dbj.cond() using native equals behavior
 	*/
 	dbj.condeq = function () {
-	  return dbj.cond.applicator.apply(
-		function (a, b) { return a === b; }, Array.prototype.slice.apply(arguments));
-	} 
+		return dbj.cond.applicator.apply(
+		function (a, b) { return a === b; }, aprot.slice.apply(arguments));
+	}
 	/*
 	dbj.cond() using native not equals behavior
 	*/
 	dbj.condnq = function () {
 		return dbj.cond.applicator.apply(
-			function (a, b) { return a !== b; }, Array.prototype.slice.apply(arguments));
+			function (a, b) { return a !== b; }, aprot.slice.apply(arguments));
 	}
 	/*
 	dbj.cond() using native less than behavior
 	*/
 	dbj.condlt = function () {
-			return dbj.cond.applicator.apply(function (a, b) { return a < b; }, Array.prototype.slice.apply(arguments));
+		return dbj.cond.applicator.apply(function (a, b) { return a < b; }, aprot.slice.apply(arguments));
 	}
 	/*
 	dbj.cond() using native greater than behavior
 	*/
 	dbj.condgt = function () {
-			return dbj.cond.applicator.apply(function (a, b) { return a > b; }, Array.prototype.slice.apply(arguments));
+		return dbj.cond.applicator.apply(function (a, b) { return a > b; }, aprot.slice.apply(arguments));
 	}
-	/*
-	type sub-system
-	*/
-	dbj.type = (function () {
-		var rx = /\w+/g, tos = Object.prototype.toString;
-		return function (o) {
-			if (typeof o === "undefined") return "undefined";
-			if (o === null) return "null";
-			if ("number" === typeof (o) && isNaN(o)) return "nan";
-			return (tos.call(o).match(rx)[1]).toLowerCase();
-		}
-	} ());
 
-	dbj.type.isObject = function (o) { return "object" === dbj.type(o); }
-	dbj.type.isFunction = function (o) { return "function" === dbj.type(o); }
-	dbj.type.isArray = function (o) { return "array" === dbj.type(o); }
-	dbj.type.isString = function (o) { return "string" === dbj.type(o); }
-
-	/*--------------------------------------------------------------------------------------------*/
-	if ("function" != typeof "".format)
-		String.prototype.format = function () {
-			var args = arguments;
-			return this.replace(/\{(\d|\d\d)\}/g, function ($0) {
-				var idx = 1 * $0.match(/\d+/)[0]; return args[idx] !== undefined ? args[idx] : (args[idx] === "" ? "" : $0);
-			}
-            );
-		}
 	/*
 	https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
 	changed so that it works for "everything" by using dbj.E.rathe() instead of "==="
@@ -135,7 +141,7 @@
 		var array = arg["array"], searchElement = arg["searchElement"],
 			fromIndex = arg["fromIndex"], comparator = arg["comparator"];
 
-		if (!dbj.type.isArray(array)) {
+		if (!dbj.isArray(array)) {
 			throw new Error(0xFF, "find_index() : bad array argument");
 		}
 		var t = Object(array), len = t.length >>> 0;
@@ -173,17 +179,13 @@
 		});
 	}
 	/*--------------------------------------------------------------------------------------------*/
-	if (!dbj.type.isFunction([].indexOf))
-		Array.prototype.indexOf = function (searchElement /*, fromIndex */) {
+	if (!dbj.isFunction(aprot.indexOf))
+		aprot.indexOf = function (searchElement /*, fromIndex */) {
 			return find_index({ "array": this, "searchElement": searchElement,
 				"fromIndex": typeof (fromIndex) !== "undefined" ? fromIndex : null,
 				"comparator": function (a, b) { return a === b; }
 			});
 		}
-	/*--------------------------------------------------------------------------------------------*/
-
-} ());
-
 /*
 --------------------------------------------------------------------------------------------
 equvalence tests
@@ -191,8 +193,6 @@ full tests are slower
 simple tests are fasters
 --------------------------------------------------------------------------------------------
 */
-(function (undefined) {
-if ( undefined === window.dbj ) dbj = {} ;
 var EQ = dbj.EQ = {} ;
 
 // Test for equality any JavaScript type. Used in QUnit
@@ -350,7 +350,7 @@ EQ.rathe = function () {
 	}();
 
 	innerEquiv = function() { // can take multiple arguments
-		var args = Array.prototype.slice.apply(arguments);
+		var args = aprot.slice.apply(arguments);
 		if (args.length < 2) {
 			return true; // end transition
 		}
@@ -374,7 +374,8 @@ EQ.rathe = function () {
 
 	return innerEquiv;
 
-}();
+}(); // eof EQ.rathe
 
-
-}());
+/*--------------------------------------------------------------------------------------------*/
+} ());
+/*--------------------------------------------------------------------------------------------*/

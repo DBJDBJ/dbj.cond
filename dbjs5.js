@@ -79,7 +79,7 @@ and GPL (GPL-LICENSE.txt) licenses.
 
 	/* go to either a numbered slide, 'next', 'prev', 'last, or 'first' */
 	function go(n) {
-		if (dbj.type.isString(n)) {
+		if (dbj.isString(n)) {
 			n = dbj.cond(n,
 					'next', cur < (slideCount - 1) ? cur + 1 : cur,
 					'prev', cur > 0 ? cur - 1 : cur,

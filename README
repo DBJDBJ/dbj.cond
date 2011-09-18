@@ -1,6 +1,12 @@
 ﻿(c) 2011 by DBJ.ORG
 
-developing DBJ*Microlib
+DBJ*Microlib project
 
  Dual licensed under the MIT (MIT-LICENSE.txt)
  and GPL (GPL-LICENSE.txt) licenses.
+
+ Open dbj_cond.html in a abrowser for API and other information.
+
+ dbjs5.js and dbjs5.css
+ ----------------------
+ Improvement of S5 is used as a test bed for proving dbjMICROLIB in real life situations.

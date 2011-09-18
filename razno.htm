@@ -78,23 +78,28 @@ function javascript ( argument ) {
 	addprops = function (t) {
 		var j = 1; while (arguments[j]) { t[arguments[j++]] = arguments[j++]; } return t;
 	},
-	next_script = function (src, next_idx_) {
+	next_script = function (src, next_cb_) {
 		var nextscr = addprops(
 			document.createElement("script"),
-				"type", "text/javascript", "rel", "crazyLoader", "src", src,
-				"onload", next_idx_ ? loader : null);
+				"type", "text/javascript",
+				"rel", "crazyLoader",
+				"src", src,
+				"onload", next_cb_);
 		document.body.appendChild(nextscr);
 	};
 		global.crazyLoader = function () {
-			var args = Array.prototype.slice.call(arguments), args_idx = 0;
+			var args = Array.prototype.slice.call(arguments), arlen = args.length >>> 0, args_idx = 0,
+			final_call = null;
 			args.push("dummy.js");
 			global.loader = function () {
-				if (!args[args_idx]) return;
+				if (args_idx > arlen) return;
 				next_script(
-				args[args_idx],
-				args[args_idx + 1] ? args_idx += 1 : (args[0](), null)
-			);
+					args[args_idx],
+					(args_idx += 1) < arlen ? loader : (final_call = args[0], null)
+				);
+				if (final_call) final_call();
 			};
+			if ("function" !== typeof args[0]) throw "crazyLoader() : first argument must be callback";
 			loader(args_idx = 1);
 		};
 

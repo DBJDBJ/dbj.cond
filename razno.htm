@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html >
 <head>
-   <title>chili test</title>
+   <title>dbjRAZNO&trade;</title>
       <meta charset="utf-8" />
 	<link href="prettify/prettify.css" rel="stylesheet" type="text/css" />
 <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css' />
@@ -26,31 +26,39 @@
 }
 </style>
 <style type="text/css" media="all" >
-    html {width:99%; height:99%;}
-body { width:99%; height:99%; margin:0px; padding:5px; border:1px solid #000;}
+html, body { width:99%; height:99%; margin:0px; padding:0px; border:0px solid;}
 .google_font {font-family:Reenie Beanie,Droid Sans; font-weight:normal;} 
-.metro_font {font-family:"Segoe UI","Lucida Grande","Droid Sans",Verdana,Arial,Helvetica,sans-serif; color:#fff; font-weight:normal;}  
-.metro_tile { width:98%; height:98%; padding:2%; margin:2%; border:0px solid; background-color:darkred; float:left; } 
-.metro_tile_div { width:30%; height:15%; }
+.metro_tile { 
+/* metro like font */
+font-family:"Segoe UI","Lucida Grande","Droid Sans",Verdana,Arial,Helvetica,sans-serif; color:#fff; 
+font-weight:normal; font-size:inherit;
+/* background */
+background-color:#8B0000; 
+/* geometry */
+width:30%; height:35%; padding:9px; margin:9px; border:0px solid; overflow:hidden; 
+/* flow */
+display:block; 
+} 
+.metro_title { font-size:large;}
 .dbj_print_line { font:12px/1.1 verdana,tahoma,arial;}
 .dbj_title_line { background-color: #6D7b8B;/* light slate gray */ margin:0px; padding:3px;}
-#close_icon { font-size:199%; text-align:center; cursor:pointer;}
+#close_icon { text-align:center; cursor:pointer;}
 </style>
 </head>
 <body>
 <div id="container">
-<div id="close_icon" class="metro_tile_div metro_tile metro_font" onclick="return window.close();" >X</div>
-<div class="metro_tile_div" >
-<h1 class="metro_tile metro_font" >DBJ*Metro Stopper&trade;</h1>
+<div id="close_icon" class=" metro_tile " onclick="return window.close();" >Close</div>
+<div class="metro_tile "  >
+<p class="metro_title" >DBJ*Metro Stopper&trade;</p>
 </div>
-<div class="metro_tile_div" >
-<h4 class="metro_tile_div metro_tile metro_font" >©dbj.org <script type="text/javascript">document.write((new Date(document.lastModified)).toLocaleDateString());</script></h4>
+<div  class="metro_tile "  >
+<p>©dbj.org <script type="text/javascript">document.write((new Date(document.lastModified)).toLocaleDateString());</script></p>
 </div>
-<div class="metro_tile_div metro_tile metro_font">
+<div class="metro_tile ">
 Jedan Dva Tri Pet Sedam Osam Devet Deset
 </div>
 </div>
-<pre class="prettyprint metro_tile_div">
+<pre class="prettyprint">
 /*
 comment
 */
@@ -62,5 +70,48 @@ function javascript ( argument ) {
 <!--- script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" ></script --->
 <script src="prettify/prettify.js" type="text/javascript"></script>
 <script type="text/javascript" >prettyPrint();</script>
+<!--script src="dbj_microlib.js" type="text/javascript"></script-->
 </body>
+<script type="text/javascript" >
+	(function (global, undefined) {
+		var head = document.getElementsByTagName("head")[0],
+	addprops = function (t) {
+		var j = 1; while (arguments[j]) { t[arguments[j++]] = arguments[j++]; } return t;
+	},
+	next_script = function (src, next_idx_) {
+		var nextscr = addprops(
+			document.createElement("script"),
+				"type", "text/javascript", "rel", "crazyLoader", "src", src,
+				"onload", next_idx_ ? loader : null);
+		document.body.appendChild(nextscr);
+	};
+		global.crazyLoader = function () {
+			var args = Array.prototype.slice.call(arguments), args_idx = 0;
+			args.push("dummy.js");
+			global.loader = function () {
+				if (!args[args_idx]) return;
+				next_script(
+				args[args_idx],
+				args[args_idx + 1] ? args_idx += 1 : (args[0](), null)
+			);
+			};
+			loader(args_idx = 1);
+		};
+
+	} (window));
+	
+	crazyLoader(
+function () {
+	var report = [];
+	$("script").each(function (a, b) {
+		if (!!b.src)
+			report.push(
+		   a + "::" + b.src
+		);
+	});
+	$("<div class='metro_tile'>").html(report.join("<br/>")).appendTo(document.body);
+},
+	"http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js", "dbj_microlib.js"
+	);
+</script>
 </html>

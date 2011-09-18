@@ -37,7 +37,7 @@ background-color:#8B0000;
 /* geometry */
 width:30%; height:35%; padding:9px; margin:9px; border:0px solid; overflow:hidden; 
 /* flow */
-display:block; 
+display:block; float:left;
 } 
 .metro_title { font-size:large;}
 .dbj_print_line { font:12px/1.1 verdana,tahoma,arial;}
@@ -67,56 +67,12 @@ function javascript ( argument ) {
   return new String(d);
 }
 </pre>
-<!--- script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" ></script --->
-<script src="prettify/prettify.js" type="text/javascript"></script>
-<script type="text/javascript" >prettyPrint();</script>
-<!--script src="dbj_microlib.js" type="text/javascript"></script-->
 </body>
+<script src="dbj.loader.js" type="text/javascript"></script>
 <script type="text/javascript" >
-	(function (global, undefined) {
-		var head = document.getElementsByTagName("head")[0],
-	addprops = function (t) {
-		var j = 1; while (arguments[j]) { t[arguments[j++]] = arguments[j++]; } return t;
-	},
-	next_script = function (src, next_cb_) {
-		var nextscr = addprops(
-			document.createElement("script"),
-				"type", "text/javascript",
-				"rel", "crazyLoader",
-				"src", src,
-				"onload", next_cb_);
-		document.body.appendChild(nextscr);
-	};
-		global.crazyLoader = function () {
-			var args = Array.prototype.slice.call(arguments), arlen = args.length >>> 0, args_idx = 0,
-			final_call = null;
-			args.push("dummy.js");
-			global.loader = function () {
-				if (args_idx > arlen) return;
-				next_script(
-					args[args_idx],
-					(args_idx += 1) < arlen ? loader : (final_call = args[0], null)
-				);
-				if (final_call) final_call();
-			};
-			if ("function" !== typeof args[0]) throw "crazyLoader() : first argument must be callback";
-			loader(args_idx = 1);
-		};
-
-	} (window));
-	
 	crazyLoader(
-function () {
-	var report = [];
-	$("script").each(function (a, b) {
-		if (!!b.src)
-			report.push(
-		   a + "::" + b.src
-		);
-	});
-	$("<div class='metro_tile'>").html(report.join("<br/>")).appendTo(document.body);
-},
-	"http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js", "dbj_microlib.js"
+		function () { prettyPrint(); }
+		, "prettify/prettify.js", "http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js", "dbj_microlib.js"
 	);
 </script>
 </html>

@@ -22,13 +22,13 @@
 	},
 	default_finale = function () { alert(scripts_loaded.join("\n")); };
 
-	global.crazyLoader = function () {
+	global.dbjLOADER = function () {
 		var args = Array.prototype.slice.call(arguments), arlen = args.length >>> 0, args_idx = 0;
 		args.push("dummy.js");
-		global.loader = function () {
+		global.__dbj__loader__ = function () {
 			next_script(
 					args[args_idx],
-					(args_idx += 1) < arlen ? loader : args[0] || default_finale
+					(args_idx += 1) < arlen ? __dbj__loader__ : args[0] || default_finale
 				);
 		};
 		loader(args_idx = 1);

@@ -1,6 +1,16 @@
 /**
  * dbjLOADER - A ridiculously simple and effective javascript dynamic loader
- *
+ * usage example :
+ 
+     dbjLOADER (
+	function () { prettyPrint(); }
+	, "prettify/prettify.js"
+	, "http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"
+	);
+	
+	First argument must be final calback or null. If null then default callback is used which shows
+	alert with source urls of all scrpts dbjLOAD-ed
+	
  * Copyright (c) 2011 DBJ.ORG
  * Dual licensed under the MIT or GPL licenses.
  */

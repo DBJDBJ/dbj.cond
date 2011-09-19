@@ -41,7 +41,7 @@
 					(args_idx += 1) < arlen ? __dbj__loader__ : args[0] || default_finale
 				);
 		};
-		loader(args_idx = 1);
+		__dbj__loader__(args_idx = 1);
 	};
 
 } (window));

@@ -70,9 +70,16 @@ function javascript ( argument ) {
 </body>
 <script src="dbj.loader.js" type="text/javascript"></script>
 <script type="text/javascript" >
+	
+	window.onerror = function (msg, url, linenumber) {
+		alert('Error message: ' + msg + '\nURL: ' + url + '\nLine Number: ' + linenumber)
+		return true
+	}
+	
 	dbjLOADER (
-		function () { prettyPrint(); }
-		, "prettify/prettify.js", "http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js", "dbj_microlib.js"
+		function () { prettyPrint(); },
+		"XXXX","prettify/prettify.js", "http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js", "dbj_microlib.js"
 	);
+
 </script>
 </html>

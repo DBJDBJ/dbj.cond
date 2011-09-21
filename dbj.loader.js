@@ -9,6 +9,9 @@
 	);
 	
 	If first argument is a function it is going to be used as final calback. 
+
+	TODO : http://yearofmoo.com/2011/03/cross-browser-stylesheet-preloading/
+	but why would anybody do this?
 	
  * Copyright (c) 2011 DBJ.ORG
  * Dual licensed under the MIT or GPL licenses.

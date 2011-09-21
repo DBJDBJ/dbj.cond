@@ -18,6 +18,7 @@
  */
 
 (function (global, undefined) {
+	"use strict";
 	global.console || (global.console = {
 		log: function () { }, error: function () { }, warn: function () { }
 	});
@@ -48,7 +49,7 @@
 
 	global.dbjLOADER = function () {
 		var args = Array.prototype.slice.call(arguments), arlen = args.length >>> 0, args_idx = 0,
-		user_finale = "function" === typeof args[0] ? args[0] : false ,
+		user_finale = "function" === typeof args[0] ? args[0] : false,
 		default_finale = function () {
 			console.log(global.__dbj__loader__.scripts_loaded.join("\n"));
 			console.error(global.__dbj__loader__.scripts_errored.join("\n"));
@@ -64,7 +65,7 @@
 		global.__dbj__loader__.scripts_loaded = ["dbjLOADER :: loaded scripts"],
 			global.__dbj__loader__.scripts_errored = ["dbjLOADER :: errored scripts"];
 
-		__dbj__loader__( args_idx = !! user_finale ? 1 : 0 );
+		__dbj__loader__(args_idx = !!user_finale ? 1 : 0);
 	};
 
 } (window));

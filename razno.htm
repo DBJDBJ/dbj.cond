@@ -25,6 +25,7 @@
 	}
 }
 </style>
+<link href="theme/metro/jquery.metro.css" rel="stylesheet" type="text/css" />
 <style type="text/css" media="all" >
 html, body { width:99%; height:99%; margin:0px; padding:0px; border:0px solid;}
 .google_font {font-family:Reenie Beanie,Droid Sans; font-weight:normal;} 
@@ -45,20 +46,48 @@ display:block; float:left;
 #close_icon { text-align:center; cursor:pointer;}
 </style>
 </head>
-<body>
-<div id="container">
-<div id="close_icon" class=" metro_tile " onclick="return window.close();" >Close</div>
-<div class="metro_tile "  >
-<p class="metro_title" >DBJ*Metro Stopper&trade;</p>
+<body accent='orange' theme='light'>
+    <div class='page'>
+        <div class='top-banner'>
+        theme:
+        <span class='theme-box' theme="dark"  title="dark" ></span>
+        <span class='theme-box' theme="light" title="light" ></span>
+        accent color:
+        <span class='accent-box' accent="orange"  title="orange"  ></span>
+        <span class='accent-box' accent="red"     title="red"     ></span>
+        <span class='accent-box' accent="green"   title="green"   ></span>
+        <span class='accent-box' accent="blue"    title="blue"    ></span>
+        <span class='accent-box' accent="magenta" title="magenta" ></span>
+        <span class='accent-box' accent="purple"  title="purple" ></span>
+        <span class='accent-box' accent="pink"    title="pink"    ></span>
+        <span class='accent-box' accent="teal"    title="teal"    ></span>
+        <span class='accent-box' accent="lime"    title="lime"    ></span>
+        <span class='accent-box' accent="brown"   title="brown"  ></span>
+    </div>
+        <h1 class='accent-color'>dbjLOADER</h1>
+        <div class='apptitle'>
+  
+        <span class='accent-color'>DBJ</span> SCRIPT AFTERLOADER
+        &nbsp;&nbsp;
+        <span style='font-size:30pt;'>
+           <a href='javascript:pivot_previous();'>&lsaquo;</a>
+           <a href='javascript:pivot_next();'>&rsaquo;</a>
+        </span>
+    </div>
+
+<div class='metro-pivot'>
+<div id="close_icon" class="metro_tile pivot-item" onclick="return window.close();" ><h3>X</h3>Close</div>
+<div class="metro_tile pivot-item" ><h3>Home</h3>
+<h4  class='accent-color'>DBJ*Metro Stopper&trade;</h4>
 </div>
-<div  class="metro_tile "  >
-<p>©dbj.org <script type="text/javascript">document.write((new Date(document.lastModified)).toLocaleDateString());</script></p>
+<div  class="metro_tile pivot-item"  ><h3>About</h3>
+<h4  class='accent-color'>©dbj.org <script type="text/javascript">document.write((new Date(document.lastModified)).toLocaleDateString());</script></h4>
 </div>
-<div class="metro_tile ">
-Jedan Dva Tri Pet Sedam Osam Devet Deset
+<div class="metro_tile pivot-item"><h3>API</h3>
+<h4  class='accent-color'>Jedan Dva Tri Pet Sedam Osam Devet Deset</h4>
 </div>
-</div>
-<pre class="prettyprint">
+<div  class="metro_tile pivot-item"  ><h3>Code</h3>
+<pre class="prettyprint accent-color">
 /*
 comment
 */
@@ -67,19 +96,57 @@ function javascript ( argument ) {
   return new String(d);
 }
 </pre>
+</div>
+</div>
+</div>
 </body>
-<script src="dbj.loader.js" type="text/javascript"></script>
-<script type="text/javascript" >
+<script type="text/javascript" id="__metro_theme_script__">
+    	
+		function metro_theme_init () {
+    		$("div.metro-pivot").metroPivot();
+    		$("span.theme-box").click(theme_Changed);
+    		$("span.accent-box").click(accent_Changed);
+    	};
+
+    	function accent_Changed() {
+    		var accent = $(this).attr("accent");
+    		$(document.body).attr("accent", accent);
+    	}
+    	function theme_Changed() {
+    		var theme = $(this).attr("theme");
+    		$(document.body).attr("theme", theme);
+    	}
+    	function pivot_previous() { $("div.metro-pivot").data("controller").goToPrevious(); }
+    	function pivot_next() { $("div.metro-pivot").data("controller").goToNext(); }
+    	function pivot_goTo(header) { $("div.metro-pivot").data("controller").goToItemByName(header); }
+    	function pivot_goToIndex(index) { $("div.metro-pivot").data("controller").goToItemByIndex(index); }
+    </script>
+<!--- script src="dbj.loader.js" type="text/javascript"></script--->
+<script type="do_this_latter" >
 	
 	window.onerror = document.body.onerror = function (msg, url, linenumber) {
 		alert('Error message: ' + msg + '\nURL: ' + url + '\nLine Number: ' + linenumber)
 		return true
 	}
-	
-	dbjLOADER (
-		function () { prettyPrint(); },
-		"XXXX","prettify/prettify.js", "http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js", "dbj_microlib.js"
-	);
 
+	onload = function () {
+		dbjLOADER(
+		function () {
+			prettyPrint();
+			setTimeout(function () { metro_theme_init(); }, 1);
+		},
+		"prettify/prettify.js", "http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js", "theme/metro/jquery.metro.js", "dbj_microlib.js"
+	);
+	};
+</script>
+<script type="text/javascript" src="prettify/prettify.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+<script src="theme/metro/jquery.metro.js" type="text/javascript"></script>
+<script src="dbj_microlib.js" type="text/javascript"></script>
+<script type="text/javascript" >
+	$(function () {
+		setTimeout(function () { metro_theme_init(); }, 1);
+		setTimeout(function () { prettyPrint(); }, 1);
+	});
 </script>
 </html>

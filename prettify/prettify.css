@@ -38,7 +38,7 @@ pre.prettyprint{
 	/* dbj removed: border:1px solid #888; */
 	/* dbj added */
 	width:90%;
-	font-size:80%;
+	font-size:60%; /* was 80% */
 	}
 ol.linenums{
 	margin-top:0;margin-bottom:0

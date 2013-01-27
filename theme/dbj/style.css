@@ -1,5 +1,5 @@
 body {
-	font-family: sans-serif;
+	font-family: "Segoe UI",sans-serif;
 	background-color:transparent;
 }
 .slide, .footer {
@@ -38,7 +38,7 @@ a {
 	padding-right: 0;
 }
 div.source {
-   font:80%/1.1 courier new;
+   font:80%/1.1 "Segoe UI", sans serif,courier new;
    margin-top:5px;
    margin-bottom:5px;
 }

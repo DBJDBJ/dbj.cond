@@ -12,24 +12,18 @@
 <h2 id="qunit-userAgent"></h2>
 <ol id="qunit-tests"></ol>
 </body>
-<script type="text/javascript" >
-/* just slap the script tag in the page wherever that might be */
-	var crazyLoader = function () {
-		var args = arguments;
-		function loader(args_idx) {
-			if (args_idx > args.length) return;
+<script type="text/javascript_notinuse" >
+    var crazyLoader = function () {
+        var sbegin = '<script type="text/javascript"',
+            send = '></' + 'script>',
+            args = arguments;
 
-			var next_script = args[args_idx + 1] ? " onload='loader(" + args[args_idx + 1] + ")' " : " ";
-
-			document.write("<script type='text/javascript' src='" + args[args_idx] +
-			                 next_script + "' ></" + "script>");
-
-			loader(args_idx + 1);
-		};
-		loader(0);
-	}
+        for (var args_idx = 0; args_idx < args.length; args_idx++) {
+            document.write(sbegin + ' src="' + args[args_idx] + send);
+        };
+    }
 </script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="qunit.js" ></script>
 <script type="text/javascript" src="../dbj_microlib.js" ></script>
 <script type="text/javascript" src="test.dbj.lib.js" ></script>

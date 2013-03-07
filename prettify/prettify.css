@@ -1,51 +1,114 @@
-.pln{color:#000}
-@media screen{
-.str{color:#080}
-.kwd{
-	color:#008;
-/* dbj added */
-font-weight:bold;
-	}
-.com{
-color:#666; /*#800;*/
-/* dbj added */
-font-style:italic;
-font-weight:bold;
-}
-.typ{color:#606}
-.lit{color:#066}
-.pun,.opn,.clo{color:#660}
-.tag{color:#008}
-.atn{color:#606}
-.atv{color:#080}
-.dec,.var{color:#606}
-.fun{color:red}}
-
-@media print,projection{
-.str{color:#060}
-.kwd{color:#006;font-weight:bold}
-.com{color:#600;font-style:italic}
-.typ{color:#404;font-weight:bold}
-.lit{color:#044}
-.pun,.opn,.clo{color:#440}
-.tag{color:#006;font-weight:bold}
-.atn{color:#404}
-.atv{color:#060}
+.pln {
+    color: #000;
 }
 
-pre.prettyprint{
-	padding:2px;
-	/* dbj removed: border:1px solid #888; */
-	/* dbj added */
-	width:90%;
-	font-size:60%; /* was 80% */
-	}
-ol.linenums{
-	margin-top:0;margin-bottom:0
-	}
-	li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8	{
-	list-style-type:none
-	}
-	li.L1,li.L3,li.L5,li.L7,li.L9{
-		background:#eee
-		}
+@media screen {
+    .str {
+        color: #080;
+    }
+
+    .kwd {
+        color: #008;
+    }
+
+    .com {
+        color: #800;
+    }
+
+    .typ {
+        color: #606;
+    }
+
+    .lit {
+        color: #066;
+    }
+
+    .pun, .opn, .clo {
+        color: #660;
+    }
+
+    .tag {
+        color: #008;
+    }
+
+    .atn {
+        color: #606;
+    }
+
+    .atv {
+        color: #080;
+    }
+
+    .dec, .var {
+        color: #606;
+    }
+
+    .fun {
+        color: red;
+    }
+}
+
+@media print,projection {
+    .str {
+        color: #060;
+    }
+
+    .kwd {
+        color: #006;
+        font-weight: bold;
+    }
+
+    .com {
+        color: #600;
+        font-style: italic;
+    }
+
+    .typ {
+        color: #404;
+        font-weight: bold;
+    }
+
+    .lit {
+        color: #044;
+    }
+
+    .pun, .opn, .clo {
+        color: #440;
+    }
+
+    .tag {
+        color: #006;
+        font-weight: bold;
+    }
+
+    .atn {
+        color: #404;
+    }
+
+    .atv {
+        color: #060;
+    }
+}
+
+pre.prettyprint {
+    padding: 2px;
+    border: 1px solid #888;
+    /* DBJ 2013 MAR 07 */
+    max-width:99%;
+    max-height:99%;
+    font-size:80%; 
+    overflow:auto;
+}
+
+ol.linenums {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
+    list-style-type: none;
+}
+
+li.L1, li.L3, li.L5, li.L7, li.L9 {
+    background: #eee;
+}

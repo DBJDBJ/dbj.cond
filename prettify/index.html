@@ -1,0 +1,64 @@
+<!DOCTYPE html />
+<html>
+<head>
+<title>How To :: Pretty Print</title>
+<link href="prettify.css" rel="stylesheet" type="text/css" />
+<script src="run_prettify.js" type="text/javascript"></script>
+<!-- script type="text/javascript" >
+    load = function () { prettyPrint(); }
+</!-->
+</head>
+<body>
+ <pre  class="prettyprint linenums:100"  >
+/* 
+   'keys' event handler inspired with 
+    MozPoint (http://mozpoint.mozdev.org/) 
+*/
+	function keys(key) {
+		key = key || event ;
+		key.which  = key.keyCode ;
+		/* depending on the key pressed return a function */
+		dbj.cond(key.which,
+     /*return, enter, spacebar, page down, rightkey, downkey*/ 
+		 	[ 10, 13 , 32 , 34 , 39, 40 ] ,
+			function () { go('next'); },
+     /*page up ,leftkey,upkey,backspace*/ 
+			[ 33,   37 ,  38 , 8 ] , 
+			function () { go('prev'); },
+			  36, /* home */
+			function () { go(0); },
+			  35, /* end */
+			function () { go(slideCount - 1); },
+			  67, /* c */
+			function () { },
+			  79, /* o */
+			function () { $('.outline').toggle(); },
+			/* if none of the above return the null func. */
+			function () { }
+     /* upon return immediately execute the function returned */
+		)(); 
+		return false;
+	}
+</pre>	
+<pre class="prettyprint linenums:100" >
+	function keys(key) {
+		key = key || event ;
+		key.which  = key.keyCode ;
+		/* depending on the key pressed */
+		if( [10,13,32,34,39,40].indexOf(key.which) > -1)
+			{ go('next'); }
+		else if( [33,37,38,8].indexOf(key.which) > -1)
+			{ go('prev'); }
+		else if( key.which == 36 ) /* home */
+			{ go(0); }
+		else if( key.which == 35 ) /* end */
+			{ go(slideCount - 1); }
+		else if( key.which == 67 ) /* c */
+			{ /* */ }
+		else if( key.which == 79 ) /* o */
+			{ $('.outline').toggle(); }
+		return false;
+	}
+</pre>
+</body>
+</html>

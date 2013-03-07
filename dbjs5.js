@@ -1,6 +1,6 @@
 
 /*
-(c) 2011 by DBJ.ORG
+(c) 2011-2013 by DBJ.ORG
 
 DBJQS5 DBJ QS5 
 
@@ -8,7 +8,7 @@ Inspired with S5 and JQS5 Copyright 2008 Steve Pomeroy <steve@staticfree.info>
 Dual licensed under the MIT (MIT-LICENSE.txt)
 and GPL (GPL-LICENSE.txt) licenses.
 */
-(function (undefined) {
+(function ($, undefined) {
 	/*--------------------------------------------------------------------------------------------*/
 	/* extend jQuery with a new function */
 	jQuery.fn.extend({
@@ -31,7 +31,7 @@ and GPL (GPL-LICENSE.txt) licenses.
 	var cur, slideCount, $body = $(document.body), $head = $("head"), $document = $(document);
 
 	/* initialize the jqs5 rendering */
-	window.jqs5 = {
+	var jqs5 = {
 		init: function () {
 			/* inject some elements to stylize each slide */
 			var footer = $("<DIV/>").addClass('footer'),
@@ -64,16 +64,22 @@ and GPL (GPL-LICENSE.txt) licenses.
 			// initialize 
 			$('.slide').hide();
 			slideCount = $('.slide').length;
-			fontScale();
+			// fontScale();
 
 			// load the key/mouse bindings
-			$body.keyup(keys);
-			$body.keypress(trap);
-			$body.click(clicker);
+			$document.keyup(keys);
+			$document.click(function (E) {
+			    dbj.cond(
+                    E.which,
+                    1, function () { go("next"); },
+                    2, function () { go("prev"); },
+                    function () { }
+                    )();
+			    return false;
+			});
 
-			// var first_slide = Number(document.location.hash.substring(2));
 			// start the presentation
-			go(0);
+			go('first');
 		}
 	};
 
@@ -99,37 +105,7 @@ and GPL (GPL-LICENSE.txt) licenses.
 		document.location.hash = "#s" + n;
 	}
 
-
-
-	/* the below code borrowed from S5 */
-
-	// causes layout problems in FireFox < 4, that get fixed if browser's Reload is used; 
-	// same may be true of other Gecko-based browsers
-	function fontScale() {
-		var vScale = 1.5 * 22,  // both yield 32 (after rounding) at 1024x768
-		    hScale = 1.5 * 32,  // perhaps should auto-calculate based on theme's declared value?
-			vSize = $document.height(), hSize = $document.width(),
-		    newSize = Math.min(Math.round(vSize / vScale), Math.round(hSize / hScale));
-
-		$body.css("font-size", parseInt(newSize) + 'px');
-
-		if (jQuery.browser['mozilla']) {  // hack to counter incremental reflow bugs
-			$body.css("display", 'none').css("display", 'block');
-		}
-	}
-	/*
-	function fontSize(value) {
-	var ssstr = "<style type='text/css' media='screen, projection' id='dbjs5_font_size'>body {font-size:{0} !important;}</style>";
-	$("#dbjs5_font_size", $head).remove();
-	$head.append($(ssstr.format(value)));
-	}
-	*/
-	// 'keys' code adapted from MozPoint (http://mozpoint.mozdev.org/)
 	function keys(key) {
-		if (!key) {
-			key = event;
-			key.which = key.keyCode;
-		}
 		dbj.cond(key.which,
 			[10 // return
 			, 13 // enter
@@ -144,53 +120,29 @@ and GPL (GPL-LICENSE.txt) licenses.
 			, 8], // backspace
 			function () { go('prev'); },
 			36, // home
-				function () { go(0); },
+				function () { go('first'); },
 			35, // end
 				function () { go(slideCount - 1); },
 			67, // c
 				function () { },
 			79, // o
 				function () { $('.outline').toggle(); },
+                // otherwise
 				function () { }
 		)();
 		return false;
 	}
-	// Key trap fix, new function body for trap()
-	function trap(e) {
-		if (!e) {
-			e = event;
-			e.which = e.keyCode;
-		}
-		try {
-			modifierKey = e.ctrlKey || e.altKey || e.metaKey;
-		}
-		catch (e) {
-			modifierKey = false;
-		}
-		return modifierKey || e.which == 0;
-	}
-
-
-	function clicker(e) {
-		var target;
-		if (window.event) {
-			target = window.event.srcElement;
-			e = window.event;
-		} else target = e.target;
-		if (target.getAttribute('href') != null) return true;
-		if (!e.which || e.which == 1) {
-			go('next');
-		}
-	}
-
 	/* self ignition */
 	$(function () {
-		try {
-			$body.hide();
-			jqs5.init();
-		} finally {
+	    try {
+	        $body.hide();
+	        jqs5.init();
+	    } catch (x) {
+	        alert("dbjS5 initialization ERROR\n\n"+x);
+	    }
+		finally {
 			$body.show();
 		}
 	});
 
-} ());
+} ( $ || jQuery));

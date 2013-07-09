@@ -63,26 +63,9 @@
 	}
 	*/
 	dbj.cond = (function () {
-		/*
-		comparator in essence defines the behaviour of the cond() 
-		default_comparator works for all types, because it uses function dbj.EQ.rathe(b, a) 
-		input value is the left side in the comparison
-		defualt comparator allows for arrays of values to be compared 
-		with the single input value of the same type
-		Examples:
-		default_comparator( 1, [3,2,1] ) --> true
-		default_comparator( function (){ return 1;}, [3,2,1] ) --> true
-		default_comparator( [3,2,1], [3,2,1] ) --> true
-		*/
-		var default_comparator = function (a, b) {
-			if (dbj.EQ.rathe(a, b)) return true;
-			if (dbj.isArray(b)) return indexOfanything(b, a) > -1;
-			return false;
-		};
-
 		return function (v) {
 			if (!dbj.isEven(arguments.length)) throw "dbj.cond() not given even number of arguments";
-			var comparator = dbj.cond.comparator || default_comparator,
+		    var comparator = dbj.cond.comparator || dbj.EQ.default_comparator,
 			    j = 1, L = arguments.length;
 			for (; j < L; j += 2) {
 				if (comparator(v, arguments[j])) return arguments[j + 1];
@@ -200,12 +183,26 @@
 		}
 /*
 --------------------------------------------------------------------------------------------
-equvalence tests
-full tests are slower
-simple tests are faster
+comparators in essence define the behaviour of the cond()
+equvalence tests are simple to meter: full tests are slower and simple tests are faster
 --------------------------------------------------------------------------------------------
 */
-var EQ = dbj.EQ = {} ;
+	var EQ = dbj.EQ = {};
+/*
+default_comparator works for all types, because it uses function dbj.EQ.rathe(b, a) 
+defualt comparator allows arrays to singular values to be compared 
+Examples:
+default_comparator( 1, [3,2,1] ) --> true
+default_comparator( [3,2,1], 1 ) --> true
+default_comparator( function (){ return 1;}, [3,2,1] ) --> true
+default_comparator( [3,2,1], [3,2,1] ) --> true
+*/
+	dbj.EQ.default_comparator = function (a, b) {
+	    if (dbj.EQ.rathe(a, b)) return true;         /* covers arr to arr too */
+	    if (dbj.isArray(b)) return indexOfanything(b, a) > -1; /* sing to arr */
+	    if (dbj.isArray(a)) return indexOfanything(a, b) > -1; /* arr to sing */
+	    return false;
+	};
 
 // Test for equality any JavaScript type. Used in QUnit
 // equiv({a:1},{b:2}) --> true
@@ -388,6 +385,28 @@ EQ.rathe = function () {
 
 }(); // eof EQ.rathe
 
+    /*
+    simple cond
+    */
+dbj.scond = function (v) {
+    ///<summary>
+    /// the last argument (if given) is the default value
+    ///<code>
+    /// dbj.scond( input, case1, value1, case2, value2, ..... , value_for_default )
+    ///</code>
+    /// example :
+    ///<code>
+    /// dbj.scond(2, 1, "blue", 2, "red", /*default is*/"green");
+    ///</code>
+    /// returns "red"
+    ///</summary>
+    ///default comparator is 'exact match' aka "==="
+    var j = 1, L = arguments.length;
+    for (; j < L; j += 2) {
+        if (v === arguments[j]) return arguments[j + 1];
+    }
+    return (!arguments[j - 2]) ? undefined : arguments[j - 2];
+}
 /*--------------------------------------------------------------------------------------------*/
 } ());
 /*--------------------------------------------------------------------------------------------*/

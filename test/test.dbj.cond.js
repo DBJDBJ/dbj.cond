@@ -24,7 +24,7 @@ top.tests = {
             [function () { return dbj.condlt(7, 7, "A", 4, "B", "C"); }, "C"],
         ]
 	},
-	"dbj.cond() by defauylt uses complex comparator for equality comparisons of any types": {  
+	"dbj.cond() by default uses complex comparator for equality comparisons of any types": {  
 		"dbj.cond() simpler uses": [
                 [function () { return dbj.cond(1, [3, 2, 1], "A", 7, "B", "C"); }, "A"],
                 [function () { return dbj.cond(7, [3, 2, 1], "A", 7, "B", "C"); }, "B"],
@@ -51,34 +51,28 @@ top.tests = {
            [function () { return dbj.cond({ a: 7 }, [1, 2, 3], "A", { a: 7 }, "B", "C"); }, "B"]
 		]
 	}, // eof module
-	"Utilities": {
-		"DBJ String ulitities ": [
-                [function () { return "{0}{1}{2}".format(1, 2, 3); }, "123"],
-                [function () { return "{0}{1}{2}".format(0); }, "0{1}{2}"],
-                [function () { return "{99}".format("!"); }, "{99}"]
-              ],
-		"DBJ dbj.type system": [
-                [function () { return dbj.type(NaN); }, "nan"],
-                [function () { return dbj.type([]); }, "array"],
-                [function () { return dbj.type(true); }, "boolean"],
-                [function () { return dbj.type(new Date()); }, "date"],
-                [function () { return dbj.type(new Error(0xFF, ".")); }, "error"],
-                [function () { return dbj.type(function () { }); }, "function"],
-                [function () { return dbj.type(Math); }, "math"],
-                [function () { return dbj.type(1); }, "number"],
-                [function () { return dbj.type({}); }, "object"],
-                [function () { return dbj.type(/./); }, "regexp"],
-                [function () { return dbj.type(""); }, "string"],
-                [function () { return dbj.type(window.JSON || undefined); }, (window.JSON ? "json" : "undefined")],
-                [function () { return dbj.type(window.Arguments || undefined); }, (window.Arguments ? "arguments" : "undefined")],
-                [function () { return dbj.type(undefined); }, "undefined"],
-                [function () { return dbj.type(null); }, "null"]
-            ],
-		"DBJ dbj.type system isXXX functions ": [
-                [function () { return dbj.isArray([]); }, true],
-                [function () { return dbj.isFunction(Function); }, true],
-                [function () { return dbj.isObject({}); }, true],
-                [function () { return dbj.isString("."); }, true]
-            ]
+	"Simple cond()": {
+		" basic usage": [
+                [function () { return dbj.scond(1,1,"123","0"); }, "123"],
+                [function () { return dbj.scond(true, true, "123", "0"); }, "123"],
+                [function () { return dbj.scond(false, 1 > 2 , "123", "0"); }, "123"]
+		],
+		" extended usage": [
+                [function () { return dbj.scond(true, dbj.EQ.rathe([1,2,3],[1,2,3]), "OK", "0"); }, "OK"],
+                [function () { return dbj.scond(true, dbj.EQ.rathe(/./, /./), "OK", "0"); }, "OK"],
+                [function () { return dbj.scond(true, dbj.EQ.rathe(new Date(1959,6,3), new Date(1959,6,3)), "OK", "0"); }, "OK"],
+                [function () { return dbj.scond(true, dbj.EQ.rathe({ "a": 1 }, {"a":1 }), "OK", "0"); }, "OK"]
+		],
+		" array vs single use cases": [
+                [function () { return dbj.scond(true, dbj.EQ.default_comparator(1, [1, 2, 3]), "OK", "0"); }, "OK"],
+                [function () { return dbj.scond(true, dbj.EQ.default_comparator([1, 2, 3], 1), "OK", "0"); }, "OK"],
+                [function () { return dbj.scond(true, dbj.EQ.default_comparator([1, 2, 3], [1,2,3]), "OK", "0"); }, "OK"]
+		],
+		" multi arguments comparator usage": [
+                [function () { return dbj.scond(true, dbj.EQ.rathe([1,2,3],[1, 2, 3], [3, 2, 3]), "OK", "0"); }, "0"],
+                [function () { return dbj.scond(true, dbj.EQ.rathe(/./, /./, /./), "OK", "0"); }, "OK"],
+                [function () { return dbj.scond(true, dbj.EQ.rathe(new Date(1959, 6, 3), new Date(1959, 6, 3), new Date(1959, 6, 3)), "OK", "0"); }, "OK"],
+                [function () { return dbj.scond(true, dbj.EQ.rathe({"a":1}, { "a": 1 }, { "a": 1 }), "OK", "0"); }, "OK"]
+		]
 	}
 }         // eof tests

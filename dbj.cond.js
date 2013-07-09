@@ -93,7 +93,19 @@
 	/* see the usage in dbj.cond */
 	dbj.cond.comparator = null;
 	/*
-	Apply the comparator of your choice. Must call with apply()
+	call dbj.cond() *once* with the the comparator of your choice. 
+    Must be called with apply() in order to
+    to pass the comparator to be used on top of usual arguments for dbj.cond
+    example:
+    var x = 2 ;
+    dbj.cond.applicator(
+       function (a,b) {return a != b ;}, // my comparator to be used just for this call
+       [x,1,"OK",2] // array of required arguments for dbj.cond()
+       ) ;
+
+       will return "OK", since comparator given for this one call returned true because
+       x != 1 so the first comparison was used to return a result value "OK".
+
 	*/
 	dbj.cond.applicator = function () {
 		if (!dbj.isFunction(this)) throw "this in the applicator must be the comparator";
@@ -105,27 +117,27 @@
 		}
 	}
 	/*
-	dbj.cond() using native equals behavior
+	call dbj.cond() once, using native equals behavior
 	*/
 	dbj.condeq = function () {
 		return dbj.cond.applicator.apply(
 		function (a, b) { return a === b; }, aprot.slice.apply(arguments));
 	}
 	/*
-	dbj.cond() using native not equals behavior
+	call dbj.cond() once, using native not equals behavior
 	*/
 	dbj.condnq = function () {
 		return dbj.cond.applicator.apply(
 			function (a, b) { return a !== b; }, aprot.slice.apply(arguments));
 	}
 	/*
-	dbj.cond() using native less than behavior
+	call dbj.cond() once, using native less than behavior
 	*/
 	dbj.condlt = function () {
 		return dbj.cond.applicator.apply(function (a, b) { return a < b; }, aprot.slice.apply(arguments));
 	}
 	/*
-	dbj.cond() using native greater than behavior
+	call dbj.cond() once, using native greater than behavior
 	*/
 	dbj.condgt = function () {
 		return dbj.cond.applicator.apply(function (a, b) { return a > b; }, aprot.slice.apply(arguments));

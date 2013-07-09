@@ -1,0 +1,46 @@
+﻿
+dbj approach is/was to completely encapsualte any possible complexity of
+comparing all possible thing in es5 in al possible ways.
+
+but as user called "David" described here 
+http://james.padolsey.com/javascript/how-to-avoid-switch-case-syndrome/
+There is a different approach in design.
+
+function cond( v ) {
+  var i;
+  for (i=1 ; i < arguments.length-1; i+=2 ) {
+  	var vals = typeof arguments[i] == "object" ? arguments[i] : [arguments[i]];
+	for (var j = 0; j<vals.length; j++)
+	  if (v===vals[j]) 
+	    return arguments[i + 1];
+  }
+  return arguments[i];
+}
+var x =4;
+cond(x,2,"green",[3,4,5],"yellow","defaultclr");
+cond(true,x<2,"green",x<7,"red","defaultclr");
+cond(x, {4:2}, "got it","not found");
+
+He simply leaves the core cond() implementation as simple as possible.
+It can have arrays as compared values and it uses "===" as the only comparator.
+Buit then in second example he accidentaly gives boolean value as an in-value.
+This opens up the way to use any kind of comparator user wants without 
+complex dbj.cond() implementation!
+
+so for example we can use dbj.EQ.rathe() , the core powerfull comparator of anything, with 
+the simple cond:
+
+cond ( true, dbj.EQ.rathe([1,2,3],[1,2,3]), "OK", "default") ; // returns "OK"
+
+a more generic example:
+
+var inp = [1,2,3], comp = dbj.EQ.rathe, check = [1,2,3], resval = "OK", defval = "default" ;
+
+cond( true, comp(inp, check), resval, defval ) ;
+
+Is this good and why is this good? 
+1. simpler code and simpler usage
+2. comparator vs call context is cleaner vs. current dbj.cond applicator
+3. greater decoupling between comparators and cond. 
+3.1. which means easy(er) change of the comparator's
+3.2 this even opens a way to have cond() in native code, still with replaceable comparators!

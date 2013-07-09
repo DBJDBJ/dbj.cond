@@ -44,3 +44,4 @@ Is this good and why is this good?
 3. greater decoupling between comparators and cond. 
 3.1. which means easy(er) change of the comparator's
 3.2 this even opens a way to have cond() in native code, still with replaceable comparators!
+3.3 if cond() is in a native code then we might have JS with no if's and no switch-es !

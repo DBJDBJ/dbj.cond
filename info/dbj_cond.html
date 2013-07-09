@@ -1,7 +1,7 @@
 <!DOCTYPE html />
 <html>
 <head>
-    <title>DBJ*COND</title>
+    <title>dbj.cond</title>
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css' />
     <link href='http://fonts.googleapis.com/css?family=Reenie+Beanie' rel='stylesheet' type='text/css' />
     <link href="prettify/prettify.css" rel="stylesheet" type="text/css" />
@@ -11,34 +11,30 @@
             font-family: "Segoe UI","Lucida Grande","Droid Sans",Verdana,Arial,Helvetica,sans-serif;
         }
     </style>
-<script src="http://code.jquery.com/jquery-latest.js"></script>
-<script src="dbj_microlib.js" type="text/javascript"></script>
-<script src="dbjs5.js" type="text/javascript"></script>
-<script src="prettify/run_prettify.js" type="text/javascript"></script>
 </head>
 <body>
-    <h1>DBJ*ML&trade;</h1>
-    <p>DBJ Micro Library by <a href="http://dbj.org">DBJ.ORG</a> :: dbj.cond() :: Programming without if()</p>
+    <h1>dbj();&trade;</h1>
+    <p>An JavaScript Library by <a href="http://dbj.org">dbj();</a> :: dbj.cond() :: No if() and no switch()</p>
     <h2>dbj.cond()</h2>
     <div>
 <code>var x = dbj.cond(v1,v2,v3,v4,v5,v6)</code> is shorthand for:
  <pre class="prettyprint">
-     var x = if ( compare(v1,v2) ) v3 ; // x may be v3, v5 or v6
+     var x = if ( compare(v1,v2) ) v3 ; 
         else if ( compare(v1,v4) ) v5 ;
              else v6 ; 
-// if v2 and v4 are arrays,  
-// their members will be checked.
+// input v1 is compared to v2 or v4
+//outcome is v3, v5 or v6 as default
 </pre>
         Original dbj.cond() from <a href="http://dbj.org/dbj/?p=119">DBJ.ORG</a>, worked only on values that can be compared 
 for equality, with native '===' operator.
     </div>
     <div>
         New dbj.cond() allows users to compare values for equality with other values of any type or arrays of them. Syntax is the same as before:
-        <pre class="prettyprint">dbj.cond(a,b,c,...,d) ; 
+        <pre class="prettyprint">dbj.cond(a,b,c,d) ; 
 // returns c if a equals b, 
 // otherwise returns the last argument: d</pre>
 There can be any number of pairs before last argument and after the first argument. 
-New behaviour is that arguments can be of any type including objects, arrays, dates, etc.
+New behaviour :: values can be of any type including objects, arrays, dates, etc.
  <br />
         Function <code>compare(a,b)</code> is called <i>comparator</i>.
 Comparator is any function which receives two arguments and returns true or 
@@ -159,4 +155,8 @@ default_comparator( [3,2,1], [[7,8],[3,2,1]] )
         </li>
     </ul>
 </body>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="../dbj.cond.js" type="text/javascript"></script>
+<script src="dbjs5.js" type="text/javascript"></script>
+<script src="prettify/run_prettify.js" type="text/javascript"></script>
 </html>

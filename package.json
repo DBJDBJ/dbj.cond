@@ -1,7 +1,15 @@
 {
   "name": "dbj.cond()",
   "version": "2.0.0",
+  "author" : "dbj <dbj@dbj.org>",
+  "description" : "simple and clean way to avoid if's and switches",
   "dependencies": {
-
-  }
+  },
+  "repository" : {
+  "type" : "git" ,
+  "url"  : "https://github.com/DBJDBJ/dbj.cond.git"
+  },
+  "keywords": ["cond", "if", "else", "switch"],
+  "analyze" : false,
+  "license" : "MIT"
 }

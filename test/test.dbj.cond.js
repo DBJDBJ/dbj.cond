@@ -55,7 +55,10 @@ top.tests = {
 		" basic usage": [
                 [function () { return dbj.scond(1,1,"123","0"); }, "123"],
                 [function () { return dbj.scond(true, true, "123", "0"); }, "123"],
-                [function () { return dbj.scond(false, 1 > 2 , "123", "0"); }, "123"]
+                [function () { return dbj.scond(false, 1 > 2 , "123", "0"); }, "123"],
+                [function () { return dbj.scond(1, [1,2,3], "OK", "0"); }, "OK"],
+                [function () { return dbj.scond([1,2,3], 1, "OK", "0"); }, "OK"],
+                [function () { return dbj.scond([1, 2, 3], [1,2,3], "OK", "0"); }, "0"]
 		],
 		" extended usage": [
                 [function () { return dbj.scond(true, dbj.EQ.rathe([1,2,3],[1,2,3]), "OK", "0"); }, "OK"],

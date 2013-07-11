@@ -403,10 +403,23 @@ dbj.scond = function (v) {
     ///default comparator is 'exact match' aka "==="
     var j = 1, L = arguments.length;
     for (; j < L; j += 2) {
-        if (v === arguments[j]) return arguments[j + 1];
+        if (dbj.scond.comparator(v,arguments[j])) return arguments[j + 1];
     }
     return (!arguments[j - 2]) ? undefined : arguments[j - 2];
-}
+};
+
+dbj.scond.comparator = function (a, b) {
+
+    if (a === b) return true; // most of the cases
+
+    if ("function" == typeof a.indexOf) {
+        return a.indexOf(b) > -1;
+    }
+    if ( "function" == typeof b.indexOf ) {
+        return b.indexOf(a) > -1 ;
+    }
+    return false ;
+};
 /*--------------------------------------------------------------------------------------------*/
 } ());
 /*--------------------------------------------------------------------------------------------*/

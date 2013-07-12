@@ -3,46 +3,12 @@
 (c) 2011 by DBJ.ORG
  Dual licensed under the MIT (MIT-LICENSE.txt)
  and GPL (GPL-LICENSE.txt) licenses.
+
+ depends on dbj.kernel.js
 */
 
-(function (undefined) {
+(function (dbj,undefined) {
 
-	var oprot = Object.prototype,
-		aprot = Array.prototype,
-		sprot = String.prototype;
-
-	/*--------------------------------------------------------------------------------------------*/
-	if ("function" != typeof "".format)
-		String.prototype.format = function () {
-			var args = arguments;
-			return this.replace(/\{(\d|\d\d)\}/g, function ($0) {
-				var idx = 1 * $0.match(/\d+/)[0]; return args[idx] !== undefined ? args[idx] : (args[idx] === "" ? "" : $0);
-			}
-            );
-		}
-
-	/*--------------------------------------------------------------------------------------------*/
-		if (undefined === window.dbj)
-		dbj = {
-			toString: function () { return "dbj(); ES5 MicroCore 1.2.0"; },
-			isEven: function (value) { return ((value|0) % 2 == 0); },
-
-			/* type sub-system */
-			type: (function () {
-				var rx = /\w+/g, tos = oprot.toString;
-				return function (o) {
-					if (typeof o === "undefined") return "undefined";
-					if (o === null) return "null";
-					if ("number" === typeof (o) && isNaN(o)) return "nan";
-					return (tos.call(o).match(rx)[1]).toLowerCase();
-				}
-			} ()),
-			isObject: function (o) { return "object" === dbj.type(o); },
-			isFunction: function (o) { return "function" === dbj.type(o); },
-			isArray: function (o) { return "array" === dbj.type(o); },
-			isString: function (o) { return "string" === dbj.type(o); }
-
-		};
 	/*
 	Defult cond allows users to compare initial values with other values of the same type
 	or arrays of values of the same type. Order is "first found, first served". Example:
@@ -174,7 +140,7 @@
 		});
 	}
 	/*--------------------------------------------------------------------------------------------*/
-	if (!dbj.isFunction(aprot.indexOf))
+	if (!dbj.isFunction(dbj.aprot.indexOf))
 		aprot.indexOf = function (searchElement /*, fromIndex */) {
 			return find_index({ "array": this, "searchElement": searchElement,
 				"fromIndex": typeof (fromIndex) !== "undefined" ? fromIndex : null,
@@ -421,5 +387,5 @@ dbj.scond.comparator = function (a, b) {
     return false ;
 };
 /*--------------------------------------------------------------------------------------------*/
-} ());
+} (dbj ));
 /*--------------------------------------------------------------------------------------------*/

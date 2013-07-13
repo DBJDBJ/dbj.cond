@@ -60,7 +60,7 @@
 		if (!dbj.isFunction(this)) throw "this in the applicator must be the comparator";
 		try {
 			dbj.cond.comparator = this;
-			return dbj.cond.apply(null, aprot.slice.apply(arguments));
+			return dbj.cond.apply(null, dbj.aprot.slice.apply(arguments));
 		} finally {
 			dbj.cond.comparator = null;
 		}
@@ -70,26 +70,26 @@
 	*/
 	dbj.condeq = function () {
 		return dbj.cond.applicator.apply(
-		function (a, b) { return a === b; }, aprot.slice.apply(arguments));
+		function (a, b) { return a === b; }, dbj.aprot.slice.apply(arguments));
 	}
 	/*
 	call dbj.cond() once, using native not equals behavior
 	*/
 	dbj.condnq = function () {
 		return dbj.cond.applicator.apply(
-			function (a, b) { return a !== b; }, aprot.slice.apply(arguments));
+			function (a, b) { return a !== b; }, dbj.aprot.slice.apply(arguments));
 	}
 	/*
 	call dbj.cond() once, using native less than behavior
 	*/
 	dbj.condlt = function () {
-		return dbj.cond.applicator.apply(function (a, b) { return a < b; }, aprot.slice.apply(arguments));
+	    return dbj.cond.applicator.apply(function (a, b) { return a < b; }, dbj.aprot.slice.apply(arguments));
 	}
 	/*
 	call dbj.cond() once, using native greater than behavior
 	*/
 	dbj.condgt = function () {
-		return dbj.cond.applicator.apply(function (a, b) { return a > b; }, aprot.slice.apply(arguments));
+	    return dbj.cond.applicator.apply(function (a, b) { return a > b; }, dbj.aprot.slice.apply(arguments));
 	}
 
 	/*
@@ -141,7 +141,7 @@
 	}
 	/*--------------------------------------------------------------------------------------------*/
 	if (!dbj.isFunction(dbj.aprot.indexOf))
-		aprot.indexOf = function (searchElement /*, fromIndex */) {
+		dbj.aprot.indexOf = function (searchElement /*, fromIndex */) {
 			return find_index({ "array": this, "searchElement": searchElement,
 				"fromIndex": typeof (fromIndex) !== "undefined" ? fromIndex : null,
 				"comparator": function (a, b) { return a === b; }
@@ -325,7 +325,7 @@ EQ.rathe = function () {
 	}();
 
 	innerEquiv = function() { // can take multiple arguments
-		var args = aprot.slice.apply(arguments);
+		var args = dbj.aprot.slice.apply(arguments);
 		if (args.length < 2) {
 			return true; // end transition
 		}

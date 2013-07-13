@@ -55,11 +55,11 @@ var /*module*/dbj = (function (undefined) {
         "aprot" : aprot,
         "sprot" : sprot,
 
+        type : imp_.type,
         isObject: imp_.isObject,
         isFunction: imp_.isFunction,
         isArray: imp_.isArray,
         isString: imp_.isString
-
     };
 
 }());

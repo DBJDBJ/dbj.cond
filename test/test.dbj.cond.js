@@ -33,22 +33,40 @@ top.tests = {
             ],
 		"dbj.cond() more complex usage": [
            [function () {
-           	var f1 = function () { return 4; }, f2 = function () { return 5; }, 
-			f3 = function () { return 3; }, f5 = function () { return 5; }, f6 = function () { return 6; };
+               /* function to function comparison */
+               var f1 = function () { return 4; },
+                   f2 = function () { return 5; },
+			       f3 = function () { return 3; },
+                   f5 = function () { return 5; },
+                   f6 = function () { return 6; };
            	return dbj.cond(f1, f1, f3, f2, f5, f6)();
            }, 3],
            [function () {
-           	var f1 = function () { return 4; }, f2 = function () { return 5; };
-           	return dbj.cond(f1, f1, "A", f2, "B", "C");
+               /* function comparison */
+               var f0 = function () { return 4; }, f1 = function () { return 4; }, f2 = function () { return 5; };
+           	return dbj.cond(f0, f1, "A", f2, "B", "C");
            }, "A"],
            [function () {
-           	var d1 = new Date(), d2 = new Date(1959, 7, 3);
-           	return dbj.cond(d1, d1, "A", d2, "B", "C");
+               /* dates comparison */
+               var d0 = new Date(1959,6,3), d1 = new Date(1959,6,3), d2 = new Date(1959, 7, 3);
+           	return dbj.cond(d0, d1, "A", d2, "B", "C");
            }, "A"],
-           [function () { return dbj.cond(/./, /./, "A", /.[a,A]?/, "B", "C"); }, "A"],
-           [function () { return dbj.cond([1, 2, 3], [1, 2, 3], "A", 7, "B", "C"); }, "A"],
-           [function () { return dbj.cond([1, 2, 3], [1, [2,3], [1,2,3]], "A", 7, "B", "C"); }, "A"],
-           [function () { return dbj.cond({ a: 7 }, [1, 2, 3], "A", { a: 7 }, "B", "C"); }, "B"]
+           [function () {
+               /* regex to regex comparison */
+               return dbj.cond(/./, /./, "A", /.[a,A]?/, "B", "C");
+           }, "A"],
+           [function () {
+               /* simple array to array comparison */
+               return dbj.cond([1, 2, 3], [1, 2, 3], "A", 7, "B", "C");
+           }, "A"],
+           [function () {
+               /* input array lookup in multidimensional array */
+               return dbj.cond([1, 2, 3], [1, [2, 3], [1, 2, 3]], "A", 7, "B", "C");
+           }, "A"],
+           [function () {
+               /* comparing objects */
+               return dbj.cond({ a: 7 }, [1, 2, 3], "A", { a: 7 }, "B", "C");
+           }, "B"],
 		]
 	}, // eof module
 	"Simple cond()": {

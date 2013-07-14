@@ -41,112 +41,7 @@
 	} ());
 	/* see the usage in dbj.cond */
 	dbj.cond.comparator = null;
-	/*
-	call dbj.cond() *once* with the the comparator of your choice. 
-    Must be called with apply() in order to
-    to pass the comparator to be used on top of usual arguments for dbj.cond
-    example:
-    var x = 2 ;
-    dbj.cond.applicator(
-       function (a,b) {return a != b ;}, // my comparator to be used just for this call
-       [x,1,"OK",2] // array of required arguments for dbj.cond()
-       ) ;
 
-       will return "OK", since comparator given for this one call returned true because
-       x != 1 so the first comparison was used to return a result value "OK".
-
-	*/
-	dbj.cond.applicator = function () {
-		if (!dbj.isFunction(this)) throw "this in the applicator must be the comparator";
-		try {
-			dbj.cond.comparator = this;
-			return dbj.cond.apply(null, dbj.aprot.slice.apply(arguments));
-		} finally {
-			dbj.cond.comparator = null;
-		}
-	}
-	/*
-	call dbj.cond() once, using native equals behavior
-	*/
-	dbj.condeq = function () {
-		return dbj.cond.applicator.apply(
-		function (a, b) { return a === b; }, dbj.aprot.slice.apply(arguments));
-	}
-	/*
-	call dbj.cond() once, using native not equals behavior
-	*/
-	dbj.condnq = function () {
-		return dbj.cond.applicator.apply(
-			function (a, b) { return a !== b; }, dbj.aprot.slice.apply(arguments));
-	}
-	/*
-	call dbj.cond() once, using native less than behavior
-	*/
-	dbj.condlt = function () {
-	    return dbj.cond.applicator.apply(function (a, b) { return a < b; }, dbj.aprot.slice.apply(arguments));
-	}
-	/*
-	call dbj.cond() once, using native greater than behavior
-	*/
-	dbj.condgt = function () {
-	    return dbj.cond.applicator.apply(function (a, b) { return a > b; }, dbj.aprot.slice.apply(arguments));
-	}
-
-	/*
-	https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
-	changed so that it works for "everything" by using dbj.E.rathe() instead of "==="
-	also not implemented as array extension but private function instead
-	*/
-	var find_index = function (arg) {
-		"use strict";
-		var array = arg["array"], searchElement = arg["searchElement"],
-			fromIndex = arg["fromIndex"], comparator = arg["comparator"];
-
-		if (!dbj.isArray(array)) {
-			throw new Error(0xFF, "find_index() : bad array argument");
-		}
-		var t = Object(array), len = t.length >>> 0;
-		if (len === 0) {
-			return -1;
-		}
-		// if fromIndex is used as 3-rd argument
-		var n = 0;
-		if (fromIndex) {
-			n = Number(fromIndex);
-			if (n !== n) { // shortcut for verifying if it's NaN
-				n = 0;
-			} else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0)) {
-				n = (n > 0 || -1) * Math.floor(Math.abs(n));
-			}
-		}
-		if (n >= len) {
-			return -1;
-		}
-		var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
-		for (; k < len; k++) {
-			/* dbj 2011SEP11 replaced simple native '===' with dbj.EQ.rathe() */
-			if (k in t && comparator(t[k], searchElement)) {
-				return k;
-			}
-		}
-		return -1;
-	}
-
-	/*--------------------------------------------------------------------------------------------*/
-	var indexOfanything = function (array, searchElement /*, fromIndex */) {
-		return find_index({ "array": array, "searchElement": searchElement,
-			"fromIndex": typeof (fromIndex) !== "undefined" ? fromIndex : null,
-			"comparator": dbj.EQ.rathe
-		});
-	}
-	/*--------------------------------------------------------------------------------------------*/
-	if (!dbj.isFunction(dbj.aprot.indexOf))
-		dbj.aprot.indexOf = function (searchElement /*, fromIndex */) {
-			return find_index({ "array": this, "searchElement": searchElement,
-				"fromIndex": typeof (fromIndex) !== "undefined" ? fromIndex : null,
-				"comparator": function (a, b) { return a === b; }
-			});
-		}
 /*
 --------------------------------------------------------------------------------------------
 comparators in essence define the behaviour of the cond()
@@ -163,6 +58,18 @@ default_comparator( [3,2,1], 1 ) --> true
 default_comparator( function (){ return 1;}, [3,2,1] ) --> true
 default_comparator( [3,2,1], [3,2,1] ) --> true
 */
+	var indexOfanything = function (array, searchElement) {
+	    var found = -1 ;
+	    array.every(
+            function (e, i) {
+                if (dbj.EQ.rathe(e, searchElement)) {
+                    found = i; return false;
+                };
+                return true;
+            });
+	    return found;
+	}
+
 	dbj.EQ.default_comparator = function (a, b) {
 	    if (dbj.EQ.rathe(a, b)) return true;         /* covers arr to arr too */
 	    if (dbj.isArray(b)) return indexOfanything(b, a) > -1; /* sing to arr */
@@ -355,36 +262,20 @@ EQ.rathe = function () {
     simple cond
     */
 dbj.scond = function (v) {
-    ///<summary>
-    /// the last argument (if given) is the default value
-    ///<code>
-    /// dbj.scond( input, case1, value1, case2, value2, ..... , value_for_default )
-    ///</code>
-    /// example :
-    ///<code>
-    /// dbj.scond(2, 1, "blue", 2, "red", /*default is*/"green");
-    ///</code>
-    /// returns "red"
-    ///</summary>
-    ///default comparator is 'exact match' aka "==="
+    "use strict";
+    if (!dbj.isEven(arguments.length)) throw "dbj.scond() not given even number of arguments";
     var j = 1, L = arguments.length;
     for (; j < L; j += 2) {
         if (dbj.scond.comparator(v,arguments[j])) return arguments[j + 1];
     }
     return (!arguments[j - 2]) ? undefined : arguments[j - 2];
 };
-
+    /*
+    standard comparator 
+    */
 dbj.scond.comparator = function (a, b) {
-
-    if (a === b) return true; // most of the cases
-
-    if ("function" == typeof a.indexOf) {
-        return a.indexOf(b) > -1;
-    }
-    if ( "function" == typeof b.indexOf ) {
-        return b.indexOf(a) > -1 ;
-    }
-    return false ;
+    "use strict";
+    return (a === b) ; 
 };
 /*--------------------------------------------------------------------------------------------*/
 } (dbj ));

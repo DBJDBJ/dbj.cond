@@ -50,43 +50,34 @@ equvalence tests are simple to meter: full tests are slower and simple tests are
 */
 	var EQ = dbj.EQ = {};
 
-    /*
-    find value of any type in the array of values of the same type
-    comparator is user defined
-    */
-	var indexOfanything = ( function () {
-
-	    var imp_ = function (array, searchElement) {
-	        var found = -1;
-	        array.every(
-                function (e, i) {
-                    if (dbj.EQ.rathe(e, searchElement)) {
-                        found = i; return false;
-                    };
-                    return true;
-                });
-	        return found;
-	    };
-
-	    return function (a,e) {
-	        return imp_(a, e);
-	    };
-
-	}());
-
-    /*
-    default_comparator works for all types, because it uses function dbj.EQ.rathe(b, a) 
-    defualt comparator allows arrays to singular values to be compared 
-    Examples:
-    default_comparator( 1, [3,2,1] ) --> true
-    default_comparator( [3,2,1], 1 ) --> true
-    default_comparator( function (){ return 1;}, [3,2,1] ) --> true
-    default_comparator( [3,2,1], [3,2,1] ) --> true
-    */
+/*
+find value of any type in the array of values of the same type
+comparator is user defined
+*/
+	var index_of = function (array, searchElement, comparator ) {
+	    var found = -1;
+	    array.every(
+            function (e, i) {
+                if (comparator(e, searchElement)) {
+                    found = i; return false;
+                };
+                return true;
+            });
+	    return found;
+	};
+/*
+default_comparator works for all types, because it uses function dbj.EQ.rathe(b, a) 
+defualt comparator allows arrays to singular values to be compared 
+Examples:
+default_comparator( 1, [3,2,1] ) --> true
+default_comparator( [3,2,1], 1 ) --> true
+default_comparator( function (){ return 1;}, [3,2,1] ) --> true
+default_comparator( [3,2,1], [3,2,1] ) --> true
+*/
 	dbj.EQ.default_comparator = function (a, b) {
 	    if (dbj.EQ.rathe( a, b )) return true;         /* covers arr to arr too */
-	    if (dbj.isArray(b)) return indexOfanything(b, a) > -1; /* sing to arr */
-	    if (dbj.isArray(a)) return indexOfanything(a, b) > -1; /* arr to sing */
+	    if (dbj.isArray(b)) return index_of(b, a, dbj.EQ.rathe ) > -1; /* sing to arr */
+	    if (dbj.isArray(a)) return index_of(a, b, dbj.EQ.rathe ) > -1; /* arr to sing */
 	    return false;
 	};
 

@@ -1,32 +1,30 @@
-﻿<!DOCTYPE HTML >
+﻿<!DOCTYPE html >
 <html>
 <head>
-<title>DBJ(tm) QUNIT Tests</title>
-<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css' />
-<link href='http://fonts.googleapis.com/css?family=Reenie+Beanie' rel='stylesheet' type='text/css' />
-<link href="qunit.css" rel="stylesheet" type="text/css" />
+<title>dbj();&trade;&nbsp;&amp;&nbsp;dbj.cond()&trade;are &copy; by dbj();</title>
+<!--<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css' />
+<link href='http://fonts.googleapis.com/css?family=Reenie+Beanie' rel='stylesheet' type='text/css' />-->
+<link href="http://code.jquery.com/qunit/qunit-1.12.0.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<h1 id="qunit-header">DBJ&trade;&nbsp;JavaScript Micro Library of Foundation Mechanisms</h1>
-<h2 id="qunit-banner"></h2>
-<h2 id="qunit-userAgent"></h2>
-<ol id="qunit-tests"></ol>
+ <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
 </body>
-<script type="text/javascript_notinuse" >
+<script type="text/javascript" >
     var crazyLoader = function () {
-        var sbegin = '<script type="text/javascript"',
-            send = '></' + 'script>',
+        var sbegin = '<script type="text/javascript" src="%%" ><\/script>' ;
             args = arguments;
 
         for (var args_idx = 0; args_idx < args.length; args_idx++) {
-            document.write(sbegin + ' src="' + args[args_idx] + send);
+            document.write(sbegin.replace("%%", args[args_idx]));
         };
     }
+    crazyLoader(
+    "http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js",
+    "http://code.jquery.com/qunit/qunit-1.12.0.js",
+    "../dbj.kernel.js",
+    "../dbj.cond.js",
+    "test.dbj.cond.js"
+    );
 </script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="qunit.js" ></script>
-<script type="text/javascript" src="../dbj.kernel.js" ></script>
-<script type="text/javascript" src="../dbj.cond.js" ></script>
-<script type="text/javascript" src="test.dbj.cond.js" ></script>
-<script type="text/javascript" src="dbj.qunit.js" ></script>
 </html>

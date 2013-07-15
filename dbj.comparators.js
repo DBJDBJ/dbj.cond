@@ -106,6 +106,7 @@ dependancy: dbj
         b.every(function (e, i) { return e === a[i]; });
     }
 
+    /* interface */
     dbj.comparators = {
         /// compare arrays without checking if params are arrays
         eq_arr: function (a, b) {

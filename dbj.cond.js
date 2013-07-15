@@ -31,7 +31,7 @@
 	dbj.cond = (function () {
 		return function (v) {
 			if (!dbj.isEven(arguments.length)) throw "dbj.cond() not given even number of arguments";
-		    var comparator = dbj.cond.comparator || dbj.EQ.default_comparator,
+		    var comparator = dbj.cond.comparator || dbj.EQ.standard_comparator,
 			    j = 1, L = arguments.length;
 			for (; j < L; j += 2) {
 				if (comparator(v, arguments[j])) return arguments[j + 1];
@@ -42,6 +42,8 @@
 	/* see the usage in dbj.cond */
 	dbj.cond.comparator = null;
 
+
+
 /*
 --------------------------------------------------------------------------------------------
 comparators in essence define the behaviour of the cond()
@@ -49,6 +51,11 @@ equvalence tests are simple to meter: full tests are slower and simple tests are
 --------------------------------------------------------------------------------------------
 */
 	var EQ = dbj.EQ = {};
+
+	dbj.EQ.standard_comparator = function (a, b) {
+	    "use strict";
+	    return a === b ;
+	};
 
 /*
 find value of any type in the array of values of the same type
@@ -74,7 +81,7 @@ default_comparator( [3,2,1], 1 ) --> true
 default_comparator( function (){ return 1;}, [3,2,1] ) --> true
 default_comparator( [3,2,1], [3,2,1] ) --> true
 */
-	dbj.EQ.default_comparator = function (a, b) {
+	dbj.EQ.multi_comparator = function (a, b) {
 	    if (dbj.EQ.rathe( a, b )) return true;         /* covers arr to arr too */
 	    if (dbj.isArray(b)) return index_of(b, a, dbj.EQ.rathe ) > -1; /* sing to arr */
 	    if (dbj.isArray(a)) return index_of(a, b, dbj.EQ.rathe ) > -1; /* arr to sing */
@@ -262,25 +269,6 @@ EQ.rathe = function () {
 
 }(); // eof EQ.rathe
 
-    /*
-    simple cond
-    */
-dbj.scond = function (v) {
-    "use strict";
-    if (!dbj.isEven(arguments.length)) throw "dbj.scond() not given even number of arguments";
-    var j = 1, L = arguments.length;
-    for (; j < L; j += 2) {
-        if (dbj.scond.comparator(v,arguments[j])) return arguments[j + 1];
-    }
-    return (!arguments[j - 2]) ? undefined : arguments[j - 2];
-};
-    /*
-    standard comparator 
-    */
-dbj.scond.comparator = function (a, b) {
-    "use strict";
-    return (a === b) ; 
-};
 /*--------------------------------------------------------------------------------------------*/
 } (dbj ));
 /*--------------------------------------------------------------------------------------------*/

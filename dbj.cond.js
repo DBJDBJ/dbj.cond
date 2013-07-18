@@ -1,32 +1,102 @@
+/*
+(c) dbj.org
+The absolute core of the dbj cores ... perhaps we can call it a "kernel"
+*/
+var /*module*/dbj = (function (undefined) {
+
+    /*
+    additions to ES5 intrinsics
+    */
+    /* moot point: what happens in the presence of another "".format() ? */
+    if ("function" != typeof "".format)
+        String.prototype.format = function () {
+            var args = arguments;
+            return this.replace(/\{(\d|\d\d)\}/g, function ($0) {
+                var idx = 1 * $0.match(/\d+/)[0]; return args[idx] !== undefined ? args[idx] : (args[idx] === "" ? "" : $0);
+            }
+            );
+        }
+
+    var oprot = Object.prototype, aprot = Array.prototype, sprot = String.prototype;
+
+    var /*implementation*/imp_ = {
+        /* coercion to Int32 as required by asm.js */
+        toInt32: function (v_) {
+            return v_ | 0;
+        },
+        isEven: function (value) { return (imp_.toInt32(value) % 2 == 0); },
+        /* dbj's type system */
+        type: (function () {
+            var rx = /\w+/g, tos = oprot.toString;
+            return function (o) {
+                if (typeof o === "undefined") return "undefined";
+                if (o === null) return "null";
+                if ("number" === typeof (o) && isNaN(o)) return "nan";
+                return (tos.call(o).match(rx)[1]).toLowerCase();
+            }
+        }()),
+        isObject: function (o)   { return "object" === imp_.type(o);   },
+        isFunction: function (o) { return "function" === imp_.type(o); },
+        isArray: function (o)    { return "array" === imp_.type(o);    },
+        isString: function (o)   { return "string" === imp_.type(o);   }
+    };
+
+    return/*interface*/ {
+
+        toString: function () { return "dbj(); kernel 1.2.0"; },
+        /* 
+        coercion to Int32 
+        also required by asm.js
+        */
+        toInt32: imp_.toInt32,
+        isEven: imp_.isEven,
+
+        "oprot": oprot,
+        "aprot": aprot,
+        "sprot": sprot,
+
+        type: imp_.type,
+        isObject: imp_.isObject,
+        isFunction: imp_.isFunction,
+        isArray: imp_.isArray,
+        isString: imp_.isString
+    };
+
+}());
 
 /*
 (c) 2011 by DBJ.ORG
  Dual licensed under the MIT (MIT-LICENSE.txt)
  and GPL (GPL-LICENSE.txt) licenses.
 
- depends on dbj.kernel.js
+ depends on dbj.kernel
 */
 
 (function (dbj,undefined) {
 
-	/*
-	Defult cond allows users to compare initial values with other values of the same type
-	or arrays of values of the same type. Order is "first found, first served". Example:
-	dbj.cond( 1, 1, "A", 2, "B", "C") returns "A"
-	dbj.cond( 1, [3,2,1],"A", 2, "B", "C") returns "A" , 1 is found first in [3,2,1]
+    /*
+    Terminology and arguments requirements:
 
-	any types can be compared meaningfully. For example
-	dbj.cond( /./, /./, "A", /$/, "B", "C") returns "A"
+            dbj.cond( input_value,
+                      check_val, out_val, // any number of check/out values
+                      default_val ) ;
 
-	function types are also compared and not called as functions
-	dbj.cond( function() {return 1;}, function(){return 1}, "A", function(){return 1}, "B", "C") returns "A"
+    Number of arguments must be even. 
+	Standard  cond allows users to handle values with other values of the same type.
+    Standard comparator is '==='. Order is "first found, first served". Example:
 
-	this behavior allows for functions dispatching. Example: 
+	         dbj.cond( 1, 1, "A", 2, "B", "C") //=> "A"
 
-	function disptacher ( fx ) {
-	return dbj.cond( fx, f1, f2, f3, f4, f5 ) ;
-	// returns f2,f4 or f5 if neither f1 or f3 are equal to fx
-	}
+Arrays as arguments are not part of standard dbj.cond() functionality:  
+
+	         dbj.cond( 1, [3,2,1],"A", 2, "B", "C") 
+             //=> "C" , single and array can not be compared 
+             // 1 === [1,2,3] => false
+
+	Only intrinsic scalar types can be compared meaningfully. For example
+	dbj.cond( /./, /./, "A", /$/, "B", "C") 
+    //=> "C",  /./ === /./ => false
+
 	*/
 	dbj.cond = (function () {
 		return function (v) {
@@ -47,7 +117,7 @@
 /*
 --------------------------------------------------------------------------------------------
 comparators in essence define the behaviour of the cond()
-equvalence tests are simple to meter: full tests are slower and simple tests are faster
+comples tests are slower and simple tests are faster
 --------------------------------------------------------------------------------------------
 */
 	var EQ = dbj.EQ = {};
@@ -59,7 +129,6 @@ equvalence tests are simple to meter: full tests are slower and simple tests are
 
 /*
 find value of any type in the array of values of the same type
-comparator is user defined
 */
 	var index_of = function (array, searchElement, comparator ) {
 	    var found = -1;
@@ -74,11 +143,11 @@ comparator is user defined
 	};
 /*
 default_comparator works for all types, because it uses function dbj.EQ.rathe(b, a) 
-defualt comparator allows arrays to singular values to be compared 
+defualt comparator allows arrays to singles to be compared 
 Examples:
 default_comparator( 1, [3,2,1] ) --> true
 default_comparator( [3,2,1], 1 ) --> true
-default_comparator( function (){ return 1;}, [3,2,1] ) --> true
+default_comparator( function (){ return 1;}, [3,2,1] ) --> false
 default_comparator( [3,2,1], [3,2,1] ) --> true
 */
 	dbj.EQ.multi_comparator = function (a, b) {
@@ -88,7 +157,7 @@ default_comparator( [3,2,1], [3,2,1] ) --> true
 	    return false;
 	};
 
-// Test for equality any JavaScript type. Used in QUnit
+// Test for equality any JavaScript type. Also used in QUnit
 // equiv({a:1},{b:2}) --> true
 //
 // Discussions and reference: http://philrathe.com/articles/equiv

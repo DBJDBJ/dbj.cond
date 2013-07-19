@@ -2,7 +2,7 @@
   "name": "dbj.cond()",
   "version": "2.0.0",
   "author" : "dbj <dbj@dbj.org>",
-  "description" : "simple and clean way to avoid if's and switches",
+  "description" : "simple and robuts way to avoid if's and switches",
   "dependencies": {
   },
   "repository" : {

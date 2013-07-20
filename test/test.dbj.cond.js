@@ -9,7 +9,7 @@
             );
     }
 
-    function test_standard(x, v) {
+    function test_for_not_equality(x, v) {
 
         test.x = x; test.v = v;
 
@@ -18,8 +18,8 @@
 
         testera('dbj.cond(test.x, test.v, "x eq v", "!")', "!");
         testera('dbj.cond(test.x, 0, "1", 2, 3, 4, 5, 6, 7, "!")', "!");
-        testera('dbj.cond(true, test.x == test.v, "eq","!")', "!");
-        testera('dbj.cond(true, 1 == 2, "1", "default outcome")', "default outcome");
+        testera('dbj.cond(true, test.x != test.v, "neq","!")', "neq");
+        testera('dbj.cond(true, 1 == 2, "1", test.v)', test.v);
         testera('dbj.cond(true, 1 == 1, test.x, "!")', test.x);
     }
 
@@ -30,10 +30,10 @@
 
     test(" dbj.cond.comparator => " + dbj.cond.comparator, function () {
 
-        test_standard(1, 2);
-        test_standard("Alpha", "Beta");
-        test_standard(true, false);
-        test_standard(Math.PI, Math.E);
+        test_for_not_equality(1, 2);
+        test_for_not_equality("Alpha", "Beta");
+        test_for_not_equality(true, false);
+        test_for_not_equality(3.14, 2.34);
 
     });
 
@@ -41,10 +41,21 @@
 
     test(" dbj.cond.comparator => dbj.EQ.rathe " , function () {
 
-        test_standard({}, {1:2});
-        test_standard({ "Alpha": 1 }, { "Beta": 2 } );
-        test_standard([true,true], [false,false]);
-        test_standard([Math.PI, Math.E], [Math.E, Math.PI]);
+        test_for_not_equality({}, {1:2});
+        test_for_not_equality({ "Alpha": 1 }, { "Beta": 2 } );
+        test_for_not_equality([true,true], [false,false]);
+        test_for_not_equality([3, 2], [2, 3]);
+
+    });
+
+    dbj.cond.comparator = dbj.EQ.multi_comparator;
+
+    test(" dbj.cond.comparator => dbj.EQ.multi_comparator ", function () {
+
+        test_for_not_equality({}, [{ 1: 2 }]);
+        test_for_not_equality([{ "Alpha": 1 }], { "Beta": 2 });
+        test_for_not_equality([[true, true],3], [false, false]);
+        test_for_not_equality([3, 2], [true,[3, 2]]);
 
     });
 

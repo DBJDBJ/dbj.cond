@@ -1,8 +1,18 @@
+
+/*
+--------------------------------------------------------------------------------------------
+export to Node.JS
+(also work in the presence of qUnit "module")
+--------------------------------------------------------------------------------------------
+*/
+(module || (module = { }));
+(module.exports || (module.exports = {}));
+
 /*
 (c) dbj.org
 The absolute core of the dbj cores ... perhaps we can call it a "kernel"
 */
-var /*module*/dbj = (function (undefined) {
+module.exports.dbj = dbj = (function (undefined) {
 
     /*
     additions to ES5 intrinsics
@@ -111,8 +121,6 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
 	} ());
 	/* see the usage in dbj.cond */
 	dbj.cond.comparator = null;
-
-
 
 /*
 --------------------------------------------------------------------------------------------

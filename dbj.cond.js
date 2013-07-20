@@ -108,244 +108,337 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
     //=> "C",  /./ === /./ => false
 
 	*/
-	dbj.cond = (function () {
-		return function (v) {
+	dbj.cond = function ( v ) {
+
+	    var comparator_ = dbj.cond.comparator = dbj.compare.standard;
+	    /* jokers can fiddle with the above and set it to null */
+
+	    dbj.cond = function (v) {
 			if (!dbj.isEven(arguments.length)) throw "dbj.cond() not given even number of arguments";
-		    var comparator = dbj.cond.comparator || dbj.EQ.standard_comparator,
-			    j = 1, L = arguments.length;
+			 var  j = 1, L = arguments.length;
 			for (; j < L; j += 2) {
-				if (comparator(v, arguments[j])) return arguments[j + 1];
+			    if ( true === comparator_(v, arguments[j])) return arguments[j + 1];
 			}
 			return arguments[L - 1];
-		};
-	} ());
-	/* see the usage in dbj.cond */
+	    };
+	    return dbj.cond(v);
+	} ;
 	dbj.cond.comparator = null;
 
+/*--------------------------------------------------------------------------------------------*/
+} (dbj ));
+/*--------------------------------------------------------------------------------------------*/
 /*
---------------------------------------------------------------------------------------------
-comparators in essence define the behaviour of the cond()
-comples tests are slower and simple tests are faster
---------------------------------------------------------------------------------------------
-*/
-	var EQ = dbj.EQ = {};
+(c) dbj
+place for dbj comparators
+dependancy: dbj.kernel and ES5
 
-	dbj.EQ.standard_comparator = function (a, b) {
-	    "use strict";
-	    return a === b ;
-	};
+NOTE: currently ( 2013-07-19 ) this is in the same file as dbj.cond
 
-/*
-find value of any type in the array of values of the same type
+cleanest implementation would be to have non standard comparators in separate file
+so that standard usage does require very minimal dbj.cond.js
 */
-	var index_of = function (array, searchElement, comparator ) {
-	    var found = -1;
-	    array.every(
+(function (dbj, undefined) {
+    "use strict";
+
+    // also defines what is a comparator : 
+    function strict_eq(a, b) { return a === b; }
+    // as per ES5 spec this returns false on different types
+
+    /*
+    find single in the array
+    only same types allowed to be compared 
+    (as customary) returns -1 , on not found
+    */
+    var index_of = function (array, searchElement, comparator) {
+        var found = -1;
+        array.every(
             function (e, i) {
                 if (comparator(e, searchElement)) {
                     found = i; return false;
                 };
                 return true;
             });
-	    return found;
-	};
-/*
-default_comparator works for all types, because it uses function dbj.EQ.rathe(b, a) 
-defualt comparator allows arrays to singles to be compared 
-Examples:
-default_comparator( 1, [3,2,1] ) --> true
-default_comparator( [3,2,1], 1 ) --> true
-default_comparator( function (){ return 1;}, [3,2,1] ) --> false
-default_comparator( [3,2,1], [3,2,1] ) --> true
-*/
-	dbj.EQ.multi_comparator = function (a, b) {
-	    if (dbj.EQ.rathe( a, b )) return true;         /* covers arr to arr too */
-	    if (dbj.isArray(b)) return index_of(b, a, dbj.EQ.rathe ) > -1; /* sing to arr */
-	    if (dbj.isArray(a)) return index_of(a, b, dbj.EQ.rathe ) > -1; /* arr to sing */
-	    return false;
-	};
+        return found;
+    };
 
-// Test for equality any JavaScript type. Also used in QUnit
-// equiv({a:1},{b:2}) --> true
-//
-// Discussions and reference: http://philrathe.com/articles/equiv
-// Test suites: http://philrathe.com/tests/equiv
-// Author: Philippe Rathé <prathe@gmail.com>
-EQ.rathe = function () {
+    /*
+    multi_comparator  allows arrays v.s. singles to be compared 
+    
+    Examples:
+    
+    multi_comparator( 1, [3,2,1] ) --> true
+    multi_comparator( [3,2,1], 1 ) --> true
+    multi_comparator( function (){ return 1;}, [3,2,1] ) --> false
+    multi_comparator( [3,2,1], ["x",[3,2,1]] ) --> true
+    
+    if rathe(a,b) is used then multi_comparator works for all types
+    */
+    var multi_comparator = function (a, b, comparator) {
+        if (comparator(a, b)) return true;         /* covers arr to arr too */
+        if (Array.isArray(b)) return index_of(b, a, comparator) > -1; /* sing to arr */
+        if (ArrayisArray(a)) return index_of(a, b, comparator) > -1; /* arr to sing */
+        return false;
+    };
 
-	var innerEquiv, // the real equiv function
-		callers = [], // stack to decide between skip/abort functions
-		parents = []; // stack to avoiding loops from circular referencing
+    // Test for equality any JavaScript type. Also used in QUnit
+    // equiv({a:1},{b:2}) --> true
+    //
+    // Discussions and reference: http://philrathe.com/articles/equiv
+    // Test suites: http://philrathe.com/tests/equiv
+    // Author: Philippe Rathé <prathe@gmail.com>
+    var rathe = function () {
 
-	// Call the o related callback with the given arguments.
-	function bindCallbacks(o, callbacks, args) {
-		var prop = dbj.type(o);
-		if (prop) {
-			if (dbj.type(callbacks[prop]) === "function") {
-				return callbacks[prop].apply(callbacks, args);
-			} else {
-				return callbacks[prop]; // or undefined
-			}
-		}
-	}
+        var innerEquiv, // the real equiv function
+            callers = [], // stack to decide between skip/abort functions
+            parents = []; // stack to avoiding loops from circular referencing
 
-	var callbacks = function () {
+        // Call the o related callback with the given arguments.
+        function bindCallbacks(o, callbacks, args) {
+            var prop = dbj.type(o);
+            if (prop) {
+                if (dbj.type(callbacks[prop]) === "function") {
+                    return callbacks[prop].apply(callbacks, args);
+                } else {
+                    return callbacks[prop]; // or undefined
+                }
+            }
+        }
 
-	    // expose it to be used by dbj.cond's default comparator
-		// for string, boolean, number and null
-		EQ.useStrictEquality = function (b, a) {
-			if (b instanceof a.constructor || a instanceof b.constructor) {
-				// to catch short annotaion VS 'new' annotation of a
-				// declaration
-				// e.g. var i = 1;
-				// var j = new Number(1);
-				return a == b;
-			} else {
-				return a === b;
-			}
-		}
+        var callbacks = function () {
 
-		// TODO! Check that dbj.type() returns these strings
-		return {
-			"string" : EQ.useStrictEquality,
-			"boolean" : EQ.useStrictEquality,
-			"number" : EQ.useStrictEquality,
-			"null" : EQ.useStrictEquality,
-			"undefined" : EQ.useStrictEquality,
+            // expose it to be used by dbj.cond's default comparator
+            // for string, boolean, number and null
+            var useStrictEquality = function (b, a) {
+                if (b instanceof a.constructor || a instanceof b.constructor) {
+                    // to catch short annotaion VS 'new' annotation of a
+                    // declaration
+                    // e.g. var i = 1;
+                    // var j = new Number(1);
+                    return a == b;
+                } else {
+                    return a === b;
+                }
+            }
 
-			"nan" : function(b) {
-				return isNaN(b);
-			},
+            // TODO! Check that dbj.type() returns these strings
+            return {
+                "string": useStrictEquality,
+                "boolean": useStrictEquality,
+                "number": useStrictEquality,
+                "null": useStrictEquality,
+                "undefined": useStrictEquality,
 
-			"date" : function(b, a) {
-				return dbj.type(b) === "date"
-						&& a.valueOf() === b.valueOf();
-			},
+                "nan": function (b) {
+                    return isNaN(b);
+                },
 
-			"regexp" : function(b, a) {
-				return dbj.type(b) === "regexp"
-						&& a.source === b.source && // the regex itself
-						a.global === b.global && // and its modifers
-													// (gmi) ...
-						a.ignoreCase === b.ignoreCase
-						&& a.multiline === b.multiline;
-			},
+                "date": function (b, a) {
+                    return dbj.type(b) === "date"
+                            && a.valueOf() === b.valueOf();
+                },
 
-			// - skip when the property is a method of an instance (OOP)
-			// - abort otherwise,
-			// initial === would have catch identical references anyway
-			"function" : function() {
-				var caller = callers[callers.length - 1];
-				return caller !== Object && typeof caller !== "undefined";
-			},
+                "regexp": function (b, a) {
+                    return dbj.type(b) === "regexp"
+                            && a.source === b.source && // the regex itself
+                            a.global === b.global && // and its modifers
+                                                        // (gmi) ...
+                            a.ignoreCase === b.ignoreCase
+                            && a.multiline === b.multiline;
+                },
 
-			"array" : function(b, a) {
-				var i, j, loop;
-				var len;
+                // - skip when the property is a method of an instance (OOP)
+                // - abort otherwise,
+                // initial === would have catch identical references anyway
+                "function": function () {
+                    var caller = callers[callers.length - 1];
+                    return caller !== Object && typeof caller !== "undefined";
+                },
 
-				// b could be an object literal here
-				if (!(dbj.type(b) === "array")) {
-					return false;
-				}
+                "array": function (b, a) {
+                    var i, j, loop;
+                    var len;
 
-				len = a.length;
-				if (len !== b.length) { // safe and faster
-					return false;
-				}
+                    // b could be an object literal here
+                    if (!(dbj.type(b) === "array")) {
+                        return false;
+                    }
 
-				// track reference to avoid circular references
-				parents.push(a);
-				for (i = 0; i < len; i++) {
-					loop = false;
-					for (j = 0; j < parents.length; j++) {
-						if (parents[j] === a[i]) {
-							loop = true;// dont rewalk array
-						}
-					}
-					if (!loop && !innerEquiv(a[i], b[i])) {
-						parents.pop();
-						return false;
-					}
-				}
-				parents.pop();
-				return true;
-			},
+                    len = a.length;
+                    if (len !== b.length) { // safe and faster
+                        return false;
+                    }
 
-			"object" : function(b, a) {
-				var i, j, loop;
-				var eq = true; // unless we can proove it
-				var aProperties = [], bProperties = []; // collection of
-														// strings
+                    // track reference to avoid circular references
+                    parents.push(a);
+                    for (i = 0; i < len; i++) {
+                        loop = false;
+                        for (j = 0; j < parents.length; j++) {
+                            if (parents[j] === a[i]) {
+                                loop = true;// dont rewalk array
+                            }
+                        }
+                        if (!loop && !innerEquiv(a[i], b[i])) {
+                            parents.pop();
+                            return false;
+                        }
+                    }
+                    parents.pop();
+                    return true;
+                },
 
-				// comparing constructors is more strict than using
-				// instanceof
-				if (a.constructor !== b.constructor) {
-					return false;
-				}
+                "object": function (b, a) {
+                    var i, j, loop;
+                    var eq = true; // unless we can proove it
+                    var aProperties = [], bProperties = []; // collection of
+                    // strings
 
-				// stack constructor before traversing properties
-				callers.push(a.constructor);
-				// track reference to avoid circular references
-				parents.push(a);
+                    // comparing constructors is more strict than using
+                    // instanceof
+                    if (a.constructor !== b.constructor) {
+                        return false;
+                    }
 
-				for (i in a) { // be strict: don't ensures hasOwnProperty
-								// and go deep
-					loop = false;
-					for (j = 0; j < parents.length; j++) {
-						if (parents[j] === a[i])
-							loop = true; // don't go down the same path
-											// twice
-					}
-					aProperties.push(i); // collect a's properties
+                    // stack constructor before traversing properties
+                    callers.push(a.constructor);
+                    // track reference to avoid circular references
+                    parents.push(a);
 
-					if (!loop && !innerEquiv(a[i], b[i])) {
-						eq = false;
-						break;
-					}
-				}
+                    for (i in a) { // be strict: don't ensures hasOwnProperty
+                        // and go deep
+                        loop = false;
+                        for (j = 0; j < parents.length; j++) {
+                            if (parents[j] === a[i])
+                                loop = true; // don't go down the same path
+                            // twice
+                        }
+                        aProperties.push(i); // collect a's properties
 
-				callers.pop(); // unstack, we are done
-				parents.pop();
+                        if (!loop && !innerEquiv(a[i], b[i])) {
+                            eq = false;
+                            break;
+                        }
+                    }
 
-				for (i in b) {
-					bProperties.push(i); // collect b's properties
-				}
+                    callers.pop(); // unstack, we are done
+                    parents.pop();
 
-				// Ensures identical properties name
-				return eq
-						&& innerEquiv(aProperties.sort(), bProperties
-								.sort());
-			}
-		};
-	}();
+                    for (i in b) {
+                        bProperties.push(i); // collect b's properties
+                    }
 
-	innerEquiv = function() { // can take multiple arguments
-		var args = dbj.aprot.slice.apply(arguments);
-		if (args.length < 2) {
-			return true; // end transition
-		}
+                    // Ensures identical properties name
+                    return eq
+                            && innerEquiv(aProperties.sort(), bProperties
+                                    .sort());
+                }
+            };
+        }();
 
-		return (function(a, b) {
-			if (a === b) {
-				return true; // catch the most you can
-			} else if (a === null || b === null || typeof a === "undefined"
-					|| typeof b === "undefined"
-					|| dbj.type(a) !== dbj.type(b)) {
-				return false; // don't lose time with error prone cases
-			} else {
-				return bindCallbacks(a, callbacks, [ b, a ]);
-			}
+        innerEquiv = function () { // can take multiple arguments
+            var args = dbj.aprot.slice.apply(arguments);
+            if (args.length < 2) {
+                return true; // end transition
+            }
 
-			// apply transition with (1..n) arguments
-		})(args[0], args[1])
-				&& arguments.callee.apply(this, args.splice(1,
-						args.length - 1));
-	};
+            return (function (a, b) {
+                if (a === b) {
+                    return true; // catch the most you can
+                } else if (a === null || b === null || typeof a === "undefined"
+                        || typeof b === "undefined"
+                        || dbj.type(a) !== dbj.type(b)) {
+                    return false; // don't lose time with error prone cases
+                } else {
+                    return bindCallbacks(a, callbacks, [b, a]);
+                }
 
-	return innerEquiv;
+                // apply transition with (1..n) arguments
+            })(args[0], args[1])
+                    && arguments.callee.apply(this, args.splice(1,
+                            args.length - 1));
+        };
 
-}(); // eof EQ.rathe
+        return innerEquiv;
 
-/*--------------------------------------------------------------------------------------------*/
-} (dbj ));
-/*--------------------------------------------------------------------------------------------*/
+    }(); // eof rathe()
+
+    /*
+    Two arrays are considered equal when all their elements 
+    fulfill the following conditions:
+
+    1.  types are equal
+    2.  positions are equal
+    3. values are equal
+
+    Sparse arrays are also compared for equality
+
+    Solution using every() is fast because it uses native method for iteration
+    but it requires two way check since every will 'skip' over undefined entries
+    this checking [1,,2] vs [1,2] will be considered true.
+    
+    this is the tough test, that has to be satisfied:
+
+                 equal_arrays([1, 2, , 3], [1, 2, 3]); // => false
+    
+    function has(element, index) {
+        return this[index] === element;
+    }
+
+    function equal_arrays(a, b) {
+        return (a.length === b.length) && a.every(has, b) && b.every(has, a);
+    }
+    
+    optimised version of the above, also using the comparator
+    */
+    function equal_arrays_opt(a, b, comparator) {
+
+        return (a.length === b.length) &&
+        a.every(function (e, i) { return comparator(e, b[i]); }) &&
+        b.every(function (e, i) { return comparator(e, a[i]); });
+    }
+
+    /* interface */
+    dbj.compare = {
+
+        standard: function (a, b) {
+            return strict_eq(a, b);
+        },
+        /* 
+        compare two arrays 
+       if comparator is given uses it otherwise uses strict_eq().
+
+       NOTE: this method is in here because it might prove faster than 
+       dbj.compare.multi()
+        */
+        arr: function (a, b, /* optional */ comparator) {
+
+            if (!Array.isArray(a)) throw TypeError("First argument must be array");
+            if (!Array.isArray(b)) throw TypeError("Second argument must be array");
+
+            if (!!comparator && "function" != typeof comparator)
+                throw TypeError("Third argument is given but is not a function");
+
+            return equal_arrays(
+                a, b, comparator || strict_eq
+                )
+        },
+        /*
+        Can compare two arrays AND single to array AND array to single
+        NOTE: if comparator is given use it otherwise use strict_eq().
+        */
+        multi: function (a, b, comparator) {
+            return multi_comparator(a, b, comparator || strict_eq);
+        },
+        /*
+        perform deep comparison of two objects or scalars
+        NOTE: to construct multi+deep comparator, end users will do this :
+
+         dbj.compare(a,b,dbj.compare.deep) ;
+
+        */
+        deep: function (a, b) {
+            return rathe(a, b);
+        }
+    };
+
+}(dbj));

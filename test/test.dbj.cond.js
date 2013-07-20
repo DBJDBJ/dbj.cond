@@ -28,7 +28,7 @@
         ok(!!dbj.cond, "dbj.cond is defined");
     });
 
-    test(" dbj.cond.comparator => " + dbj.cond.comparator, function () {
+    test(" dbj.cond.comparator => standard ", function () {
 
         test_for_not_equality(1, 2);
         test_for_not_equality("Alpha", "Beta");
@@ -37,9 +37,9 @@
 
     });
 
-    dbj.cond.comparator = dbj.EQ.rathe;
+    dbj.cond.comparator = dbj.compare.deep ;
 
-    test(" dbj.cond.comparator => dbj.EQ.rathe " , function () {
+    test(" dbj.cond.comparator => dbj.compare.deep ", function () {
 
         test_for_not_equality({}, {1:2});
         test_for_not_equality({ "Alpha": 1 }, { "Beta": 2 } );
@@ -48,9 +48,9 @@
 
     });
 
-    dbj.cond.comparator = dbj.EQ.multi_comparator;
+    dbj.cond.comparator = dbj.compare.multi ;
 
-    test(" dbj.cond.comparator => dbj.EQ.multi_comparator ", function () {
+    test(" dbj.cond.comparator => dbj.compare.multi ", function () {
 
         test_for_not_equality({}, [{ 1: 2 }]);
         test_for_not_equality([{ "Alpha": 1 }], { "Beta": 2 });

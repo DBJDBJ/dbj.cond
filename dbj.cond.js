@@ -121,7 +121,11 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
 			}
 			return arguments[L - 1];
 	    };
-	    return dbj.cond(v);
+	    /*
+        be sure to pass all the arguments on the first run
+        which is the only time the line bellow will be executed
+        */
+	    return dbj.cond.apply(this, Array.prototype.slice.call(arguments,0));
 	} ;
 	dbj.cond.comparator = null;
 

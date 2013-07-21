@@ -9,7 +9,12 @@
             );
     }
 
-    function test_for_not_equality(x, v) {
+    test.x = test.v = null;
+
+    /*
+    precondition: x !== v
+    */
+        function test_for_not_equality(x, v) {
 
         test.x = x; test.v = v;
 
@@ -29,7 +34,7 @@
     });
 
     test(" dbj.cond.comparator => standard ", function () {
-
+        /* standard is used by default */
         test_for_not_equality(1, 2);
         test_for_not_equality("Alpha", "Beta");
         test_for_not_equality(true, false);

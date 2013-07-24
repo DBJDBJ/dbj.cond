@@ -2,28 +2,37 @@
 <html>
 <head>
 <title>dbj();&trade;&nbsp;&amp;&nbsp;dbj.cond()&trade;are &copy; by dbj();</title>
-<!--<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css' />
-<link href='http://fonts.googleapis.com/css?family=Reenie+Beanie' rel='stylesheet' type='text/css' />-->
 <link href="http://code.jquery.com/qunit/qunit-1.12.0.css" rel="stylesheet" type="text/css" />
-</head>
-<body>
- <div id="qunit"></div>
-  <div id="qunit-fixture"></div>
-</body>
 <script type="text/javascript" >
-    var crazyLoader = function () {
-        var sbegin = '<script type="text/javascript" src="%%" ><\/script>' ;
-            args = arguments;
 
-        for (var args_idx = 0; args_idx < args.length; args_idx++) {
-            document.write(sbegin.replace("%%", args[args_idx]));
+    "use strict";
+
+    /*
+    MUST! use this before window.onload()
+    */
+    var crazyLoader = (function () {
+
+        var body = document.getElementsByTagName("body")[0],
+            sbegin = '<script type="text/javascript" src="%%" ><\/script>';
+
+        return function () {
+            for (var args = arguments, L = arguments.length, args_idx = 0; args_idx < L ; args_idx++) {
+                document.write(sbegin.replace("%%", args[args_idx]));
+            };
         };
-    }
+
+    }());
+
     crazyLoader(
-    "http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js",
     "http://code.jquery.com/qunit/qunit-1.12.0.js",
     "../dbj.cond.js",
     "test.dbj.cond.js"
     );
 </script>
+</head>
+<body>
+ <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+</body>
+
 </html>

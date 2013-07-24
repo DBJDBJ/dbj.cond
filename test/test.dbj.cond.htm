@@ -2,32 +2,49 @@
 <html>
 <head>
 <title>dbj();&trade;&nbsp;&amp;&nbsp;dbj.cond()&trade;are &copy; by dbj();</title>
-<link href="http://code.jquery.com/qunit/qunit-1.12.0.css" rel="stylesheet" type="text/css" />
+<!--<link href="http://code.jquery.com/qunit/qunit-1.12.0.css" rel="stylesheet" type="text/css" />-->
 <script type="text/javascript" >
-
-    "use strict";
 
     /*
     MUST! use this before window.onload()
     */
-    var crazyLoader = (function () {
+    var crazyLoader =  (function () {
+        "use strict";
 
-        var body = document.getElementsByTagName("body")[0],
-            sbegin = '<script type="text/javascript" src="%%" ><\/script>';
-
-        return function () {
+        var js_template = '<script type="text/javascript" src="%%" ><\/script>' ,
+            css_template = '<link href="%%" rel="stylesheet" type="text\/css" \/>';
+                
+        /* first arg is a template to be used */
+        var loader = function () {
             for (var args = arguments, L = arguments.length, args_idx = 0; args_idx < L ; args_idx++) {
-                document.write(sbegin.replace("%%", args[args_idx]));
+                document.write(this.replace("%%", args[args_idx]));
             };
         };
+        loader.tpl = null;
 
+        var aprot = Array.prototype;
+
+        return {
+            css: function () {
+                loader.apply(css_template, aprot.slice.call(arguments, 0))
+            },
+
+            js: function () {
+                loader.apply(js_template, aprot.slice.call(arguments, 0))
+            }
+        };
     }());
 
-    crazyLoader(
-    "http://code.jquery.com/qunit/qunit-1.12.0.js",
-    "../dbj.cond.js",
-    "test.dbj.cond.js"
+    crazyLoader.css(
+            "http://code.jquery.com/qunit/qunit-1.12.0.css"
     );
+
+    crazyLoader.js(
+        "http://code.jquery.com/qunit/qunit-1.12.0.js",
+        "../dbj.cond.js",
+        "test.dbj.cond.js"
+    );
+
 </script>
 </head>
 <body>

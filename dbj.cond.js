@@ -2,17 +2,18 @@
 /*
 --------------------------------------------------------------------------------------------
 export to Node.JS
-(also work in the presence of qUnit "module")
+(also works in the presence of qUnit "module")
 --------------------------------------------------------------------------------------------
 */
-(module || (module = { }));
-(module.exports || (module.exports = {}));
+if ("undefined" == typeof exports ) {
+    exports = {} ;
+}
 
 /*
 (c) dbj.org
 The absolute core of the dbj cores ... perhaps we can call it a "kernel"
 */
-module.exports.dbj = dbj = (function (undefined) {
+exports.dbj = dbj = (function (undefined) {
 
     /*
     additions to ES5 intrinsics

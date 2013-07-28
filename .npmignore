@@ -1,0 +1,4 @@
+node_modules/*
+nodetest/*
+qunittest/*
+Web.config

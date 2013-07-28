@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "author" : "dbj <dbj@dbj.org>",
   "description" : "simple and robuts way to avoid if's and switches",
-  "dependencies": {
+  "dependencies": { 
   },
   "repository" : {
   "type" : "git" ,
@@ -11,5 +11,9 @@
   },
   "keywords": ["cond", "if", "else", "switch"],
   "analyze" : false,
-  "license" : "MIT"
+  "license" : "MIT",
+    "engines": {
+    "node": ">=0.1.90"
+  },
+  "main": "dbj.cond.js"
 }

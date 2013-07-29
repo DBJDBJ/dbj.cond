@@ -19,7 +19,7 @@
 - Any legal values or expressions are allowed as arguments
 - standard comparison of input vs check vals is one of JS strict equality, aka "==="  
 - processing stops on first comparison yielding true
- ##node.js module use  
+ ###node.js usage  
       npm install dbj.cond
  ```javascript
         var dbj = require("dbj.cond").dbj ;

@@ -3,7 +3,8 @@
 (c) 2009-2013 .. and beyond, by dbj  
  Licensed under the MIT (MIT-LICENSE.txt)  
    
- Inspired with LISP (cond ... ). Provides very clean conditional code with no if/else cascades and with no switch(). Call syntax:
+ An conditional coding abstraction inspired with [LISP (cond ... ) and (case ...)](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial-17.html) statements.
+ Non-trival conditional logic, but still clean code with no complex if/else cascades and with no switch(). Call syntax:  
  ```javascript
        dbj.cond( input_val,
 	             chechk_val_1, outcome_1,
@@ -17,7 +18,7 @@
 ```
 - There can be any number of check/outcome pairs  
 - Any legal values or expressions are allowed as arguments
-- standard comparison of input vs check vals is one of JS strict equality, aka "==="  
+- standard comparison of input vs check vals is one of JS strict equality, aka "==="
 - processing stops on first comparison yielding true
  ###node.js usage  
       npm install dbj.cond
@@ -30,17 +31,20 @@
                 // include dbj.cond.js
 				dbj.cond(1,1,"1","!"); //=> "1"
  ```
- Standard comparison is one of strict equality.  
+ Standard comparison is one of strict equality. 
  ###Beyond basic usage  
- To change the standard (strict equality) comparator:   
+ Change the standard (strict equality) comparator:   
  ```javascript
         // switching to user defined comparator
         dbj.cond.comparator = function myComparator (a,b ) { return a != b ; };
+				dbj.cond(1,1,"1","!") //=> "!"
 
 		// switching back to standard comparator
         dbj.cond.comparator = dbj.compare.standard ;
+				dbj.cond(1,1,"1","!") //=> "1"
  ```
- For reasons of performance dbj.cond.comparator is not checked for validity. Two powerfull non-standard comparators are provided, "deep" and "multi". Usage:   
+ For reasons of performance dbj.cond.comparator is not checked for validity.
+ For using dbj.cond() with complex types two powerfull non-standard comparators are provided, "deep" and "multi". Usage:   
  ```javascript
        // use dbj deep equality comparator
        dbj.cond.comparator = dbj.compare.deep;

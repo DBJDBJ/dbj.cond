@@ -1,9 +1,8 @@
-﻿
- #dbj.cond()  
-
+﻿##dbj.cond()  
+  
 (c) 2009-2013 .. and beyond, by dbj  
  Licensed under the MIT (MIT-LICENSE.txt)  
-
+   
  Inspired with LISP (cond ... ). Provides very clean conditional code with no if/else cascades and with no switch(). Call syntax:
  ```javascript
        dbj.cond( input_val,
@@ -26,13 +25,13 @@
         var dbj = require("dbj.cond").dbj ;
 				dbj.cond(1,1,"1","!") //=> "1"
  ```
- ##Browser usage  
+ ###Browser usage  
  ```javascript
                 // include dbj.cond.js
 				dbj.cond(1,1,"1","!"); //=> "1"
  ```
  Standard comparison is one of strict equality.  
- ##Beyond basic usage  
+ ###Beyond basic usage  
  To change the standard (strict equality) comparator:   
  ```javascript
         // switching to user defined comparator
@@ -75,7 +74,7 @@
 				              , false 
 				   ); //=> "Works!"
 ```
- ##NOTE  
+ ###NOTE  
  It is to be the reference source and knowledge base, but right now Wiki is work-in-progress, mainly to sync it with a code 
  after numerous changes and re-thinking sessions. 
  After this note is removed, Wiki will be released as the reference text on dbj.cond()

@@ -46,9 +46,21 @@
     module(" ");
 
     test("dbj_condeval('true', 'odd(x)', 'hotpo(x,0)', '\"EVEN!\"') ", function () {
-        ok(dbj_condeval('true', 'odd(x)', 'hotpo(x,0)', '"EVEN!"'), 16);
+        ok(dbj_condeval(true, odd(x), 'hotpo(x,0)', '"EVEN!"'), 16);
     });
 
+    function hotpox(x, steps) {
+        return dbj_condeval(true,
+        "x == 1", steps ,
+        "odd(x)", "hotpo( 1 + ( x * 3 ), 1 + steps )",
+                   "hotpo ( x / 2, 1 + steps)"
+        );
+    }
+
+    test("hotpox(" + x + ",0)", function () {
+        ok(hotpox(x,0), 16);
+    });
+    
 
 }(dbj || {}));
 

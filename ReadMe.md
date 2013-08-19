@@ -35,7 +35,7 @@
  ```
  Standard comparison is one of strict equality. 
  ###Beyond basic usage  
- JS switch() stement uses "===" as the only possible comparator. Using dbj.cond() it is easy to change the comparator used.
+ Using user defined comparators is probably the most powerfull feature of dbj.cond(). JS switch() stement uses "===" as the only possible comparator. Using dbj.cond() it is easy to change the comparator used.
  To change the standard (strict equality) comparator:   
  ```javascript
         // switching to user defined comparator
@@ -47,7 +47,6 @@
 				dbj.cond(1,1,"1","!") //=> "1"
  ```
  For reasons of performance dbj.cond.comparator is not checked for validity. 
- Using user defined comparators is probably the most powerfull feature of dbj.cond().
  For using dbj.cond() with complex JS types two powerfull non-standard comparators are provided, "deep" and "multi". Usage:   
  ```javascript
        // use dbj deep equality comparator

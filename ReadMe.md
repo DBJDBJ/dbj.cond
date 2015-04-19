@@ -1,6 +1,6 @@
 ﻿##dbj.cond()  
   
-(c) 2009-2013 .. and beyond, by dbj  
+(c) 2009-2015 .. and beyond, by dbj.org  
  Licensed under the MIT (MIT-LICENSE.txt)  
    
  An conditional coding abstraction inspired with [LISP (cond ... ) and (case ...)](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial-17.html) statements.

@@ -1,6 +1,6 @@
-﻿##dbj.cond()  
+﻿## dbj.cond()  
   
-(c) 2009-2015 .. and beyond, by dbj.org  
+(c) 2009-2017 .. and beyond, by dbj.org  
  Licensed under the MIT (MIT-LICENSE.txt)  
    
  An conditional coding abstraction inspired with [LISP (cond ... ) and (case ...)](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial-17.html) statements.
@@ -22,19 +22,19 @@
 - standard comparison of input vs check vals is one of JS strict equality, aka "==="
 - processing stops on first comparison yielding true
 - There can be any number of check/outcome pairs  
- ###node.js usage  
+ ### node.js usage  
       npm install dbj.cond
  ```javascript
         var dbj = require("dbj.cond").dbj ;
 				dbj.cond(1,1,"1","!") //=> "1"
  ```
- ###Browser usage  
+ ### Browser usage  
  ```javascript
                 // include dbj.cond.js
 				dbj.cond(1,1,"1","!"); //=> "1"
  ```
  Standard comparison is one of strict equality. 
- ###Beyond basic usage  
+ ### Beyond basic usage  
  User defined comparators are probably the most powerfull feature of dbj.cond(). JS switch() stement uses "===" as the only possible comparator. Using dbj.cond() it is easy to change the comparator used.
  To change the standard (strict equality) comparator:   
  ```javascript
@@ -87,7 +87,7 @@
 				              , false 
 				   ); //=> "Works!"
 ```
- ###NOTE  
+ ### NOTE  
  It is to be the reference source and knowledge base, but right now Wiki is work-in-progress, mainly to sync it with a code 
  after numerous changes and re-thinking sessions. 
  After this note is removed, Wiki will be released as the reference text on dbj.cond()
@@ -97,5 +97,5 @@
   
   
 ---------------------------------------------------------------------  
-####&copy; by [![dbj();](http://dbj.org/media/blue/dbj2_blue_50x50.png)](http://www.dbj.org "dbj")  
+#### &copy; by [![dbj();](http://dbj.org/media/blue/dbj2_blue_50x50.png)](http://www.dbj.org "dbj")  
 

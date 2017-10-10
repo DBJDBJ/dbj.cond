@@ -97,5 +97,4 @@
   
   
 ---------------------------------------------------------------------  
-#### &copy; by [![dbj();](http://dbj.org/media/blue/dbj2_blue_50x50.png)](http://www.dbj.org "dbj")  
-
+### &copy; 2017 [![dbj();](http://dbj.org/wp-content/uploads/2015/12/cropped-dbj-icon-e1486129719897.jpg)](http://www.dbj.org "dbj")  

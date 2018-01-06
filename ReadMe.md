@@ -1,7 +1,11 @@
-﻿## dbj.cond()  
+﻿# dbj.cond()  
   
-(c) 2009-2017 .. and beyond, by dbj.org  
+(c) 2009-2018 .. and beyond, by dbj.org  
  Licensed under the MIT (MIT-LICENSE.txt)  
+ 
+ [nconf][nconf]
+ 
+ [![Build Status][build]][travis] [![Dependency Status][dependency]][david]
    
  An conditional coding abstraction inspired with [LISP (cond ... ) and (case ...)](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial-17.html) statements.
  Non-trival conditional logic coding, but still clean code with no complex if/else cascades and with no switch(). Call syntax:  

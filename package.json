@@ -1,8 +1,8 @@
 {
   "name": "dbj.cond",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "author" : {
-		    "name" : "dbj", "web" : "http://dbj.org"
+		    "name" : "dbj", "web" : "https://dbj.org"
 	} ,
   "description" : "Better conditional statement",
   "repository" : {

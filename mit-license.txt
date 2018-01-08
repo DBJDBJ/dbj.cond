@@ -1,5 +1,5 @@
-﻿Copyright 2013 by dbj(); 
-http://dbj.org/
+﻿Copyright 2013 - 2018 by dbj.org; 
+https://dbj.org/
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

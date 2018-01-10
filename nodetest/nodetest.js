@@ -1,7 +1,8 @@
 ﻿
 var test = require("tape");
 var colors = require('colors');
-var dbj = require("../dbj.cond.js").dbj ;
+var dbj = require("../dbj.cond.js") ;
+// var dbj = require("../dbj.cond.comparators.js") ;
 
 
 function testera(call_, exp, msg) {
@@ -20,10 +21,10 @@ test.x = test.v = null;
 
         test.x = x; test.v = v;
 
-        testera('dbj.cond(test.x, test.v, "x eq v", "!")', "!");
-        testera('dbj.cond(true, test.x != test.v, "neq","!")', "neq");
-        testera('dbj.cond(true, 1 == 2, "1", test.v)', test.v);
-        testera('dbj.cond(true, 1 == 1, test.x, "!")', test.x);
+        testera('cond(test.x, test.v, "x eq v", "!")', "!");
+        testera('cond(true, test.x != test.v, "neq","!")', "neq");
+        testera('cond(true, 1 == 2, "1", test.v)', test.v);
+        testera('cond(true, 1 == 1, test.x, "!")', test.x);
     }
     /*
     precondition: x === v
@@ -32,10 +33,10 @@ test.x = test.v = null;
 
         test.x = test.v = x;
 
-        testera('dbj.cond(test.x, test.v, "EQ", "!")', "EQ");
-        testera('dbj.cond(true, test.x != test.v, "neq","!")', "!");
-        testera('dbj.cond(true, 1 == 2, "NEQ", test.v)', test.v);
-        testera('dbj.cond(true, 1 == 1, test.x, "!")', test.x);
+        testera('cond(test.x, test.v, "EQ", "!")', "EQ");
+        testera('cond(true, test.x != test.v, "neq","!")', "!");
+        testera('cond(true, 1 == 2, "NEQ", test.v)', test.v);
+        testera('cond(true, 1 == 1, test.x, "!")', test.x);
     }
 
     function multi_test(x, v) {
@@ -48,8 +49,8 @@ test.x = test.v = null;
 
     test(" presence of the library ".yellow, function (T) {
         T.plan(2);
-                T.ok(!!dbj, "dbj is defined".green );
-                T.ok(!!dbj.cond, "dbj.cond is defined".green );
+                T.ok(!! dbj, "dbj is defined".green );
+                T.ok(!! dbj.cond, "dbj.cond is defined".green );
         T.end();
     });
 
@@ -62,7 +63,7 @@ test.x = test.v = null;
             multi_test(true, false);
             multi_test(3.14, 2.34);
     });
-
+/*
     dbj.cond.comparator = dbj.compare.deep;
 
     test(" dbj.cond.comparator => dbj.compare.deep ".yellow, function (T) {
@@ -86,3 +87,4 @@ test.x = test.v = null;
         multi_test([3, 2], [true, [3, 2]]);
 
     });
+*/

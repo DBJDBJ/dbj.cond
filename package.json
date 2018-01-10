@@ -1,19 +1,32 @@
 {
   "name": "dbj.cond",
   "version": "2.1.0",
-  "author" : {
-		    "name" : "dbj", "web" : "https://dbj.org"
-	} ,
-  "description" : "Better conditional statement",
-  "repository" : {
-		  "type" : "git" ,
-		  "url"  : "https://github.com/DBJDBJ/dbj.cond.git"
+  "author": {
+    "name": "dbj",
+    "web": "https://dbj.org"
   },
-  "keywords": ["cond", "if", "else", "switch", "LISP"],
-  "analyze" : false,
-  "license" : "MIT",
-    "engines": {
+  "description": "Better conditional statement",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DBJDBJ/dbj.cond.git"
+  },
+  "keywords": [
+    "cond",
+    "if",
+    "else",
+    "switch",
+    "LISP"
+  ],
+  "analyze": false,
+  "license": "MIT",
+  "engines": {
     "node": ">=0.1.90"
   },
-  "main": "dbj.cond.js"
+  "main": "dbj.cond.js",
+  "devDependencies": {
+    "tape": "^4.8.0"
+  },
+  "dependencies": {
+    "colors": "^1.1.2"
+  }
 }

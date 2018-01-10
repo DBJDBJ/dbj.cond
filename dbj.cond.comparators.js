@@ -13,7 +13,7 @@ if ("undefined" == typeof exports ) {
 (c) dbj.org
 The absolute core of the dbj cores ... perhaps we can call it a "kernel"
 */
-exports.dbj = dbj = (function (undefined) {
+const dbj = (function (undefined) {
 
     /*
     additions to ES5 intrinsics
@@ -75,73 +75,14 @@ exports.dbj = dbj = (function (undefined) {
 
 }());
 
-/*
-(c) 2011 by DBJ.ORG
- Dual licensed under the MIT (MIT-LICENSE.txt)
- and GPL (GPL-LICENSE.txt) licenses.
-
- depends on dbj.kernel
-*/
-
-(function (dbj,undefined) {
-
-    /*
-    Terminology and arguments requirements:
-
-            dbj.cond( input_value,
-                      check_val, out_val, // any number of check/out values
-                      default_val ) ;
-
-    Number of arguments must be even. 
-	Standard  cond allows users to handle values with other values of the same type.
-    Standard comparator is '==='. Order is "first found, first served". Example:
-
-	         dbj.cond( 1, 1, "A", 2, "B", "C") //=> "A"
-
-Arrays as arguments are not part of standard dbj.cond() functionality:  
-
-	         dbj.cond( 1, [3,2,1],"A", 2, "B", "C") 
-             //=> "C" , single and array can not be compared 
-             // 1 === [1,2,3] => false
-
-	Only intrinsic scalar types can be compared meaningfully. For example
-	dbj.cond( /./, /./, "A", /$/, "B", "C") 
-    //=> "C",  /./ === /./ => false
-
-	*/
-	dbj.cond = function ( v ) {
-
-	    var comparator_ = dbj.cond.comparator = dbj.compare.standard;
-	    /* jokers can fiddle with the above and set it to null */
-
-	    dbj.cond = function (v) {
-			if (!dbj.isEven(arguments.length)) throw "dbj.cond() not given even number of arguments";
-			 var  j = 1, L = arguments.length;
-			for (; j < L; j += 2) {
-			    if ( true === comparator_(v, arguments[j])) return arguments[j + 1];
-			}
-			return arguments[L - 1];
-	    };
-	    /*
-        be sure to pass all the arguments on the first run
-        which is the only time the line bellow will be executed
-        */
-	    return dbj.cond.apply(this, Array.prototype.slice.call(arguments,0));
-	} ;
-	dbj.cond.comparator = null;
-
 /*--------------------------------------------------------------------------------------------*/
-} (dbj ));
 /*--------------------------------------------------------------------------------------------*/
 /*
-(c) dbj
+(c) dbj 2013 -2018 
 place for dbj comparators
-dependancy: dbj.kernel and ES5
-
-NOTE: currently ( 2013-07-19 ) this is in the same file as dbj.cond
-
-cleanest implementation would be to have non standard comparators in separate file
-so that standard usage does require very minimal dbj.cond.js
+dependancy: dbj.kernel (above) and ES5
+NOTE: since 2013 quite a few comparators have been implemented please be sure which
+comparator you need and use the ones bellow after that.
 */
 (function (dbj, undefined) {
     "use strict";
@@ -445,142 +386,3 @@ so that standard usage does require very minimal dbj.cond.js
 
 }(dbj));
 
-/*
-
-Oliver Steele's "x * y".lambda() implementation
-to be used (cautiously) as a helper when dbj.cond() outcome values are best coded as anonymoys functions.
-see the "Caution & Recursion" page on the Wiki
-
-*/
-(function (dbj) {
-
-    /*
-     * Author: Oliver Steele
-     * Copyright: Copyright 2007 by Oliver Steele.  All rights reserved.
-     * License: MIT License
-     * Homepage: http://osteele.com/javascripts/functional
-     * Created: 2007-07-11
-     * Version: 1.0.2
-     *
-     *
-     * This defines "string lambdas", that allow strings such as `x+1` and
-     * `x -> x+1` to be used in some contexts as functions.
-     *
-     * string.lambda() turns a string that contains a JavaScript expression into a
-     * `Function` that returns the value of that expression.
-     *
-     * If the string contains a `->`, this separates the parameters from the body:
-     * >> 'x -> x + 1'.lambda()(1) -> 2
-     * >> 'x y -> x + 2*y'.lambda()(1, 2) -> 5
-     * >> 'x, y -> x + 2*y'.lambda()(1, 2) -> 5
-     *
-     * Otherwise, if the string contains a `_`, this is the parameter:
-     * >> '_ + 1'.lambda()(1) -> 2
-     *
-     * Otherwise if the string begins or ends with an operator or relation,
-     * prepend or append a parameter.  (The documentation refers to this type
-     * of string as a "section".)
-     * >> '/2'.lambda()(4) -> 2
-     * >> '2/'.lambda()(4) -> 0.5
-     * >> '/'.lambda()(2,4) -> 0.5
-     * Sections can end, but not begin with, `-`.  (This is to avoid interpreting
-     * e.g. `-2*x` as a section).  On the other hand, a string that either begins
-     * or ends with `/` is a section, so an expression that begins or ends with a
-     * regular expression literal needs an explicit parameter.
-     *
-     * Otherwise, each variable name is an implicit parameter:
-     * >> 'x + 1'.lambda()(1) -> 2
-     * >> 'x + 2*y'.lambda()(1, 2) -> 5
-     * >> 'y + 2*x'.lambda()(1, 2) -> 5
-     *
-     * Implicit parameter detection ignores strings literals, variable names that
-     * start with capitals, and identifiers that precede `:` or follow `.`:
-     * >> map('"im"+root', ["probable", "possible"]) -> ["improbable", "impossible"]
-     * >> 'Math.cos(angle)'.lambda()(Math.PI) -> -1
-     * >> 'point.x'.lambda()({x:1, y:2}) -> 1
-     * >> '({x:1, y:2})[key]'.lambda()('x') -> 1
-     *
-     * Implicit parameter detection mistakenly looks inside regular expression
-     * literals for variable names.  It also doesn't know to ignore JavaScript
-     * keywords and bound variables.  (The only way you can get these last two is
-     * with a function literal inside the string.  This is outside the intended use
-     * case for string lambdas.)
-     *
-     * Use `_` (to define a unary function) or `->`, if the string contains anything
-     * that looks like a free variable but shouldn't be used as a parameter, or
-     * to specify parameters that are ordered differently from their first
-     * occurrence in the string.
-     *
-     * Chain `->`s to create a function in uncurried form:
-     * >> 'x -> y -> x + 2*y'.lambda()(1)(2) -> 5
-     * >> 'x -> y -> z -> x + 2*y+3*z'.lambda()(1)(2)(3) -> 14
-     *
-     * `this` and `arguments` are special:
-     * >> 'this'.call(1) -> 1
-     * >> '[].slice.call(arguments, 0)'.call(null,1,2) -> [1, 2]
-     */
-    dbj.lambda = String.prototype.lambda = function () {
-        var params = [],
-            expr = this,
-            sections = expr.ECMAsplit(/\s*->\s*/m);
-        if (sections.length > 1) {
-            while (sections.length) {
-                expr = sections.pop();
-                params = sections.pop().split(/\s*,\s*|\s+/m);
-                sections.length && sections.push('(function(' + params + '){return (' + expr + ')})');
-            }
-        } else if (expr.match(/\b_\b/)) {
-            params = '_';
-        } else {
-            // test whether an operator appears on the left (or right), respectively
-            var leftSection = expr.match(/^\s*(?:[+*\/%&|\^\.=<>]|!=)/m),
-                rightSection = expr.match(/[+\-*\/%&|\^\.=<>!]\s*$/m);
-            if (leftSection || rightSection) {
-                if (leftSection) {
-                    params.push('$1');
-                    expr = '$1' + expr;
-                }
-                if (rightSection) {
-                    params.push('$2');
-                    expr = expr + '$2';
-                }
-            } else {
-                // `replace` removes symbols that are capitalized, follow '.',
-                // precede ':', are 'this' or 'arguments'; and also the insides of
-                // strings (by a crude test).  `match` extracts the remaining
-                // symbols.
-                var vars = this.replace(/(?:\b[A-Z]|\.[a-zA-Z_$])[a-zA-Z_$\d]*|[a-zA-Z_$][a-zA-Z_$\d]*\s*:|this|arguments|'(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*"/g, '').match(/([a-z_$][a-z_$\d]*)/gi) || []; // '
-                for (var i = 0, v; v = vars[i++];)
-                    params.indexOf(v) >= 0 || params.push(v);
-            }
-        }
-        return new Function(params, 'return (' + expr + ')');
-    }
-
-
-    /*
-     Some mobile browsers (and IE6) String split() is not ES3 or ES5 compliant  
-     That breaks '->1'.lambda().
-     ECMAsplit is an ECMAScript-compliant `split`, although only for
-     one argument.
-    */
-    String.prototype.ECMAsplit =
-        // The test is from the ECMAScript reference.
-        ('ab'.split(/a*/).length > 1
-         ? String.prototype.split
-         : function (separator, limit) {
-             if (typeof limit != 'undefined')
-                 throw "ECMAsplit: limit is unimplemented";
-             var result = this.split.apply(this, arguments),
-                 re = RegExp(separator),
-                 savedIndex = re.lastIndex,
-                 match = re.exec(this);
-             if (match && match.index == 0)
-                 result.unshift('');
-             // in case `separator` was already a RegExp:
-             re.lastIndex = savedIndex;
-             return result;
-         });
-
-
-}(dbj));

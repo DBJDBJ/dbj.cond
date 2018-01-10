@@ -27,6 +27,7 @@
     "tape": "^4.8.0"
   },
   "dependencies": {
-    "colors": "^1.1.2"
+    "colors": "^1.1.2",
+    "deep-equal": "^1.0.1"
   }
 }

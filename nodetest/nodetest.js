@@ -25,7 +25,7 @@ function testera(call_, exp, msg) {
             (msg || (call_ + " // => " + exp)).info
         );
     } catch (x) {
-        console.log(("\nEXCEPTION while evaluating: \n" + call_ + "\n" + x.stack).error);
+        testera.TAPE.fail(("\nEXCEPTION while evaluating: \n" + call_ + "\n" + x.stack).error);
     }
 };
 
@@ -51,17 +51,15 @@ function test_for_not_equality(x, v) {
         testera('dbj.cond(true, testera.x != testera.v, "neq","!")', "!");
     }
 
-    test(" presence of the library ".yellow, function (T) {
+    test("\npresence of the library ".yellow, function (T) {
         T.plan(2);
                 T.ok(!! dbj, "dbj is defined".green );
                 T.ok(!! dbj.cond, "dbj.cond is defined".green );
-       //  T.end();
     });
 
-    console.log("\ndbj.cond.comparator => standard ".yellow);
-            /* standard is used by default */
+    /* standard is used by default */
 
-    test(" test for equality ".yellow, function (T) {
+    test("\nGoing to use dbj.cond.comparator standard \n test for equality ".yellow, function (T) {
 
       testera.TAPE = T;
       T.plan(8);
@@ -86,28 +84,31 @@ function test_for_not_equality(x, v) {
 must be able to use also https://github.com/substack/node-deep-equal
 that means te test bellow must pass while using it too ...
 */
+const deepEqual = require('deep-equal');
+
+dbj.cond.comparator = deepEqual; // dbj.compare.deep;
+
+test("\nGoing to use node js assert deep-equal module\n Testing for inequality".yellow, function (T) {
+
+    testera.TAPE = T;
+        T.plan(8);
+    test_for_not_equality({}, { 1: 2 });
+    test_for_not_equality({ "Alpha": 1 }, { "Beta": 2 });
+    test_for_not_equality([true, true], [false, false]);
+    test_for_not_equality([3, 2], [2, 3]);
+
+    });
 /*
-    dbj.cond.comparator = dbj.compare.deep;
-
-    test(" dbj.cond.comparator => dbj.compare.deep ".yellow, function (T) {
-
-        multi_test.TAPE = T;
-        multi_test({}, { 1: 2 });
-        multi_test({ "Alpha": 1 }, { "Beta": 2 });
-        multi_test([true, true], [false, false]);
-        multi_test([3, 2], [2, 3]);
-
-    });
-
     dbj.cond.comparator = dbj.compare.multi;
+*/
+    test(" \nMore complex deep inequality testing".yellow, function (T) {
 
-    test(" dbj.cond.comparator => dbj.compare.multi ".yellow, function (T) {
-
-        multi_test.TAPE = T;
-        multi_test({}, [{ 1: 2 }]);
-        multi_test([{ "Alpha": 1 }], { "Beta": 2 });
-        multi_test([[true, true], 3], [false, false]);
-        multi_test([3, 2], [true, [3, 2]]);
+        testera.TAPE = T;
+        T.plan(8);
+        test_for_not_equality({}, [{ 1: 2 }]);
+        test_for_not_equality([{ "Alpha": 1 }], { "Beta": 2 });
+        test_for_not_equality([[true, true], 3], [false, false]);
+        test_for_not_equality([3, 2], [true, [3, 2]]);
 
     });
-*/
+/* EOF */

@@ -2,7 +2,7 @@
 const test = require("tape");
 const colors = require('colors');
 const dbj = require("../dbj.cond.js") ;
-// var dbj = require("../dbj.cond.comparators.js") ;
+const dbj_comparators = require("../dbj.cond.comparators.js") ;
 
 colors.setTheme({
     silly: 'rainbow',

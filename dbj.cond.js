@@ -73,11 +73,9 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
     export to Node.JS
     (also works in the presence of qUnit "module")
     */
-    if ("undefined" == typeof exports) {
-        exports = {};
+    if ("undefined" != typeof module) {
+        module['exports'] = dbj;  // for node js usage
     }
 
-    module['exports'] = dbj;  // for node js usage
-
 /*--------------------------------------------------------------------------------------------*/
-}({}));
+}('undefined' == typeof dbj ? {} : dbj ) );

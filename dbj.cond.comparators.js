@@ -384,5 +384,23 @@ comparator you need and use the ones bellow after that.
         }
     };
 
-}(dbj));
+
+    // if DOM is present export it to DOM window
+    if ("undefined" != typeof (window)) {
+        if (undefined == typeof window.dbj)
+            window.dbj = dbj;
+        else
+            window.dbj.cond = dbj.cond;
+        // overwrite the current window.dbj.cond if any
+    };
+
+    /*
+    export to Node.JS
+    (also works in the presence of qUnit "module")
+    */
+    if ("undefined" != typeof module) {
+        module['exports'] = dbj;  // for node js usage
+    }
+
+}('undefined' == typeof dbj ? {} : dbj ));
 

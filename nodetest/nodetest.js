@@ -1,68 +1,91 @@
 ﻿
-var test = require("tape");
-var colors = require('colors');
-var dbj = require("../dbj.cond.js") ;
+const test = require("tape");
+const colors = require('colors');
+const dbj = require("../dbj.cond.js") ;
 // var dbj = require("../dbj.cond.comparators.js") ;
+
+colors.setTheme({
+    silly: 'rainbow',
+    input: 'grey',
+    verbose: 'cyan',
+    prompt: 'grey',
+    info: 'green',
+    data: 'grey',
+    help: 'cyan',
+    warn: 'yellow',
+    debug: 'blue',
+    error: 'red'
+});
 
 
 function testera(call_, exp, msg) {
-
-        multi_test.TAPE.deepEqual(
+    try {
+        testera.TAPE.deepEqual(
             eval(call_), exp,
-            msg || (call_ + " // => " + exp)
-            );
+            (msg || (call_ + " // => " + exp)).info
+        );
+    } catch (x) {
+        console.log(("\nEXCEPTION while evaluating: \n" + call_ + "\n" + x.stack).error);
     }
+};
 
-test.x = test.v = null;
+testera.TAPE = null;
+
     /*
     precondition: x !== v
     */
-    function test_for_not_equality(x, v) {
-
-        test.x = x; test.v = v;
-
-        testera('cond(test.x, test.v, "x eq v", "!")', "!");
-        testera('cond(true, test.x != test.v, "neq","!")', "neq");
-        testera('cond(true, 1 == 2, "1", test.v)', test.v);
-        testera('cond(true, 1 == 1, test.x, "!")', test.x);
+function test_for_not_equality(x, v) {
+    /* we make arguments globaly reachable so that eval can use them */
+    testera.x = x;
+    testera.v = v;
+    testera('dbj.cond(testera.x, testera.v, "x eq v", "!")', "!");
+    testera('dbj.cond(true, testera.x != testera.v, "neq","!")', "neq");
     }
     /*
     precondition: x === v
     */
-    function test_for_equality(x) {
-
-        test.x = test.v = x;
-
-        testera('cond(test.x, test.v, "EQ", "!")', "EQ");
-        testera('cond(true, test.x != test.v, "neq","!")', "!");
-        testera('cond(true, 1 == 2, "NEQ", test.v)', test.v);
-        testera('cond(true, 1 == 1, test.x, "!")', test.x);
+    function test_for_equality(x, v) {
+        testera.x = x;
+        testera.v = v;
+        testera('dbj.cond(testera.x, testera.v, "EQ", "!")', "EQ");
+        testera('dbj.cond(true, testera.x != testera.v, "neq","!")', "!");
     }
-
-    function multi_test(x, v) {
-        multi_test.TAPE.plan(8);
-                test_for_not_equality(x, v);
-                test_for_equality(x);
-        multi_test.TAPE.end();
-    }
-    multi_test.TAPE = null;
 
     test(" presence of the library ".yellow, function (T) {
         T.plan(2);
                 T.ok(!! dbj, "dbj is defined".green );
                 T.ok(!! dbj.cond, "dbj.cond is defined".green );
-        T.end();
+       //  T.end();
     });
 
-    test(" dbj.cond.comparator => standard ".yellow, function (T) {
-
-        multi_test.TAPE = T;
+    console.log("\ndbj.cond.comparator => standard ".yellow);
             /* standard is used by default */
-            multi_test(1, 2);
-            multi_test("Alpha", "Beta");
-            multi_test(true, false);
-            multi_test(3.14, 2.34);
+
+    test(" test for equality ".yellow, function (T) {
+
+      testera.TAPE = T;
+      T.plan(8);
+      test_for_equality(2, 2);
+      test_for_equality("Alpha", "Alpha");
+      test_for_equality(true, true);
+      test_for_equality(3.14, 3.14);
     });
+
+    test(" test for inequality ".yellow, function (T) {
+
+        testera.TAPE = T;
+        T.plan(8);
+        test_for_not_equality(1, 2);
+        test_for_not_equality("Alpha", "Beta");
+        test_for_not_equality(true, false);
+        test_for_not_equality(3.14, 2.34);
+    });
+
+
+/*
+must be able to use also https://github.com/substack/node-deep-equal
+that means te test bellow must pass while using it too ...
+*/
 /*
     dbj.cond.comparator = dbj.compare.deep;
 

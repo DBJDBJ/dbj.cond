@@ -1,15 +1,5 @@
 
 /*
---------------------------------------------------------------------------------------------
-export to Node.JS
-(also works in the presence of qUnit "module")
---------------------------------------------------------------------------------------------
-*/
-if ("undefined" == typeof exports ) {
-    exports = {} ;
-}
-
-/*
 (c) 2011 - 2018 by DBJ.ORG
  Dual licensed under the MIT (MIT-LICENSE.txt)
  and GPL (GPL-LICENSE.txt) licenses.
@@ -79,7 +69,15 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
             // overwrite the current window.dbj.cond if any
     };
 
-    exports = dbj;  // for node js usage
+    /*
+    export to Node.JS
+    (also works in the presence of qUnit "module")
+    */
+    if ("undefined" == typeof exports) {
+        exports = {};
+    }
+
+    module['exports'] = dbj;  // for node js usage
 
 /*--------------------------------------------------------------------------------------------*/
 }({}));

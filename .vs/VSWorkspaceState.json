@@ -1,9 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\gevaltest",
-    "\\nodetest"
+    "\\nodetest",
+    "\\qunittest"
   ],
-  "SelectedNode": "\\dbj.cond.js",
+  "SelectedNode": "\\qunittest",
   "PreviewInSolutionExplorer": false
 }

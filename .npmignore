@@ -1,4 +1,4 @@
 node_modules/*
-nodetest/*
 qunittest/*
+test/*
 Web.config

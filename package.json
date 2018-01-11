@@ -1,11 +1,11 @@
 {
   "name": "dbj.cond",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "author": {
     "name": "dbj",
-    "web": "https://dbj.org"
+    "web": "https://dbj.org/dbj-cond"
   },
-  "description": "Better conditional statement",
+  "description": "JavaScript COND (aka conditional) statement",
   "repository": {
     "type": "git",
     "url": "https://github.com/DBJDBJ/dbj.cond.git"

@@ -1,4 +1,5 @@
 ﻿
+const version = require('../package.json').version;
 const test = require("tape");
 const colors = require('colors');
 const dbj = require("../dbj.cond.js") ;
@@ -17,6 +18,10 @@ colors.setTheme({
     error: 'red'
 });
 
+test(("VERSION " + version).warn, function (T) {
+    T.plan(1);
+    T.ok(version);
+});
 
 function testera(call_, exp, msg) {
     try {

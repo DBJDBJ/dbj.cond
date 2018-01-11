@@ -24,10 +24,10 @@
   },
   "main": "dbj.cond.js",
   "devDependencies": {
-    "tape": "^4.8.0"
-  },
-  "dependencies": {
+    "tape": "^4.8.0",
     "colors": "^1.1.2",
     "deep-equal": "^1.0.1"
+  },
+  "dependencies": {
   }
 }

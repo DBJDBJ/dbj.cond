@@ -1,4 +1,3 @@
-
 /*
 (c) 2011 - 2018 by DBJ.ORG
  Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -12,7 +11,6 @@
         } ,
         isEven = function (value) { return (toInt32(value) % 2 == 0); };
 
-    dbj.cond = {};
     /*
     Terminology and arguments requirements:
 
@@ -60,15 +58,6 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
     dbj.cond.comparator = function strict_eq(a, b) { return a === b; };
     /* jokers can fiddle with the above and set it to null */
 
-    // if DOM is present export it to DOM window
-    if ( "undefined" != typeof(window) ) {
-        if ( undefined == typeof window.dbj)
-            window.dbj = dbj;
-        else
-            window.dbj.cond = dbj.cond;
-            // overwrite the current window.dbj.cond if any
-    };
-
     /*
     export to Node.JS
     (also works in the presence of qUnit "module")
@@ -78,4 +67,12 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
     }
 
 /*--------------------------------------------------------------------------------------------*/
-}('undefined' == typeof dbj ? {} : dbj ) );
+}(function () {
+        // for dom env this creates window.dbj
+        // for node env this creates module local var
+        if ("undefined" == typeof dbj)
+            dbj = {}; 
+        return dbj;
+    }()
+  )
+);

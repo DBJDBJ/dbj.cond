@@ -1,6 +1,6 @@
 {
   "name": "dbj.cond",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "author": {
     "name": "dbj",
     "web": "https://dbj.org/dbj-cond"
@@ -28,6 +28,5 @@
     "colors": "^1.1.2",
     "deep-equal": "^1.0.1"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

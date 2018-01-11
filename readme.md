@@ -1,7 +1,11 @@
-﻿# dbj.cond()  
+﻿<img src="http://dbj.org/wp-content/uploads/2013/07/comparator-e1373486780369.jpg" alt="dbj.cond() by dbj.org" width="100%" align="left" hspace="5px" />
+
+# dbj.cond()  
   
 (c) 2009-2018 .. and beyond, by dbj.org  
- Licensed under the MIT (MIT-LICENSE.txt)  
+ Licensed under the MIT (MIT-LICENSE.txt) 
+
+Note: for tests adn the rest please always visit the <a href="https://github.com/DBJDBJ/dbj.cond" target="_blank">project on the Github</a>. 
  
  An conditional coding abstraction inspired with [LISP (cond ... ) and (case ...)](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial-17.html) statements.
  Using this idiom delivers non-trival conditional logic coding, but still clean code with no complex if/else cascades and with no switch(). 

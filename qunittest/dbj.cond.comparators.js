@@ -1,19 +1,9 @@
 
 /*
---------------------------------------------------------------------------------------------
-export to Node.JS
-(also works in the presence of qUnit "module")
---------------------------------------------------------------------------------------------
-*/
-if ("undefined" == typeof exports ) {
-    exports = {} ;
-}
-
-/*
 (c) dbj.org
-The absolute core of the dbj cores ... perhaps we can call it a "kernel"
+The absolute core of dbj cores ... perhaps we can call it dbj.core
 */
-const dbj = (function (undefined) {
+(function (undefined) {
 
     /*
     additions to ES5 intrinsics
@@ -52,28 +42,41 @@ const dbj = (function (undefined) {
         isString: function (o)   { return "string" === imp_.type(o);   }
     };
 
-    return/*interface*/ {
+    dbj.core = {
 
-        toString: function () { return "dbj(); kernel 1.2.0"; },
+        "toString": function () { return "dbj(); kernel 1.2.0"; },
         /* 
         coercion to Int32 
         also required by asm.js
         */
-        toInt32: imp_.toInt32,
-        isEven: imp_.isEven,
+        "toInt32": imp_.toInt32,
+        "isEven": imp_.isEven,
 
         "oprot": oprot,
         "aprot": aprot,
         "sprot": sprot,
 
-        type: imp_.type,
-        isObject: imp_.isObject,
-        isFunction: imp_.isFunction,
-        isArray: imp_.isArray,
-        isString: imp_.isString
+        "type": imp_.type,
+        "isObject": imp_.isObject,
+        "isFunction": imp_.isFunction,
+        "isArray": imp_.isArray,
+        "isString": imp_.isString
     };
 
-}());
+    // we do not export it to node from here
+    /*
+        if ('undefined' != typeof module ) module['exports'] = dbj ;
+    */
+
+}(
+    function () {
+        // for dom env this creates window.dbj
+        // for node env this creates module local var
+        if ("undefined" == typeof dbj)
+            dbj = {};
+        return dbj;
+    }()
+));
 
 /*--------------------------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------------------------*/
@@ -123,7 +126,7 @@ comparator you need and use the ones bellow after that.
     var multi_comparator = function (a, b, comparator) {
         if (comparator(a, b)) return true;         /* covers arr to arr too */
         if (Array.isArray(b)) return index_of(b, a, comparator) > -1; /* sing to arr */
-        if (ArrayisArray(a)) return index_of(a, b, comparator) > -1; /* arr to sing */
+        if (Array.isArray(a)) return index_of(a, b, comparator) > -1; /* arr to sing */
         return false;
     };
 
@@ -141,9 +144,9 @@ comparator you need and use the ones bellow after that.
 
         // Call the o related callback with the given arguments.
         function bindCallbacks(o, callbacks, args) {
-            var prop = dbj.type(o);
+            var prop = dbj.core.type(o);
             if (prop) {
-                if (dbj.type(callbacks[prop]) === "function") {
+                if (dbj.core.type(callbacks[prop]) === "function") {
                     return callbacks[prop].apply(callbacks, args);
                 } else {
                     return callbacks[prop]; // or undefined
@@ -180,12 +183,12 @@ comparator you need and use the ones bellow after that.
                 },
 
                 "date": function (b, a) {
-                    return dbj.type(b) === "date"
+                    return dbj.core.type(b) === "date"
                             && a.valueOf() === b.valueOf();
                 },
 
                 "regexp": function (b, a) {
-                    return dbj.type(b) === "regexp"
+                    return dbj.core.type(b) === "regexp"
                             && a.source === b.source && // the regex itself
                             a.global === b.global && // and its modifers
                                                         // (gmi) ...
@@ -206,7 +209,7 @@ comparator you need and use the ones bellow after that.
                     var len;
 
                     // b could be an object literal here
-                    if (!(dbj.type(b) === "array")) {
+                    if (!(dbj.core.type(b) === "array")) {
                         return false;
                     }
 
@@ -282,7 +285,7 @@ comparator you need and use the ones bellow after that.
         }();
 
         innerEquiv = function () { // can take multiple arguments
-            var args = dbj.aprot.slice.apply(arguments);
+            var args = dbj.core.aprot.slice.apply(arguments);
             if (args.length < 2) {
                 return true; // end transition
             }
@@ -292,7 +295,7 @@ comparator you need and use the ones bellow after that.
                     return true; // catch the most you can
                 } else if (a === null || b === null || typeof a === "undefined"
                         || typeof b === "undefined"
-                        || dbj.type(a) !== dbj.type(b)) {
+                        || dbj.core.type(a) !== dbj.core.type(b)) {
                     return false; // don't lose time with error prone cases
                 } else {
                     return bindCallbacks(a, callbacks, [b, a]);
@@ -345,7 +348,7 @@ comparator you need and use the ones bellow after that.
 
     /* interface */
     dbj.compare = {
-                standard: strict_eq ,
+                'standard': strict_eq ,
         /* 
         compare two arrays 
        if comparator is given uses it otherwise uses strict_eq().
@@ -353,7 +356,7 @@ comparator you need and use the ones bellow after that.
        NOTE: this method is in here because it might prove faster than 
        dbj.compare.multi()
         */
-        arr: function (a, b, /* optional */ comparator) {
+        'arr': function (a, b, /* optional */ comparator) {
 
             if (!Array.isArray(a)) throw TypeError("First argument must be array");
             if (!Array.isArray(b)) throw TypeError("Second argument must be array");
@@ -369,7 +372,7 @@ comparator you need and use the ones bellow after that.
         Can compare two arrays AND single to array AND array to single
         NOTE: if comparator is given use it otherwise use strict_eq().
         */
-        multi: function (a, b, comparator) {
+        'multi': function (a, b, comparator) {
             return multi_comparator(a, b, comparator || strict_eq);
         },
         /*
@@ -379,7 +382,7 @@ comparator you need and use the ones bellow after that.
          dbj.compare(a,b,dbj.compare.deep) ;
 
         */
-        deep: function (a, b) {
+        'deep': function (a, b) {
             return rathe(a, b);
         }
     };
@@ -392,5 +395,13 @@ comparator you need and use the ones bellow after that.
         module['exports'] = dbj;  // for node js usage
     }
 
-}('undefined' == typeof dbj ? {} : dbj ));
+}(function () {
+    // for dom env this creates window.dbj
+    // for node env this creates module local var
+    if ("undefined" == typeof dbj)
+        dbj = {};
+    return dbj;
+    }()
+)
+);
 

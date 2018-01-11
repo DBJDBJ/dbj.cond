@@ -1,7 +1,8 @@
 ﻿/*
 (c) 2018 by dbj.org -- simple, feasible no stunts
 */
-window.onload = function () {
+
+(function (undefined) {
 
     if ("undefined" == typeof dbj) {
         return alert("dbj is undefined?");
@@ -10,7 +11,6 @@ window.onload = function () {
         return alert("dbj.cond is undefined?");
     }
 
-    (function (undefined) {
 
         module("dbj.cond() ");
 
@@ -60,8 +60,8 @@ window.onload = function () {
         }
 
         test(" presence of the library ", function () {
-            ok(!!dbj, "dbj is defined");
-            ok(!!dbj.cond, "dbj.cond is defined");
+            ok('undefined' != typeof dbj, "dbj is defined");
+            ok('undefined' != typeof dbj.cond, "dbj.cond is defined");
         });
 
         test(" dbj.cond.comparator => standard ", function () {
@@ -97,4 +97,3 @@ window.onload = function () {
 
     }());
 
-}

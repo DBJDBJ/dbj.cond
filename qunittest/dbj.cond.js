@@ -1,4 +1,3 @@
-
 /*
 (c) 2011 - 2018 by DBJ.ORG
  Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -68,4 +67,12 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
     }
 
 /*--------------------------------------------------------------------------------------------*/
-}('undefined' == typeof dbj ? {} : dbj ) );
+}(function () {
+        // for dom env this creates window.dbj
+        // for node env this creates module local var
+        if ("undefined" == typeof dbj)
+            dbj = {}; 
+        return dbj;
+    }()
+  )
+);

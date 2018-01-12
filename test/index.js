@@ -24,9 +24,15 @@ test(("VERSION " + version).warn, function (T) {
 });
 
 function testera(call_, exp, msg) {
+
+    function evalInContext(js, context) {
+        //# Return the results of the in-line anonymous function we .call with the passed context
+        return function () { return eval(js); }.call(context);
+    }
+
     try {
         testera.TAPE.deepEqual(
-            eval(call_), exp,
+            evalInContext(call_, testera.context ), exp,
             (msg || (call_ + " // => " + exp)).info
         );
     } catch (x) {
@@ -35,16 +41,19 @@ function testera(call_, exp, msg) {
 };
 
 testera.TAPE = null;
+// this allows var's created on the level of this module to be used
+// for eval expressions
+testera.context = module;
 
     /*
     precondition: x !== v
     */
 function test_for_not_equality(x, v) {
     /* we make arguments globaly reachable so that eval can use them */
-    testera.x = x;
-    testera.v = v;
-    testera('dbj.cond(testera.x, testera.v, "x eq v", "!")', "!");
-    testera('dbj.cond(true, testera.x != testera.v, "neq","!")', "neq");
+    module.x = x;
+    module.v = v;
+    testera('dbj.cond(module.x, module.v, "x eq v", "!")', "!");
+    testera('dbj.cond(true, module.x != module.v, "neq","!")', "neq");
     }
     /*
     precondition: x === v
@@ -58,8 +67,8 @@ function test_for_not_equality(x, v) {
 
     test("\npresence of the library ".yellow, function (T) {
         T.plan(2);
-                T.ok(!! dbj, "dbj is defined".green );
-                T.ok(!! dbj.cond, "dbj.cond is defined".green );
+        T.ok('undefined' != typeof dbj, "dbj is defined".green);
+        T.ok('undefined' != typeof dbj.cond, "dbj.cond is defined".green );
     });
 
     /* standard is used by default */

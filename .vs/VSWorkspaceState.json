@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\nodetest",
-    "\\qunittest"
+    "\\qunittest",
+    "\\test"
   ],
+  "SelectedNode": "\\test\\index.js",
   "PreviewInSolutionExplorer": false
 }

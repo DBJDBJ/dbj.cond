@@ -2,6 +2,11 @@
 
 # dbj.cond() 
 
+## Versions 3.0.3 and above
+
+- dbj.compare.deep; has been removed as of 3.0.3, please use 'deep-equal'
+-  dbj.compare.arr and dbj.compar.multi are meant for arrays comparisons
+
 ## Versions 3.0.0 and above
   
 (c) 2009-2018 .. and beyond, by dbj.org  
@@ -74,15 +79,14 @@ As from version 3.0.0 we do not package complex comparators with dbj.cond. Compl
 Our complex comparators are still here and working and we do use them indeed. 
 They are just in the separate file (module): dbj.cond.comparators.js.
 This is not part of the NPM package any more, so that the package is small and fast.
-To obtain the ```dbj.cond.comparators.js``` file, please go to the <a href="https://github.com/DBJDBJ/dbj.cond" target="_blank">GitHub project</a>.
-Copy it to your project and include it as any other module:
+To obtain the ```dbj.cond.comparators.js``` file, please obtain it from node_modules like this:
 
 ```javascript
-const dbj_comparators = require('dbj.cond.comparators.js');
+const dbj_comparators = require('./node_modules/dbj.cond/dbj.cond.comparators.js');
 ```
-It exposes 4 comparators: standard, arr, multi and deep. 
+It exposes 3 comparators: standard, arr and multi. 
 
-the will be a separate npm module and documented accordingly. Here is the code explaining them
+Here is the code explaining them
 
 ```javascript
 /* dbj.compare object */
@@ -100,12 +104,6 @@ the will be a separate npm module and documented accordingly. Here is the code e
     NOTE: if comparator is given use it otherwise use strict_eq().
     */
     multi: function (a, b, comparator) {},
-    /*
-    perform deep comparison of two objects or scalars
-    NOTE: to construct multi+deep comparator, end users will do this :
-        multi( a, b, deep ) ;
-    */
-    deep: function (a, b) {}
 };
 ```
 
@@ -136,15 +134,7 @@ two powerfull non-standard comparators are provided, "deep" and "multi".
  Usage is this:   
  ```javascript
 //
-const dbj_comparator = require('dbj.cond.comparators.js');
-// use dbj deep equality comparator
-dbj.cond.comparator = dbj_compare.deep;
-// compare objects
-dbj.cond({ "Alpha": 1 }, 
-		{ "Beta": 2 }, false, 
-		{ "Alpha": 1 }, "Works!", 
-		false ); //=> "Works!"
-
+const dbj_comparators = require('./node_modules/dbj.cond/dbj.cond.comparators.js');
 // use dbj single to/from array comparator
 // which also does deep equality comparisons
 dbj.cond.comparator = dbj_compare.multi;

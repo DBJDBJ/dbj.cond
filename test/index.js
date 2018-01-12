@@ -1,26 +1,18 @@
 ﻿
-const version = require('../package.json').version;
+const cfg = require('../package.json');
 const test = require("tape");
 const colors = require('colors');
 const dbj = require("../dbj.cond.js") ;
 const dbj_comparators = require("../dbj.cond.comparators.js") ;
 
 colors.setTheme({
-    silly: 'rainbow',
-    input: 'grey',
-    verbose: 'cyan',
-    prompt: 'grey',
-    info: 'green',
-    data: 'grey',
-    help: 'cyan',
-    warn: 'yellow',
-    debug: 'blue',
-    error: 'red'
+    silly: 'rainbow',    input: 'grey',    verbose: 'cyan',    prompt: 'grey',    info: 'green',    data: 'grey',
+    help: 'cyan',    warn: 'yellow',    debug: 'blue',    error: 'red'
 });
 
-test(("VERSION " + version).warn, function (T) {
+test(("\t" + cfg.name + " VERSION ").red, function (T) {
     T.plan(1);
-    T.ok(version);
+    T.ok('undefined' != typeof cfg, ("\t\t\t" + cfg.version + "\n").warn);
 });
 
 function testera(call_, exp, msg) {
@@ -36,7 +28,7 @@ function testera(call_, exp, msg) {
             (msg || (call_ + " // => " + exp)).info
         );
     } catch (x) {
-        testera.TAPE.fail(("\nEXCEPTION while evaluating: \n" + call_ + "\n" + x.stack).error);
+        testera.TAPE.comment(("\nEXCEPTION while evaluating: \n" + call_ + "\n" + x.message).yellow);
     }
 };
 
@@ -100,12 +92,11 @@ that means te test bellow must pass while using it too ...
 */
 const deepEqual = require('deep-equal');
 
-dbj.cond.comparator = deepEqual; // dbj.compare.deep;
-
 test("\nGoing to use node js assert deep-equal module\n Testing for inequality".yellow, function (T) {
-
+    dbj.cond.comparator = deepEqual; // swap
     testera.TAPE = T;
-        T.plan(8);
+        T.plan(9);
+        T.ok(dbj.cond.comparator == deepEqual, "Switched to comparator deepEqual ".cyan );
     test_for_not_equality({}, { 1: 2 });
     test_for_not_equality({ "Alpha": 1 }, { "Beta": 2 });
     test_for_not_equality([true, true], [false, false]);
@@ -113,16 +104,32 @@ test("\nGoing to use node js assert deep-equal module\n Testing for inequality".
 
     });
 /*
-    dbj.cond.comparator = dbj.compare.multi;
-*/
-    test(" \nMore complex deep inequality testing".yellow, function (T) {
+NOTE: dbj.compare.deep; has been removed as of 3.0.3, use 'deep-equal'
 
-        testera.TAPE = T;
-        T.plan(8);
-        test_for_not_equality({}, [{ 1: 2 }]);
-        test_for_not_equality([{ "Alpha": 1 }], { "Beta": 2 });
-        test_for_not_equality([[true, true], 3], [false, false]);
-        test_for_not_equality([3, 2], [true, [3, 2]]);
+dbj.compare.arr and dbj.compar.multi are for arrays only
+*/
+    test(" \nArray comparator testing".yellow, function (T) {
+
+     dbj.cond.comparator = dbj.compare.arr;
+     T.plan(4);
+     T.ok(
+          deepEqual(
+                dbj.cond.comparator, dbj.compare.arr
+    ), "Switched to dbj.compare.arr".cyan);
+
+    T.comment("\nBoth the input and the value to check against the input should be arrays\n");
+
+    T.comment('\ndbj.cond([{}], [{}], "found", [], "empty", "otherwise") ===  "found"'.cyan);
+    T.ok(dbj.cond([{}], [{}], "found", [], "empty", "otherwise"),
+            "found", " returned " );
+
+    T.comment('\ndbj.cond([], [[[]]], "found", [], "empty", "otherwise") ==  "empty"'.cyan);
+    T.ok(dbj.cond([], [[[]]], "found", [], "empty", "otherwise"),
+        "empty", " returned " );
+
+    T.comment('\ndbj.cond([], [[[]]], "found", [13], "empty", "otherwise") == "otherwise"'.cyan);
+    T.ok(dbj.cond([{}], [[[]]], "found", [13], "empty", "otherwise"),
+        "otherwise", " returned " );
 
     });
 /* EOF */

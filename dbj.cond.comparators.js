@@ -136,6 +136,9 @@ comparator you need and use the ones bellow after that.
     // Discussions and reference: http://philrathe.com/articles/equiv
     // Test suites: http://philrathe.com/tests/equiv
     // Author: Philippe Rathé <prathe@gmail.com>
+    /*
+            LEGACY -- REMOVED -- does not worj in presence of "use strict"
+
     var rathe = function () {
 
         var innerEquiv, // the real equiv function
@@ -310,6 +313,7 @@ comparator you need and use the ones bellow after that.
         return innerEquiv;
 
     }(); // eof rathe()
+    */
 
     /*
     Two arrays are considered equal when all their elements 
@@ -339,7 +343,7 @@ comparator you need and use the ones bellow after that.
     
     optimised version of the above, also using the comparator
     */
-    function equal_arrays_opt(a, b, comparator) {
+    function equal_arrays(a, b, comparator) {
 
         return (a.length === b.length) &&
         a.every(function (e, i) { return comparator(e, b[i]); }) &&
@@ -358,8 +362,8 @@ comparator you need and use the ones bellow after that.
         */
         'arr': function (a, b, /* optional */ comparator) {
 
-            if (!Array.isArray(a)) throw TypeError("First argument must be array");
-            if (!Array.isArray(b)) throw TypeError("Second argument must be array");
+            if (!Array.isArray(a)) a = [a]; // throw TypeError("First argument must be array");
+            if (!Array.isArray(b)) b = [b]; // throw TypeError("Second argument must be array");
 
             if (!!comparator && "function" != typeof comparator)
                 throw TypeError("Third argument is given but is not a function");
@@ -369,22 +373,25 @@ comparator you need and use the ones bellow after that.
                 )
         },
         /*
-        Can compare two arrays AND single to array AND array to single
+        Can compare two arrays AND single to array AND array to single value
         NOTE: if comparator is given use it otherwise use strict_eq().
         */
         'multi': function (a, b, comparator) {
             return multi_comparator(a, b, comparator || strict_eq);
         },
         /*
+
+        LEGACY -- REMOVED -- does not work in presence of "use strict"
         perform deep comparison of two objects or scalars
         NOTE: to construct multi+deep comparator, end users will do this :
 
          dbj.compare(a,b,dbj.compare.deep) ;
 
-        */
         'deep': function (a, b) {
             return rathe(a, b);
         }
+
+        */
     };
 
     /*

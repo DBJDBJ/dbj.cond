@@ -1,23 +1,25 @@
-﻿<img src="http://dbj.org/wp-content/uploads/2013/07/comparator-e1373486780369.jpg" alt="dbj.cond() by dbj.org" width="100%" align="left" hspace="5px" />
+﻿# dbj.cond() 
 
-# dbj.cond() 
-
-## Versions 3.0.3 and above
-
-- dbj.compare.deep; has been removed as of 3.0.3, please use 'deep-equal'
--  dbj.compare.arr and dbj.compar.multi are meant for arrays comparisons
-
-## Versions 3.0.0 and above
-  
 (c) 2009-2018 .. and beyond, by dbj.org  
  Licensed under the MIT (MIT-LICENSE.txt) 
 
+<img src="http://dbj.org/wp-content/uploads/2013/07/comparator-e1373486780369.jpg" alt="dbj.cond() by dbj.org" width="100%" align="left" vspace="15px" />
+
+
+**Versions 3.0.3 and above**
+
+- ```dbj.compare.deep;``` has been removed as of 3.0.3, please use <a href="https://www.npmjs.com/package/deep-equal" target="_blank">'deep-equal'</a> or a href="https://www.npmjs.com/package/fast-deep-equal" target="_blank">'fast-deep-equal'</a> or any other comparators you might preffer.
+-  ```dbj.cond.comparators.js``` contains ```dbj.compare.arr``` and ```dbj.compare.multi```. These are meant primarily for arrays comparisons.
+
+**Versions 3.0.0 and above**
+  
 Note: for tests and the rest please always visit the <a href="https://github.com/DBJDBJ/dbj.cond" target="_blank">project on the Github</a>. 
 
 Note: for version 2.0.1 please use the required (pun intended) require syntax:
 ```javascript 
    const dbj = require('dbj.cond@2.0.1').dbj ;
 ```
+# What is dbj.cond ?
  
 dbj.cond is an coding abstraction inspired with [LISP (cond ... ) and (case ...)](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial-17.html) statements.
 Using this idiom delivers <a href="https://dbj.org/javascript-with-no-ifs/" target="_blank"> non-trival conditional logic </a> coding, but still clean source with no complex if/else cascades and with no switch(). 
@@ -69,16 +71,16 @@ Standard and default comparison used is one of strict equality. This is the func
 argument to the first element of the pairs that follow. The last argument is the fallback value, used if there is no match. 
 Processing stops on the first match found.
 
- ## Beyond basic usage: swappable comparators  
+ ## Beyond the basics: swappable comparators  
 
- User defined comparators are probably the most powerfull feature of dbj.cond(). JS switch() stement uses "===" as the only possible comparator. Using dbj.cond() it is easy to change the comparator used.
+ User defined comparators are probably the most powerfull feature of dbj.cond(). The switch() stement uses "===" as the only possible comparator. Using dbj.cond() it is easy to change the comparator used.
 
 **Note on versions 3.0.0 and above**
 
 As from version 3.0.0 we do not package complex comparators with dbj.cond. Complex comparators are powerfull but seldom used. Thus for a very fast and comofrtable usage yuo do not need them and you do not need complaex code behind that is largely unused.
 Our complex comparators are still here and working and we do use them indeed. 
-They are just in the separate file (module): dbj.cond.comparators.js.
-This is not part of the NPM package any more, so that the package is small and fast.
+They are just in the separate file: dbj.cond.comparators.js.
+This is not part of the dbj.cond.js module any more, so that it is small and fast.
 To obtain the ```dbj.cond.comparators.js``` file, please obtain it from node_modules like this:
 
 ```javascript
@@ -110,7 +112,7 @@ Here is the code explaining them
 **Comparators are swappable extensions to dbj.cond**
 
 Beside our own complex comparators please feel free to use any other available on npm or elsewhere. 
-As an example in ./test/index.js we use well known 
+As an example in <a href="https://github.com/DBJDBJ/dbj.cond/tree/master/test" target="_blank">./test/index.js</a> we use well known 
 <a href="https://github.com/substack/node-deep-equal">'deep-equal'</a> comparator. 
 
 Swappable comparators are very powerfull feature. 
@@ -122,15 +124,15 @@ Please be sure to understand what is each one doing and plan to use it according
  ```javascript
 // switching to user defined comparator to myComparator
 dbj.cond.comparator = function myComparator (a,b ) { return a != b ; };
-	dbj.cond(1,1,"1","!") //=> returns "!"
+dbj.cond(1,1,"1","!") //=> returns "!"
 
 // switching back to standard comparator
 dbj.cond.comparator = dbj_comparators.standard ;
-	dbj.cond(1,1,"1","!") //=> returns "1"
+dbj.cond(1,1,"1","!") //=> returns "1"
 ```
- For reasons of performance dbj.cond.comparators are not checked for validity. 
+For reasons of performance dbj.cond.comparators are not checked for validity. 
  As we explained for using dbj.cond() with complex types (arrays and objects)
-two powerfull non-standard comparators are provided, "deep" and "multi". 
+For dealing with arrays, two powerfull non-standard comparators are provided, "arr" and "multi". 
  Usage is this:   
  ```javascript
 //
@@ -165,6 +167,9 @@ dbj.cond(
 				    , false 
 		); //=> "Works!"
 ```
+
+There are manu more real life examples proving the quality of this idiom. Please do feel free to send us your code. 
+We might publish it and discuss it on https://dbj.org
 
 **NOTE**  
  

@@ -131,5 +131,44 @@ dbj.compare.arr and dbj.compar.multi are for arrays only
     T.ok(dbj.cond([{}], [[[]]], "found", [13], "empty", "otherwise"),
         "otherwise", " returned " );
 
+});
+
+    test(" \nThe 'multi' array comparator testing".yellow, function (T) {
+
+        dbj.cond.comparator = dbj.compare.multi;
+        dbj.cond.secondary_comparator = deepEqual;
+
+        T.plan(3);
+
+        T.ok(
+            // compare arrays for equality
+            dbj.cond(
+                [1, 2],
+                [3, 2], false,
+                [1, 2], "Works!"
+                , false
+            ), "Works!" );
+
+        T.ok(
+            // lookup into the array also works
+            // input val array is 'looked up' 
+            dbj.cond(
+                [1, 2],
+                [3, 2], false,
+                ['2d', [1, 2]], "Works!"
+                , false
+            ), "Works!"); 
+        // [1,2] is found in ['2d', [1,2]]
+
+        T.ok(
+            // lookup from the array too
+            // aka 'reverse' lookup
+            dbj.cond(
+                ['2d', [1, 2]],
+                [3, 2], false,
+                [1, 2], "Works!"
+                , false
+            ), "Works!");
     });
+
 /* EOF */

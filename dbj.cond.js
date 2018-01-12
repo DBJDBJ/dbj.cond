@@ -38,6 +38,7 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
 	dbj.cond = function ( v ) {
 
         var default_comparator_ = dbj.cond.comparator;
+        var default_secondary_comparator_ = dbj.cond.secondary_comparator;
             // also defines what is a comparator 'plugin' for dbj  cond 
             // function strict_eq(a, b) { return a === b; };
 
@@ -45,10 +46,11 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
             if (!isEven(arguments.length)) throw "dbj.cond() not given even number of arguments";
 
             var comparator = dbj.cond.comparator || default_comparator_;
+            var secondary_comparator = dbj.cond.secondary_comparator || default_secondary_comparator_;
 
 			 var  j = 1, L = arguments.length;
 			for (; j < L; j += 2) {
-                if (true === comparator(v, arguments[j])) return arguments[j + 1];
+                if (true === comparator(v, arguments[j], secondary_comparator )) return arguments[j + 1];
 			}
 			return arguments[L - 1];
 	    };
@@ -60,6 +62,7 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
 	} ;
     dbj.cond.comparator = function strict_eq(a, b) { return a === b; };
     /* jokers can fiddle with the above and set it to null */
+    dbj.cond.secondary_comparator = function strict_eq(a, b) { return a === b; };
 
     /*
     export to Node.JS

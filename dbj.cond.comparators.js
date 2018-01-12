@@ -121,12 +121,17 @@ comparator you need and use the ones bellow after that.
     multi_comparator( function (){ return 1;}, [3,2,1] ) --> false
     multi_comparator( [3,2,1], ["x",[3,2,1]] ) --> true
     
-    if rathe(a,b) is used then multi_comparator works for all types
+    if some complex comparator is used then multi_comparator works for all types
     */
     var multi_comparator = function (a, b, comparator) {
-        if (comparator(a, b)) return true;         /* covers arr to arr too */
-        if (Array.isArray(b)) return index_of(b, a, comparator) > -1; /* sing to arr */
-        if (Array.isArray(a)) return index_of(a, b, comparator) > -1; /* arr to sing */
+
+        if (!Array.isArray(a)) a = [a]; // 
+        if (!Array.isArray(b)) b = [b]; // 
+
+        if (comparator(a, b)) return true;          /* covers arr to arr too */
+        if (index_of(b, a, comparator) > -1) return true;            /* sing to arr */
+        if (index_of(a, b, comparator) > -1) return true;            /* arr to sing */
+
         return false;
     };
 

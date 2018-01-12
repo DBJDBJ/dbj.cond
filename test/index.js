@@ -110,7 +110,14 @@ dbj.compare.arr and dbj.compar.multi are for arrays only
 */
     test(" \nArray comparator testing".yellow, function (T) {
 
-     dbj.cond.comparator = dbj.compare.arr;
+        dbj.cond.comparator = dbj.compare.arr;
+        // simple strict equality default is used
+        // depending on more comples uses cases it might be needed here
+        // for realy powerfull comparisons please see the usage of
+        // 'multi' bellow
+        // dbj.cond.secondary_comparator = deepEqual;
+
+
      T.plan(4);
      T.ok(
           deepEqual(
@@ -136,6 +143,7 @@ dbj.compare.arr and dbj.compar.multi are for arrays only
     test(" \nThe 'multi' array comparator testing".yellow, function (T) {
 
         dbj.cond.comparator = dbj.compare.multi;
+        // otherwise simple strict equality default is used
         dbj.cond.secondary_comparator = deepEqual;
 
         T.plan(3);

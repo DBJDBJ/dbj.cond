@@ -10,6 +10,7 @@
 
 - ```dbj.compare.deep;``` has been removed as of 3.0.3, please use <a href="https://www.npmjs.com/package/deep-equal" target="_blank">'deep-equal'</a> or a href="https://www.npmjs.com/package/fast-deep-equal" target="_blank">'fast-deep-equal'</a> or any other comparators you might preffer.
 -  ```dbj.cond.comparators.js``` contains ```dbj.compare.arr``` and ```dbj.compare.multi```. These are meant primarily for arrays comparisons.
+- Secondary comparator feature added. See the usage of 'multi' on the bottom. 
 
 **Versions 3.0.0 and above**
   
@@ -139,7 +140,10 @@ For dealing with arrays, two powerfull non-standard comparators are provided, "a
 const dbj_comparators = require('./node_modules/dbj.cond/dbj.cond.comparators.js');
 // use dbj single to/from array comparator
 // which also does deep equality comparisons
-dbj.cond.comparator = dbj_compare.multi;
+      dbj.cond.comparator = dbj.compare.multi;
+// give  complex comparator as secondary
+// otherwise simple strict equality default is used
+        dbj.cond.secondary_comparator = deepEqual;
 // compare arrays for equality
 dbj.cond(
 	[1,2], 
@@ -167,6 +171,11 @@ dbj.cond(
 				    , false 
 		); //=> "Works!"
 ```
+
+**Seondary comparator** is used internaly by the primary one. Above we have made a powefrull combination 
+of the two as an example.  If secondary comparator is not used the standard will be used.
+
+Future developments will focus on making this easier to use by end users.
 
 There are manu more real life examples proving the quality of this idiom. Please do feel free to send us your code. 
 We might publish it and discuss it on https://dbj.org

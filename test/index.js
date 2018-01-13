@@ -1,28 +1,51 @@
-﻿
+﻿/**
+ * (c) 2018 dbj.org
+ * dbj.cond quick testing in the node environment
+ */
 const cfg = require('../package.json');
 const test = require("tape");
 const colors = require('colors');
 const dbj = require("../dbj.cond.js") ;
-const dbj_comparators = require("../dbj.cond.comparators.js") ;
+const dbj_comparators = require("../dbj.cond.comparators.js");
+/*
+   at this point the situation is:
+
+   dbj = {
+       core   : { ... },
+       cond   : { ... },
+       compare: { ... }
+   }
+*/
 
 colors.setTheme({
     silly: 'rainbow',    input: 'grey',    verbose: 'cyan',    prompt: 'grey',    info: 'green',    data: 'grey',
     help: 'cyan',    warn: 'yellow',    debug: 'blue',    error: 'red'
 });
-
+/*
+ * just show the pakckage versions
+ */
 test(("\t" + cfg.name + " VERSION ").red, function (T) {
     T.plan(1);
     T.ok('undefined' != typeof cfg, ("\t\t\t" + cfg.version + "\n").warn);
 });
-
+/**
+ * Multi purpose test execution with showing the expression executed too
+ * @param {any} call_ -- the javascript expression
+ * @param {any} exp   -- expected outcome
+ * @param {any} msg   -- message
+ */
 function testera(call_, exp, msg) {
-
+    /**
+     * Return the results of the in-line anonymous function we .call with the passed context
+     * @param {any} js       -- code to be evaulated
+     * @param {any} context  -- in which context
+     */
     function evalInContext(js, context) {
-        //# Return the results of the in-line anonymous function we .call with the passed context
         return function () { return eval(js); }.call(context);
     }
 
     try {
+        /* uing the tape deep equal comparator */
         testera.TAPE.deepEqual(
             evalInContext(call_, testera.context ), exp,
             (msg || (call_ + " // => " + exp)).info
@@ -31,7 +54,7 @@ function testera(call_, exp, msg) {
         testera.TAPE.comment(("\nEXCEPTION while evaluating: \n" + call_ + "\n" + x.message).yellow);
     }
 };
-
+// must set before using from inside tape tests
 testera.TAPE = null;
 // this allows var's created on the level of this module to be used
 // for eval expressions
@@ -41,7 +64,10 @@ testera.context = module;
     precondition: x !== v
     */
 function test_for_not_equality(x, v) {
-    /* we make arguments globaly reachable so that eval can use them */
+    /*
+        we must make arguments reachable so that internal eval can use them
+        it might be cleaner to do  testera.context = test_for_not_equality;
+    */
     module.x = x;
     module.v = v;
     testera('dbj.cond(module.x, module.v, "x eq v", "!")', "!");
@@ -51,10 +77,11 @@ function test_for_not_equality(x, v) {
     precondition: x === v
     */
     function test_for_equality(x, v) {
-        testera.x = x;
-        testera.v = v;
-        testera('dbj.cond(testera.x, testera.v, "EQ", "!")', "EQ");
-        testera('dbj.cond(true, testera.x != testera.v, "neq","!")', "!");
+    /* we must make arguments reachable so that internal eval can use them */
+        module.x = x;
+        module.v = v;
+        testera('dbj.cond(module.x, module.v, "EQ", "!")', "EQ");
+        testera('dbj.cond(true, module.x != module.v, "neq","!")', "!");
     }
 
     test("\npresence of the library ".yellow, function (T) {
@@ -87,12 +114,14 @@ function test_for_not_equality(x, v) {
 
 
 /*
-must be able to use also https://github.com/substack/node-deep-equal
-that means te test bellow must pass while using it too ...
+dbj.cond must be able to use any comparator.
+for example https://github.com/substack/node-deep-equal
+
+NOTE: dbj.compare.deep; has been removed as of 3.0.3, use 'deep-equal' instead
 */
 const deepEqual = require('deep-equal');
 
-test("\nGoing to use node js assert deep-equal module\n Testing for inequality".yellow, function (T) {
+test("\nGoing to use node js assert 'deep-equal' module\n Testing for inequality".yellow, function (T) {
     dbj.cond.comparator = deepEqual; // swap
     testera.TAPE = T;
         T.plan(9);
@@ -104,9 +133,9 @@ test("\nGoing to use node js assert deep-equal module\n Testing for inequality".
 
     });
 /*
-NOTE: dbj.compare.deep; has been removed as of 3.0.3, use 'deep-equal'
-
-dbj.compare.arr and dbj.compar.multi are for arrays only
+dbj.compare.arr and dbj.compare.multi , are meant for arrays only
+they also use dbj.cond.secondary_comparator for actualy comparing the array elements
+this allows for powerfull combinations that deliver powerfull comparison abilities
 */
     test(" \nArray comparator testing".yellow, function (T) {
 
@@ -115,9 +144,7 @@ dbj.compare.arr and dbj.compar.multi are for arrays only
         // depending on more comples uses cases it might be needed here
         // for realy powerfull comparisons please see the usage of
         // 'multi' bellow
-        // dbj.cond.secondary_comparator = deepEqual;
-
-
+        // 
      T.plan(4);
      T.ok(
           deepEqual(
@@ -143,11 +170,12 @@ dbj.compare.arr and dbj.compar.multi are for arrays only
     test(" \nThe 'multi' array comparator testing".yellow, function (T) {
 
         dbj.cond.comparator = dbj.compare.multi;
-        // otherwise simple strict equality default is used
+        // use deepEqual for comparing array elements
+        // which means 'anything' can be compared
+        // like in the tests bellow
         dbj.cond.secondary_comparator = deepEqual;
 
         T.plan(3);
-
         T.ok(
             // compare arrays for equality
             dbj.cond(

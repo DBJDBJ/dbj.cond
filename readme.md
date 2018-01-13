@@ -5,7 +5,7 @@
 
 <img src="http://dbj.org/wp-content/uploads/2013/07/comparator-e1373486780369.jpg" alt="dbj.cond() by dbj.org" width="100%" align="left" vspace="15px" />
 
-For overview, usage, tests and a such please go to the <a href="https://github.com/DBJDBJ/dbj.cond/tree/master/test" target="_blank">**dbj.cond, file man.md**</a> on the GitHub project. 
+For overview, usage, tests and a such please go to the short <a href="https://github.com/DBJDBJ/dbj.cond/blob/master/man.md" target="_blank">**online manual**</a> on the GitHub project. 
 
 There are real life examples proving the quality of this idiom. Please do feel free to send us your code. 
 We might publish it and discuss it on https://dbj.org

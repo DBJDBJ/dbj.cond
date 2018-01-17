@@ -6,7 +6,7 @@ const cfg = require('../package.json');
 const test = require("tape");
 const colors = require('colors');
 const dbj = require("../dbj.cond.js") ;
-const dbj_comparators = require("../dbj.cond.comparators.js");
+const dbj_comparators = require("dbj.cond.comparators");
 /*
    at this point the situation is:
 

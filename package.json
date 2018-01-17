@@ -1,11 +1,12 @@
 {
+  "private": false ,
   "name": "dbj.cond",
   "version": "3.0.6",
   "author": {
     "name": "dbj",
     "web": "https://dbj.org/dbj-cond"
   },
-  "description": "JavaScript COND statement",
+  "description": "Emulates LISP COND statement behaviour in JavaScript. Comparators used are decoupled and replaceable.",
   "repository": {
     "type": "git",
     "url": "https://github.com/DBJDBJ/dbj.cond.git"
@@ -26,7 +27,8 @@
   "devDependencies": {
     "tape": "^4.8.0",
     "colors": "^1.1.2",
-    "deep-equal": "^1.0.1"
+    "deep-equal": "^1.0.1",
+    "dbj.cond.comparators": "^0.0.1"
   },
   "dependencies": {}
 }

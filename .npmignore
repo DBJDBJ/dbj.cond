@@ -1,6 +1,4 @@
 node_modules/*
-qunittest/*
 wiki/*
-Web.config
 man.md
 .travis.yml

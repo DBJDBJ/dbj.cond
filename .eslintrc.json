@@ -1,0 +1,21 @@
+﻿{
+  "extends": "eslint:recommended",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "max-len": [ 2, 120, 8 ], // DBJ added
+    "consistent-return": 2,
+    "indent": "off", // [ 1, 2 ],
+    "no-else-return": 1,
+    "semi": [ 1, "always" ],
+    "space-unary-ops": 2,
+    "no-console": "off",
+    "no-undef":  "off",
+    "no-var": "error"
+  },
+  "parserOptions": {
+    "ecmaVersion": 6
+  }
+}

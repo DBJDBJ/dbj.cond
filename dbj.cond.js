@@ -2,19 +2,23 @@
 /*
 Copyright 2018 dbj.org
 
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
 http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed
-on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and limitations under the License.
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed
+on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+either express or implied.
+See the License for the specific language governing permissions
+and limitations under the License.
 */
 
 (function (dbj, undefined) {
 
-    var /* coercion to Int32 as required by asm.js */
+    const /* coercion to Int32 as required by asm.js */
         toInt32 = function (v_) {
             return v_ | 0;
         } ,
@@ -24,7 +28,7 @@ See the License for the specific language governing permissions and limitations 
     Terminology and arguments requirements:
 
             dbj.cond( input_value,
-                      check_val, out_val, // any number of check/out values
+                      check_val, out_val, // any number of check/out pairs
                       default_val ) ;
 
     Number of arguments must be even. 
@@ -46,26 +50,26 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
 	*/
 	dbj.cond = function ( v ) {
 
-        var default_comparator_ = dbj.cond.comparator;
-        var default_secondary_comparator_ = dbj.cond.secondary_comparator;
+        const default_comparator_ = dbj.cond.comparator;
+        const default_secondary_comparator_ = dbj.cond.secondary_comparator;
 
-	    dbj.cond = function (v) {
-            if (!isEven(arguments.length)) throw "dbj.cond() not given even number of arguments";
+	dbj.cond = function (v) {
+        if (!isEven(arguments.length)) throw "dbj.cond() not given even number of arguments";
 
-            var comparator = dbj.cond.comparator || default_comparator_;
-            var secondary_comparator = dbj.cond.secondary_comparator || default_secondary_comparator_;
+        let comparator = dbj.cond.comparator || default_comparator_;
+        let secondary_comparator = dbj.cond.secondary_comparator || default_secondary_comparator_;
 
-			 var  j = 1, L = arguments.length;
-			for (; j < L; j += 2) {
-                if (true === comparator(v, arguments[j], secondary_comparator )) return arguments[j + 1];
-			}
-			return arguments[L - 1];
-	    };
-	    /*
-        be sure to pass all the arguments on the first run
-        which is the only time the line bellow will be executed
-        */
-	    return dbj.cond.apply(this, Array.prototype.slice.call(arguments,0));
+        let  j = 1, L = arguments.length;
+		for (; j < L; j += 2) {
+            if (true === comparator(v, arguments[j], secondary_comparator )) return arguments[j + 1];
+		}
+		return arguments[L - 1];
+	};
+	/*
+    be sure to pass all the arguments on the first run
+    which is the only time the line bellow will be executed
+    */
+    return dbj.cond.apply(this, Array.prototype.slice.call(arguments,0));
     };
     dbj.cond.strict_eq = function (a, b) { return a === b; };
     dbj.cond.comparator = dbj.cond.strict_eq;

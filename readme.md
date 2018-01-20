@@ -1,7 +1,7 @@
 ﻿# dbj.cond() 
 
 (c) 2009-2018 .. and beyond, by dbj.org  
- Licensed under the MIT (MIT-LICENSE.txt) 
+Licensed under the Apache License, Version 2.0 
 
 <img src="http://dbj.org/wp-content/uploads/2013/07/comparator-e1373486780369.jpg" alt="dbj.cond() by dbj.org" width="100%" align="left" vspace="5%" />
 <p>&nbsp;</p>

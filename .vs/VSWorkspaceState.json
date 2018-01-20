@@ -1,9 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\qunittest",
-    "\\test"
+    ""
   ],
-  "SelectedNode": "\\node_modules",
+  "SelectedNode": "\\package.json",
   "PreviewInSolutionExplorer": false
 }

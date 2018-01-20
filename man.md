@@ -1,7 +1,7 @@
 ﻿# dbj.cond() 
 
 (c) 2009-2018 .. and beyond, by dbj.org  
- Licensed under the MIT (MIT-LICENSE.txt) 
+Licensed under the Apache License, Version 2.0 
 
 ### Short release log
 

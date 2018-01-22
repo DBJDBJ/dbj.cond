@@ -80,7 +80,7 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
     const default_secondary_comparator_ = dbj.cond.secondary_comparator;
 
     /* v3.1.3 added */
-    dbj.cond.set = function set_return_comparators_ (primary, secondary) {
+    dbj.cond.setcmp = function set_return_comparators_ (primary, secondary) {
         if ('function' === typeof primary )
             dbj.cond.comparator = primary;
         if ('function' === typeof secondary)
@@ -89,7 +89,7 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
     };
     /* v3.1.3 added */
     dbj.cond.reset = function reset_comparators() {
-        return dbj.cond.set(
+        return dbj.cond.setcmp(
             default_comparator_, default_secondary_comparator_
         );
     };

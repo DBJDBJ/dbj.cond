@@ -48,12 +48,9 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
     //=> "C",  /./ === /./ => false
 
 	*/
-	dbj.cond = function ( v ) {
+	// dbj.cond = function ( v ) {
 
-        const default_comparator_ = dbj.cond.comparator;
-        const default_secondary_comparator_ = dbj.cond.secondary_comparator;
-
-	dbj.cond = function (v) {
+    dbj.cond = function (v) {
         if (!isEven(arguments.length)) throw "dbj.cond() not given even number of arguments";
 
         let comparator = dbj.cond.comparator || default_comparator_;
@@ -69,12 +66,33 @@ Arrays as arguments are not part of standard dbj.cond() functionality:
     be sure to pass all the arguments on the first run
     which is the only time the line bellow will be executed
     */
-    return dbj.cond.apply(this, Array.prototype.slice.call(arguments,0));
-    };
+    //return dbj.cond.apply(this, Array.prototype.slice.call(arguments,0));
+    // };
     dbj.cond.strict_eq = function (a, b) { return a === b; };
     dbj.cond.comparator = dbj.cond.strict_eq;
-    /* jokers can fiddle with the above and set it to null */
+    // secondary comparator is simply ignpred by shallow primary comparators
     dbj.cond.secondary_comparator = dbj.cond.strict_eq;
+    /* 
+    jokers can fiddle with the above and set it to null
+    so we will preserve what we need
+    */
+    const default_comparator_ = dbj.cond.comparator;
+    const default_secondary_comparator_ = dbj.cond.secondary_comparator;
+
+    /* v3.1.3 added */
+    dbj.cond.set = function set_return_comparators_ (primary, secondary) {
+        if ('function' === typeof primary )
+            dbj.cond.comparator = primary;
+        if ('function' === typeof secondary)
+            dbj.cond.secondary_comparator = secondary;
+        return [dbj.cond.comparator, dbj.cond.secondary_comparator];
+    };
+    /* v3.1.3 added */
+    dbj.cond.reset = function reset_comparators() {
+        return dbj.cond.set(
+            default_comparator_, default_secondary_comparator_
+        );
+    };
 
     /*
     export to Node.JS

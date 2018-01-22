@@ -178,15 +178,17 @@ To avoid the foot-gun effect, please be sure to understand what is each one doin
 /*global dbj:true*/
 require('dbj.cond');
 const assert = require("assert");
-// switching to user defined comparator 
-dbj.cond.comparator =
-    function strictly_not_equal(a, b) { return a !== b; };
+// switching to user defined primary comparator 
+dbj.cond.setcmp(
+    function strictly_not_equal(a, b) { return a !== b; }
+);
 //
 let R1 = dbj.cond("one", "two", "two !== one", "none found!");
 assert(R1 === "two !== one");
 
 // switching back to standard strict equality
-dbj.cond.comparator = function strict_eq(a, b) { return a === b; };
+// function strict_eq(a, b) { return a === b; };
+dbj.cond.reset();
 //
 let R2 = dbj.cond("one", "one", "one === one", "none found!");
 assert(R2 === "one === one");
@@ -199,12 +201,17 @@ Usage is this:
 /*global dbj:true*/
  require('dbj.cond');
  require('dbj.cond.comparators.js');
-const deepEqual = require('deep-equal');
+const deepEqual = require('fast-deep-equal');
+//
+// method
+// dbj.cond.setcmp ( primary, secondary )
+// sets primary and optional seconday comparator
+// returns an array of current comparator pair
+dbj.cond.set(dbj.compare.lookup, deepEqual ) ;
 // switch to dbj two way lookup comparator
-dbj.cond.comparator = dbj.compare.lookup;
 // give  deepEqual comparator as secondary
 // to compare elements of arrays
-dbj.cond.secondary_comparator = deepEqual;
+//
 // at this moment dbj.cond is capable of deep array vs array comparisons
 //
 dbj.cond(
@@ -234,8 +241,9 @@ dbj.cond(
 		); //=> "Works!"
 ```
 
-### Secondary comparator
-Is used internaly by the primary one for 'drillin down' into the properties of complex objects to compare. 
+**Why the Secondary comparator**
+
+Secondary comparator is used internaly by the primary one for 'drillin down' into the properties of complex objects to compare. 
 As above it is also possible to change it. Above we have made a powerfull combination 
 of the dbj 'lookup' and 'fast-deep-equal' as an example.  
 If secondary comparator is not used the standard one is. Thus reverting to so called 'shallow' comparisons.
@@ -244,7 +252,21 @@ By exposing the secondary operator we have allowed users to fine tune the power 
 In the last example we have assembled together: dbj.compare.lookup and 'deep-equal' 
 so that we can execute deep comparisons of arrays and their elements, objects and a such.
 
-Future developments will focus on making this switchng mechanism easier to use by end users.
+**Comparators set/reset**
+
+Method
+```dbj.cond.setcmp ( primary, secondary )```
+Sets primary and optional secondary comparator. Returns an array of current comparator pair.
+```javascript
+dbj.cond.setcmp(dbj.compare.lookup, deepEqual ) ;
+```
+Method
+```javascript
+dbj.cond.reset( )
+``` 
+Resets both comparators to strict equality aka ```function (a,b) { return a === b ; }```. It returns both of them in an array.
+
+
 
 **END NOTE**  
  

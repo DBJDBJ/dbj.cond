@@ -252,6 +252,7 @@ By exposing the secondary operator we have allowed users to fine tune the power 
 In the last example we have assembled together: dbj.compare.lookup and 'deep-equal' 
 so that we can execute deep comparisons of arrays and their elements, objects and a such.
 
+<span id="setreset" ></span>
 **Comparators set/reset**
 
 Method

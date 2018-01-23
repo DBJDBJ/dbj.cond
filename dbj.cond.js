@@ -22,7 +22,9 @@ and limitations under the License.
         toInt32 = function (v_) {
             return v_ | 0;
         } ,
-        isEven = function (value) { return (toInt32(value) % 2 == 0); };
+        isEven = function (value) { return (toInt32(value) % 2 == 0); },
+        minArguments = 4 ,
+        maxArguments = 512 ;
 
     /*
     Terminology and arguments requirements:
@@ -52,6 +54,8 @@ and limitations under the License.
 	*/
     dbj.cond = function (v) {
         if (!isEven(arguments.length)) throw "dbj.cond() not given even number of arguments";
+        if (arguments.length < minArguments) throw "dbj.cond() minimal number of arguments is " + minArguments;
+        if (arguments.length > maxArguments) throw "dbj.cond() minimal number of arguments is " + maxArguments;
 
         let comparator = dbj.cond.comparator || default_comparator_;
         let secondary_comparator = dbj.cond.secondary_comparator || default_secondary_comparator_;

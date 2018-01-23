@@ -29,48 +29,46 @@ and limitations under the License.
 
             dbj.cond( input_value,
                       check_val, out_val, // any number of check/out pairs
+                       ...
+                       ...
                       default_val ) ;
 
     Number of arguments must be even. 
 	Standard  cond allows users to handle values with other values of the same type.
     Standard comparator is '==='. Order is "first found, first served". Example:
 
-	         dbj.cond( 1, 1, "A", 2, "B", "C") //=> "A"
+    dbj.cond( 1, 1, "A", 2, "B", "C") //=> "A"
 
-Arrays as arguments are not part of standard dbj.cond() functionality:  
+    Arrays as arguments are not part of standard dbj.cond() functionality:  
 
-	         dbj.cond( 1, [3,2,1],"A", 2, "B", "C") 
-             //=> "C" , single and array can not be compared 
-             // 1 === [1,2,3] => false
+	dbj.cond( 1, [3,2,1],"A", 2, "B", "C") 
+    //=> "C" , single and array can not be ordinarily compared 
+    // 1 === [1,2,3] => false
 
 	Only intrinsic scalar types can be compared meaningfully. For example
 	dbj.cond( /./, /./, "A", /$/, "B", "C") 
-    //=> "C",  /./ === /./ => false
+    //=> "C",  because (/./ === /./) yields => false
 
 	*/
-	// dbj.cond = function ( v ) {
-
     dbj.cond = function (v) {
         if (!isEven(arguments.length)) throw "dbj.cond() not given even number of arguments";
 
         let comparator = dbj.cond.comparator || default_comparator_;
         let secondary_comparator = dbj.cond.secondary_comparator || default_secondary_comparator_;
-
-        let  j = 1, L = arguments.length;
-		for (; j < L; j += 2) {
-            if (true === comparator(v, arguments[j], secondary_comparator )) return arguments[j + 1];
-		}
-		return arguments[L - 1];
+        let j = 1;
+        const LAST = arguments.length - 3;
+        do {
+            if (true === comparator(v, arguments[j], secondary_comparator ))
+                return arguments[j + 1];
+            j += 2;
+        } while (!(j > LAST));
+            return arguments[arguments.length - 1];
 	};
 	/*
-    be sure to pass all the arguments on the first run
-    which is the only time the line bellow will be executed
     */
-    //return dbj.cond.apply(this, Array.prototype.slice.call(arguments,0));
-    // };
     dbj.cond.strict_eq = function (a, b) { return a === b; };
     dbj.cond.comparator = dbj.cond.strict_eq;
-    // secondary comparator is simply ignpred by shallow primary comparators
+    // secondary comparator is simply ignored by shallow primary comparators
     dbj.cond.secondary_comparator = dbj.cond.strict_eq;
     /* 
     jokers can fiddle with the above and set it to null

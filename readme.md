@@ -1,4 +1,5 @@
-﻿# dbj.cond() 
+﻿
+**dbj.cond()** 
 
 (c) 2009-2018 .. and beyond, by dbj.org  
 Licensed under the Apache License, Version 2.0 

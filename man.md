@@ -37,7 +37,7 @@ Note: for particular version please use the required (pun intended) require synt
  
 dbj.cond is an coding abstraction inspired with [LISP (cond ... ) and (case ...)](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial-17.html) statements.
 Using this idiom delivers <a href="https://dbj.org/javascript-with-no-ifs/" target="_blank"> non-trival conditional logic </a> coding, but still clean source with no complex if/else cascades and with no switch(). 
-The more you use it, the more it becomes clear why you have choosen it. Essentialy it replaces ```if() else``` and ```switch```. It is simple, clean and effective. It also has an obvious returned value vs the ```if/else``` cascades and a ```switch``` statements.
+The more you use it, the more it becomes clear why you have choosen it. Essentialy it replaces ```if() else``` and ```switch```. It is simple, clean and effective. It also has an obvious outcome (or returned value) vs the ```if/else``` cascades and a ```switch``` statements.
 
 Call syntax:  
 

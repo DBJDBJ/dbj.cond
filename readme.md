@@ -1,19 +1,27 @@
 ﻿
-**dbj.cond()** 
+# dbj.cond()
 
-(c) 2009-2018 .. and beyond, by dbj.org  
+(c) 2009-2021 .. and beyond, by dbj at dbj dot org  
 Licensed under the Apache License, Version 2.0 
 
 <img src="http://dbj.org/wp-content/uploads/2013/07/comparator-e1373486780369.jpg" alt="dbj.cond() by dbj.org" width="100%" align="left" vspace="5%" />
 <p>&nbsp;</p>
 
+## Why dbj.cond()
+
+For avoiding complex if-then-else stunts, in very simple, elegan and performant way.
+
+## How is it done
+
 **dbj.cond** emulates in javascript the behaviour of the LISP COND 
 <a href="https://en.wikipedia.org/wiki/Conditional_(computer_programming)" 
 target="_blank">conditional</a> statement.
 
-For overview, usage, tests and a such please go to the short <a href="https://github.com/DBJDBJ/dbj.cond/blob/master/man.md" target="_blank">**online manual**</a> on the GitHub project. 
+## Usage
 
-For a testing project please go to <a href="https://github.com/DBJDBJ/dbj.cond.test" target="_blank">**dbj.cond.test**</a> in the GitHub.
+For overview, usage, tests and such, please go to the short <a href="https://github.com/DBJDBJ/dbj.cond/blob/master/man.md" target="_blank">**online manual**</a> on the GitHub. 
+
+For a testing project please go to <a href="https://github.com/DBJDBJ/dbj.cond.test" target="_blank">**dbj.cond.test**</a> on the GitHub.
 
 There are (numerous) real life examples proving the quality of this idiom. Please do feel free to send us your code. 
 We might publish it and discuss it on https://dbj.org
@@ -24,4 +32,4 @@ We might publish it and discuss it on https://dbj.org
 - GitHub <a href="https://github.com/DBJDBJ/dbj.cond/issues" target="_blank">issues page</a>.
 
 ---------------------------------------------------------------------  
-### &copy; 2018 [![dbj();](http://dbj.org/wp-content/uploads/2015/12/cropped-dbj-icon-e1486129719897.jpg)](http://www.dbj.org "dbj")  
+### &copy; 2018-2021 [![dbj();](http://dbj.org/wp-content/uploads/2015/12/cropped-dbj-icon-e1486129719897.jpg)](http://www.dbj.org "dbj")  

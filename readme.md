@@ -1,7 +1,7 @@
 ﻿
 # dbj.cond()
 
-(c) 2009-2021 .. and beyond, by dbj at dbj dot org  
+(c) 2009-2021 .. and beyond, by [dbj at dbj dot org](https://dbj.org)
 Licensed under the Apache License, Version 2.0 
 
 <img src="http://dbj.org/wp-content/uploads/2013/07/comparator-e1373486780369.jpg" alt="dbj.cond() by dbj.org" width="100%" align="left" vspace="5%" />

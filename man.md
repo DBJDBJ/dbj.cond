@@ -39,7 +39,7 @@ Note: for particular version please use the required (pun intended) require synt
 ```
 # What is dbj.cond ?
  
-Invented out of real life attacks of unmanageable if-then-else cascades. **dbj.cond** is a coding idiom (and abstraction) inspired with [LISP (cond ... ) and (case ...)](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial-17.html) statements.
+Invented as an effective defense from real life attacks of unmanageable if-then-else cascades. **dbj.cond** is a coding idiom (and abstraction) inspired with [LISP (cond ... ) and (case ...)](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial-17.html) statements.
 
 Using this idiom delivers <a href="https://dbj.org/javascript-with-no-ifs/" target="_blank"> non-trival conditional logic </a>, but still clean source with no complex if/else cascades and with no switch(). 
 

@@ -32,10 +32,10 @@ The first NPM version
 
 ----------------------------------
 
-Note: for particular version please use the required (pun intended) require syntax:
+Note: to require particular version please use the required (pun intended) require syntax:
 ```javascript 
-   // example: get version 2.0.1
-   const dbj = require('dbj.cond@2.0.1').dbj ;
+   // example: require a version 4.0.1
+   const dbj = require('dbj.cond@4.0.1').dbj ;
 ```
 # What is dbj.cond ?
  

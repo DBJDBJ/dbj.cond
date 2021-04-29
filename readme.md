@@ -9,7 +9,7 @@ Licensed under the Apache License, Version 2.0
 
 ## Why dbj.cond()
 
-For avoiding complex if-then-else stunts, in very simple, elegan and performant way.
+For avoiding complex if-then-else stunts, in very simple, elegant and performant way.
 
 ## How is it done
 

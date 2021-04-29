@@ -292,11 +292,10 @@ There are many more real-life examples proving the quality of this idiom.
 Please do feel free to send us your code. 
 We might publish it and discuss it on https://dbj.org alongside our own articles on the usability and feasibility of dbj.cond.
 
-**CONTACT**
+## CONTACT
 
-Please do not hesitate to suggest, comment or ask for a support by mailing <a href="mailto:info@dbj.org" target="_blank">info@dbj.org</a>
-And of course the good old GitHub issues mechanism is available 
-<a href="https://github.com/DBJDBJ/dbj.cond/issues" target="_blank">here</a>.
+- Please do not hesitate to suggest, comment or ask for a support by mailing <a href="mailto:info@dbj.org" target="_blank">info@dbj.org</a>
+- The good old GitHub issues mechanism is available <a href="https://github.com/DBJDBJ/dbj.cond/issues" target="_blank">here</a>.
 
 
 ---------------------------------------------------------------------  

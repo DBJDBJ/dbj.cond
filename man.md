@@ -16,7 +16,6 @@ Licensed under the Apache License, Version 2.0
 - [END NOTE](#end-note)
   - [CONTACT](#contact)
 - [Appendix A: Short release log](#appendix-a-short-release-log)
-  - [&copy; 2018-2021 dbj at dbj dot org&trade;](#-2018-2021-dbj-at-dbj-dot-org)
 
 Note: to require particular version please use the required (pun intended) require syntax:
 ```javascript 
@@ -320,4 +319,7 @@ Note: for tests and the rest please always visit the <a href="https://github.com
 The first NPM version
 
 ---
-### &copy; 2018-2021 [dbj at dbj dot org&trade;](http://www.dbj.org "dbj")  
+&copy; 2018-2021 by [dbj at dbj dot org&trade;](https://www.dbj.org)  
+
+![ ](https://dbj.org/wp-content/uploads/2015/12/cropped-dbj-icon-e1486129719897.jpg)
+

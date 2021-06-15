@@ -1,11 +1,10 @@
 ﻿
-# dbj.cond()
+<h1>dbj.cond( );</h1>
 
 (c) 2009-2021 .. and beyond, by [dbj at dbj dot org&trade;](https://dbj.org)
 Licensed under the Apache License, Version 2.0 
 
-<img src="http://dbj.org/wp-content/uploads/2013/07/comparator-e1373486780369.jpg" alt="dbj.cond() by dbj.org" width="100%" align="left" vspace="5%" />
-<p>&nbsp;</p>
+![ ](https://dbj.org/wp-content/uploads/2015/12/cropped-dbj-icon-e1486129719897.jpg)
 
 ## Why dbj.cond()
 
@@ -31,5 +30,7 @@ We might publish it and discuss it on https://dbj.org
 - Mailing <a href="mailto:info@dbj.org" target="_blank">info@dbj.org</a>
 - GitHub <a href="https://github.com/DBJDBJ/dbj.cond/issues" target="_blank">issues page</a>.
 
----------------------------------------------------------------------  
-### &copy; 2018-2021 [![ ](http://dbj.org/wp-content/uploads/2015/12/cropped-dbj-icon-e1486129719897.jpg)](http://www.dbj.org)  
+---
+&copy; 2018-2021 by [dbj at dbj dot org&trade;](https://www.dbj.org)  
+
+![ ](https://dbj.org/wp-content/uploads/2015/12/cropped-dbj-icon-e1486129719897.jpg)

@@ -1,121 +1,118 @@
-﻿# dbj.cond() user manual
+﻿<h1> dbj.cond() user manual </h1>
 
-(c) 2009-2018 .. and beyond, by dbj.org  
+(c) 2009-2021 .. and beyond, by dbj@dbj.org  
 Licensed under the Apache License, Version 2.0 
 
-### Short release log
-
-**Version 4.0.1 is the latest**
-
-Please install from [NPM](https://www.npmjs.com/package/dbj.cond).
-
-**Version 3.1.0 and above**
-
-- our own deep (aka complex) comparatos are streamlined and moved from here to a separate npm module
-   <a href="https://www.npmjs.com/package/dbj.cond.comparators" target="_blank">**dbj.cond.comparators**</a>
-
-- For a testing project please go to <a href="https://github.com/DBJDBJ/dbj.cond.test" target="_blank">**dbj.cond.test**</a> on the GitHub.
-
-**Versions 3.0.3 and above**
-
-- ```dbj.compare.deep;``` has been removed as of 3.0.3, please use <a href="https://www.npmjs.com/package/deep-equal" target="_blank">'deep-equal'</a> or a href="https://www.npmjs.com/package/fast-deep-equal" target="_blank">'fast-deep-equal'</a> or any other comparators you might preffer.
--  ```dbj.cond.comparators.js``` contains ```dbj.compare.arr``` and ```dbj.compare.multi```. These are meant primarily for arrays comparisons.
-- Secondary comparator feature added. See the usage of 'multi' on the bottom. 
-
-**Versions 3.0.0 and above**
-  
-Note: for tests and the rest please always visit the <a href="https://github.com/DBJDBJ/dbj.cond" target="_blank">project on the Github</a>. 
-
-**Version 2.0.1**
-
-The first NPM version
-
-----------------------------------
+- [What is dbj.cond ?](#what-is-dbjcond-)
+- [Installation and usage](#installation-and-usage)
+  - [ESLINT note](#eslint-note)
+- [Browser installation and usage](#browser-installation-and-usage)
+- [Basic behaviour explained](#basic-behaviour-explained)
+- [Beyond the basics: complex comparators](#beyond-the-basics-complex-comparators)
+  - [Comparators are plugins](#comparators-are-plugins)
+- [Few swappable comparators examples](#few-swappable-comparators-examples)
+  - [Complex comparators usage](#complex-comparators-usage)
+  - [API recap](#api-recap)
+- [END NOTE](#end-note)
+  - [CONTACT](#contact)
+- [Appendix A: Short release log](#appendix-a-short-release-log)
+  - [&copy; 2018-2021 dbj at dbj dot org&trade;](#-2018-2021-dbj-at-dbj-dot-org)
 
 Note: to require particular version please use the required (pun intended) require syntax:
 ```javascript 
    // example: require a version 4.0.1
    const dbj = require('dbj.cond@4.0.1').dbj ;
 ```
-# What is dbj.cond ?
+## What is dbj.cond ?
  
-Invented as an effective defense from real life attacks of unmanageable if-then-else cascades. **dbj.cond** is a coding idiom (and abstraction) inspired with [LISP (cond ... ) and (case ...)](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial-17.html) statements.
+Invented as an effective defence from real life attacks of unmanageable if-then-else cascades. A coding idiom (and abstraction) inspired with [LISP (cond ... ) and (case ...)](http://www.n-a-n-o.com/lisp/cmucl-tutorials/LISP-tutorial-17.html) statements.
 
 Using this idiom delivers <a href="https://dbj.org/javascript-with-no-ifs/" target="_blank"> non-trival conditional logic </a>, but still clean source with no complex if/else cascades and with no switch(). 
 
-The more you use it, the more it becomes clear why and how it is so useful. Essentially it replaces `if() else` and `switch`. It is simple, clean, and effective. It also has an obvious outcome (or returned value) vs the `if/else` cascades and a `switch` statement, who don't.
+Just try it. The more you use it, the more it becomes clear why and how it is so useful. Essentially it replaces `if() else` and `switch`. It is simple, clean, and effective. It also has an obvious outcome (or returned value) vs the `if/else` cascades and a `switch` statement, who don't.
 
-Call syntax:  
+The call syntax:  
 
  ```javascript
-dbj.cond( 
+var answer = dbj.cond( 
    input_val,
-   compare_1_to_val, outcome_1, /* first  pair */
-   compare_2_to_val, outcome_2, /* second pair */
-   default_outcome 
+   42, "You guessed it!", /* first  pair */
+   13, "A miss", /* second pair */
+   "Try again" 
   ) ;
 /*
-returns outcome_1 if input_val given to compare_1_to_val yields true
-returns outcome_2 if input_val given to compare_2_to_val yields true
-otherwise returns default_outcome
+Same as:
+
+var answer = if (compare(input_val,42)) 
+    "You guessed it!";
+else if (compare(input_val,13)) 
+    "A miss";
+else 
+    "Try again" ;   
 */
 ```
+Simple rules
 - Any legal JavaScript values or expressions are allowed as arguments 
-      - with appropriate comparator used
-      - defaultcomparison of input vs compare values is one of strict equality, aka "==="
-- there are comparators available
-      - decoupled and changeable 
-      - there are some quite good ones on npm already
+- comparators are decoupled and swappable 
 - processing stops on the first comparison yielding true
 - There can be any number of input/check pairs  
 
- ### node.js instalation and usage
+ ## Installation and usage
+
+ From [npm](https://docs.npmjs.com/cli/v6/commands/npm):
 
  ```npm install dbj.cond```
 
-ESLINT note: dbj packages are all clustered under the dbj "namespace" which in javascript
-is an Object. To pacify ESLINT please use the ```/*global dbj:true*/``` as in the examples(s) bellow.
+### [ESLINT](https://eslint.org/) note
+
+dbj packages are all clustered under the dbj "namespace" which is an javascriptObject. To pacify ESLINT please use the `/*global dbj:true*/` as in the examples(s) bellow.
 
  ```javascript
 /* pacify eslint about dbj global object */
 /*global dbj:true*/
 require("dbj.cond") ;
 //
+var answer = 
 dbj.cond("found one","one","found one!","none found!") 
 //returns => "found one!"
  ```
- ### Browser installation and usage
+ ## Browser installation and usage
+ ```html
+ <script src="my/script/location/dbj.cond.js" >
+ </script>
+ ```
+First include dbj.cond.js, then use it:
  ```javascript
 //
-// first include dbj.cond.js
-// then use
-dbj.cond("found one","one","found one!","none found!") 
-//returns => "found one!"
-// it has stopped on the first match to the input value
-// that was strict equal to "one"
-//
+alert(
+dbj.cond(
+    "two",
+    "one","found one!",
+    "none found!") 
+) ;
  ```
 
-### Basic behavior explained
+## Basic behaviour explained
 
-dbj.cond might be also described as an tiny front to the usage of various comparator functions. Comparator is a function used internaly, it has two arguments and returns true or false.
+dbj.cond might be also described as an tiny front to the usage of various comparator functions. Comparator is a simple function. It has two arguments and returns true or false.
+
+Comparator in use is `dbj.cond.comparator`. Default comparator is always available:
 ```javascript
 // show the  standard default comparator
 console.log( dbj.cond.comparator ) ;
 // shows: function (a, b) {return a === b; }
 ```
-The default comparison used is one of strict equality. This is the function used to compare the first dbj.cond argument to the first element of the pairs that might follow. The last argument is the fallback value, used if there is no match. 
-Processing stops on the first match found.
+AS you can see, the default comparison used is one of strict equality. 
+
+Reminder: Processing stops on the first match found.
 
  ## Beyond the basics: complex comparators  
 
- User-defined comparators are probably the most powerful feature of dbj.cond().
-Using dbj.cond() it is easy to change the comparator function.
+User-defined comparators are probably the most powerful feature of dbj.cond(). It is easy to change the comparator function.
 
-As from version 3.0.0 we do not package complex/deep comparators with dbj.cond. 
-Complex comparators are powerful but seldom used. Thus for a very fast and comfortable usage, you do not need them and you do not need complex code behind them.
+NOTE: As from version 3.0.0 we do not package complex/deep comparators with dbj.cond. Complex comparators are powerful but seldom used. Thus for a very fast and comfortable usage, you do not need them and you do not need complex code behind them.
 
-### Complex comparators are still feasible, powerful, and available. 
+> If an when needed complex comparators are still feasible, and available. 
 
 They are in the separate NPM package: 
 <a href="https://www.npmjs.com/package/dbj.cond.comparators" target="_blank">'dbj.cond.comparators'</a>.
@@ -132,16 +129,15 @@ Then "just use".
 require('dbj.cond.comparators.js');
 //
 ```
-dbj NPM comparators expose 3 comparators: standard, arr and lookup. They are clustered 
-under a dbj 'namespace' like this:
+dbj NPM comparators expose 3 comparators: standard, arr and lookup. They are clustered under a dbj 'namespace' like this:
 ```javascript
-    dbj  // object
-        core // object -- dbj core lib, probably deprecated in the next release
-        compare   // object
-             standard // comparator functions
-             arr  
-             multi // deprecated
-             lookup
+dbj  // object
+    core // object deprecated in the next release
+    compare   // object
+        standard // comparator functions
+        arr  
+        multi // deprecated
+        lookup
 ```
 
 Here is the code explaining dbj.compare a bit more. 
@@ -175,7 +171,7 @@ dbj.compare.arr(a,b) ;
 // or
 dbj.compare.lookup(a,b, my_comparator ) ;
 ```
-That is complex usage and a powerful feature. If and when you need it, it is a potential savior. That is our experience.
+That is a bit more complex and feature. If and when you need it, it is a potential saviour. That is our experience.
 
 ### Comparators are plugins
 
@@ -183,62 +179,69 @@ Beside our own complex comparators please feel free to use any other available o
 As an example we often use well known 
 <a href="https://www.npmjs.com/package/fast-deep-equal">'fast-deep-equal'</a> comparator. 
 
-Switchable deep/complex comparators are a very powerful dbj.cond feature. 
-To avoid the "foot and gun" situation, please be sure to understand what is each one doing; plan how to use it, and then test before putting it in production code.
+Switchable deep/complex comparators are a very powerful feature requiring some caution. To avoid the "foot and gun" situation, please be sure to understand what is each one doing; plan how to use it, and then test before putting it in production code.
 
-## Few examples
+## Few swappable comparators examples
 
- How to change the standard (strict equality) comparator to your own simple comparator:   
+ > API : To change the default comparator to your own simple comparator please use the `dbj.cond.setcmp` function :   
  ```javascript
 /*global dbj:true*/
 require('dbj.cond');
 const assert = require("assert");
-// switching to user defined primary comparator 
+// switching to user defined comparator 
 dbj.cond.setcmp(
     function strictly_not_equal(a, b) { return a !== b; }
 );
 // quick test
 let R1 = dbj.cond("one", "two", "two !== one", "none found!");
 assert(R1 === "two !== one");
-
-// switching back to standard strict equality
-// function strict_eq(a, b) { return a === b; };
+```
+Switching back to a default comparator:
+```javascript
 dbj.cond.reset();
 // quick test
 let R2 = dbj.cond("one", "one", "one === one", "none found!");
 assert(R2 === "one === one");
 ```
-For reasons of performance dbj.cond.comparators are not comprehensively checked for validity. 
-As we have explained (just a moment before) for using dbj.cond() with complex types (arrays of 'anything' etc.)
-for dealing with arrays, two powerful non-standard comparators are provided, "arr" and "lookup" (ex 'multi'). 
+*NOTE: For reasons of performance dbj.cond.comparators are not comprehensively checked for validity.*
+### Complex comparators usage
+
+> JavaScript runtime can contain clusters of object hierarchies. Array is one ot them. Fully Comparing this hierarchical clusters is "Deep Comparison".
+
+As we have explained (just a moment before) for using dbj.cond() with complex types (arrays of 'anything' etc.), two non-standard comparators are provided, "arr" and "lookup" (was "multi"). 
+
+One can also use third-party complex comparators.
 
 Usage is this:   
  ```javascript
 /*global dbj:true*/
  require('dbj.cond');
+// dbj complex comparators 
  require('dbj.cond.comparators.js');
+// third party complex comparator  
 // from https://www.npmjs.com/package/fast-deep-equal
 const deepEqual = require('fast-deep-equal');
-//
-// method
-// dbj.cond.setcmp ( primary, secondary )
-// sets primary and optional seconday comparator
-// returns an array of current comparator pair
+```
+> API: Function `dbj.cond.setcmp ( primary, secondary )`
+sets primary and optional secondary comparator.
+
+Example: switch to dbj two way lookup comparator,
+and give `deepEqual` comparator as secondary to deep compare elements of arrays.
+```javascript
 dbj.cond.set(dbj.compare.lookup, deepEqual ) ;
-// switch to dbj two way lookup comparator
-// give  deepEqual comparator as secondary
-// to compare elements of arrays
-//
-// at this moment dbj.cond is capable of deep array vs array comparisons
-//
+
+// deep array to array comparisons
+
 dbj.cond(
 	[1,2], 
 	[3,2], false, 
 	[1,2], "Works!"
 		, false 
 	); // => returns "Works!"
-
-// lookup into the array also works
+```
+That is easy and readily available array comparison.
+Lookup into the array also works:
+```javascript
 // input val array is 'looked up' 
 dbj.cond(
 /* input*/	[1,2], 
@@ -246,11 +249,10 @@ dbj.cond(
 /* pair 2 */	['2d', [1,2]], "Works!"
 /* default*/	, false 
 	); // => "Works!"  
-// [1,2] is found in ['2d', [1,2]]
-
-// lookup from the array too
-// aka 'reverse' lookup
-dbj.cond(
+```
+Above `[1,2]` is found in `['2d', [1,2]]`, because we used `deepEqual`, as the secondary comparator. That is slower but in that scenario we need it, and it works. And that works "both ways":
+```javascript
+var answer = dbj.cond(
 	['2d', [1,2]], 
 	[3,2]         , false, 
 	[1,2]         , "Works!"
@@ -260,43 +262,62 @@ dbj.cond(
 
 **Why the Secondary comparator**
 
-A secondary comparator is used internally by the primary one for 'drilling down' into the properties of complex objects to compare. 
-As above it is also possible to change it. Above we have made a powerful combination 
-of the dbj 'lookup' and 'fast-deep-equal' as an example.  
-If the second comparator is not used the standard one is. Thus reverting to so-called 'shallow' comparisons.
+As evident above, the secondary comparator is used internally by the primary one for 'drilling down' into the properties of complex objects. 
 
-By exposing the secondary operator we have allowed users to fine-tune the power of dbj.cond, and the usage of deep comparators. 
-In the last example, we have assembled together: dbj.compare.lookup and 'deeply equal' 
-so that we can execute deep comparisons of arrays and their elements, objects, and such.
+It is also possible to change it. Above we have made a powerful combination of the dbj 'lookup' and 'fast-deep-equal' as an example.  If the second comparator is not used the standard one is. Thus reverting to so-called 'shallow' comparisons.
 
-<span id="setreset" ></span>
-What is **comparator set/reset**
+By exposing the secondary operator we have allowed users to fine-tune the power of `dbj.cond`, and the usage of deep comparators. 
 
-Method
-```dbj.cond.setcmp ( primary, secondary )```
-Sets primary and optional secondary comparator. Returns an array of current comparator pair.
+In the last example, we have assembled together: `dbj.compare.lookup` and 'deeply equal' so that we can execute deep comparisons of arrays and their elements, objects, and such.
+
+
+### API recap
+
+`dbj.cond.setcmp ( primary, secondary )`, sets primary and optional secondary comparator.
 ```javascript
 dbj.cond.setcmp(dbj.compare.lookup, deepEqual ) ;
 ```
-Method
-```javascript
-dbj.cond.reset( )
-``` 
-Resets both comparators to default aka strict equality aka `function (a,b) { return a === b ; }`. It returns both of them in an array.
-
+Function `dbj.cond.reset( )`,resets both comparators to default ones. Default comparator is: `function (a,b) { return a === b ; }`. 
 
 ## END NOTE
  
-This is very minimal documentation and we are aware of that. 
-There are many more real-life examples proving the quality of this idiom. 
-Please do feel free to send us your code. 
-We might publish it and discuss it on https://dbj.org alongside our own articles on the usability and feasibility of dbj.cond.
+This is somewhat minimal documentation and we are aware of that. 
 
-## CONTACT
+There are many more real-life examples proving the quality of this idiom. Please do feel free to send us your code. We might publish it and discuss it on https://dbj.org alongside our own articles on the usability and feasibility of dbj.cond in real-life projects.
+
+### CONTACT
 
 - Please do not hesitate to suggest, comment or ask for a support by mailing <a href="mailto:info@dbj.org" target="_blank">info@dbj.org</a>
 - The good old GitHub issues mechanism is available <a href="https://github.com/DBJDBJ/dbj.cond/issues" target="_blank">here</a>.
+  
+---  
 
+## Appendix A: Short release log
 
----------------------------------------------------------------------  
-### &copy; 2018-2021 [![dbj();](http://dbj.org/wp-content/uploads/2015/12/cropped-dbj-icon-e1486129719897.jpg)](http://www.dbj.org "dbj")  
+**Version 4.0.1 is the latest**
+
+Please install from [NPM](https://www.npmjs.com/package/dbj.cond).
+
+**Version 3.1.0 and above**
+
+- deep (aka complex) comparators are streamlined and moved from here to a separate npm module
+   <a href="https://www.npmjs.com/package/dbj.cond.comparators" target="_blank">**dbj.cond.comparators**</a>
+
+- For a testing project please go to <a href="https://github.com/DBJDBJ/dbj.cond.test" target="_blank">**dbj.cond.test**</a> on the GitHub.
+
+**Versions 3.0.3 and above**
+
+- `dbj.compare.deep` has been removed as of 3.0.3, please use <a href="https://www.npmjs.com/package/deep-equal" target="_blank">'deep-equal'</a> or <a href="https://www.npmjs.com/package/fast-deep-equal" target="_blank">'fast-deep-equal'</a> or any other comparators you might preffer.
+-  `dbj.cond.comparators.js` contains `dbj.compare.arr` and `dbj.compare.multi`. These are meant primarily for arrays comparisons.
+- Secondary comparator feature added. See the usage of 'multi' on the bottom. 
+
+**Versions 3.0.0 and above**
+  
+Note: for tests and the rest please always visit the <a href="https://github.com/DBJDBJ/dbj.cond" target="_blank">project on the Github</a>. 
+
+**Version 2.0.1**
+
+The first NPM version
+
+---
+### &copy; 2018-2021 [dbj at dbj dot org&trade;](http://www.dbj.org "dbj")  

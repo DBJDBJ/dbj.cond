@@ -1,6 +1,6 @@
 ﻿<h1> dbj.cond() user manual </h1>
 
-(c) 2009-2021 .. and beyond, by dbj@dbj.org  
+(c) 2009-2024 .. and beyond, by dbj@dbj.org  
 Licensed under the Apache License, Version 2.0 
 
 - [What is dbj.cond ?](#what-is-dbjcond-)
